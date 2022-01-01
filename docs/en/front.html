@@ -1,0 +1,222 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Front Matter &#8212; Alembic 1.7.5 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/nature_override.css" />
+    <link rel="stylesheet" type="text/css" href="_static/changelog.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx_paramlinks.css" />
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Tutorial" href="tutorial.html" />
+    <link rel="prev" title="Welcome to Alembic’s documentation!" href="index.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="tutorial.html" title="Tutorial"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="Welcome to Alembic’s documentation!"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Alembic 1.7.5 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Front Matter</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="front-matter">
+<h1>Front Matter<a class="headerlink" href="#front-matter" title="Permalink to this headline">¶</a></h1>
+<p>Information about the Alembic project.</p>
+<section id="project-homepage">
+<h2>Project Homepage<a class="headerlink" href="#project-homepage" title="Permalink to this headline">¶</a></h2>
+<p>Alembic is hosted on GitHub at <a class="reference external" href="https://github.com/sqlalchemy/alembic">https://github.com/sqlalchemy/alembic</a> under the SQLAlchemy organization.</p>
+<p>Releases and project status are available on Pypi at <a class="reference external" href="https://pypi.python.org/pypi/alembic">https://pypi.python.org/pypi/alembic</a>.</p>
+<p>The most recent published version of this documentation should be at <a class="reference external" href="https://alembic.sqlalchemy.org">https://alembic.sqlalchemy.org</a>.</p>
+</section>
+<section id="installation">
+<span id="id1"></span><h2>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h2>
+<p>While Alembic can be installed system wide, it’s more common that it’s
+installed local to a <a class="reference external" href="https://docs.python.org/3/tutorial/venv.html">virtual environment</a> , as it also uses libraries
+such as SQLAlchemy and database drivers that are more appropriate for
+local installations.</p>
+<p>The documentation below is <strong>only one kind of approach to installing Alembic
+for a project</strong>; there are many such approaches. The documentation below is
+provided only for those users who otherwise have no specific project setup
+chosen.</p>
+<p>To build a virtual environment for a specific project, first we assume that
+<a class="reference external" href="https://pypi.org/project/virtualenv/">Python virtualenv</a> is installed
+systemwide.  Then:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ cd /path/to/your/project
+$ virtualenv .venv
+</pre></div>
+</div>
+<p>There is now a Python interpreter that you can access in
+<code class="docutils literal notranslate"><span class="pre">/path/to/your/project/.venv/bin/python</span></code>, as well as the <a class="reference external" href="http://pypi.python.org/pypi/pip">pip</a> installer tool in
+<code class="docutils literal notranslate"><span class="pre">/path/to/your/project/.venv/bin/pip</span></code>.</p>
+<p>We now install Alembic as follows:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ /path/to/your/project/.venv/bin/pip install alembic
+</pre></div>
+</div>
+<p>The install will add the <code class="docutils literal notranslate"><span class="pre">alembic</span></code> command to the virtual environment.  All
+operations with Alembic in terms of this specific virtual environment will then
+proceed through the usage of this command, as in:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ /path/to/your/project/.venv/bin/alembic init .
+</pre></div>
+</div>
+<p>The next step is <strong>optional</strong>.   If our project itself has a <code class="docutils literal notranslate"><span class="pre">setup.py</span></code>
+file, we can also install it in the local virtual environment in
+<a class="reference external" href="https://pip.pypa.io/en/stable/reference/pip_install/#editable-installs">editable mode</a>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ /path/to/your/project/.venv/bin/pip install -e .
+</pre></div>
+</div>
+<p>If we don’t “install” the project locally, that’s fine as well; the default
+<code class="docutils literal notranslate"><span class="pre">alembic.ini</span></code> file includes a directive <code class="docutils literal notranslate"><span class="pre">prepend_sys_path</span> <span class="pre">=</span> <span class="pre">.</span></code> so that the
+local path is also in <code class="docutils literal notranslate"><span class="pre">sys.path</span></code>. This allows us to run the <code class="docutils literal notranslate"><span class="pre">alembic</span></code>
+command line tool from this directory without our project being “installed” in
+that environment.</p>
+<div class="versionchanged">
+<p><span class="versionmodified changed">Changed in version 1.5.5: </span>Fixed a long-standing issue where the <code class="docutils literal notranslate"><span class="pre">alembic</span></code>
+command-line tool would not preserve the default <code class="docutils literal notranslate"><span class="pre">sys.path</span></code> of <code class="docutils literal notranslate"><span class="pre">.</span></code>
+by implementing <code class="docutils literal notranslate"><span class="pre">prepend_sys_path</span></code> option.</p>
+</div>
+<p>As a final step, the <a class="reference external" href="https://virtualenv.pypa.io/en/latest/userguide/#activate-script">virtualenv activate</a>
+tool can be used so that the <code class="docutils literal notranslate"><span class="pre">alembic</span></code> command is available without any
+path information, within the context of the current shell:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ source /path/to/your/project/.venv/bin/activate
+</pre></div>
+</div>
+<section id="dependencies">
+<h3>Dependencies<a class="headerlink" href="#dependencies" title="Permalink to this headline">¶</a></h3>
+<p>Alembic’s install process will ensure that <a class="reference external" href="https://www.sqlalchemy.org">SQLAlchemy</a>
+is installed, in addition to other dependencies.  Alembic will work with
+SQLAlchemy as of version <strong>1.3.0</strong>.</p>
+<div class="versionchanged">
+<p><span class="versionmodified changed">Changed in version 1.5.0: </span>Support for SQLAlchemy older than 1.3.0 was dropped.</p>
+</div>
+<p>Alembic supports Python versions <strong>3.6 and above</strong></p>
+<div class="versionchanged">
+<p><span class="versionmodified changed">Changed in version 1.7: </span>Alembic now supports Python 3.6 and newer; support
+for Python 2.7 has been dropped.</p>
+</div>
+</section>
+</section>
+<section id="community">
+<h2>Community<a class="headerlink" href="#community" title="Permalink to this headline">¶</a></h2>
+<p>Alembic is developed by <a class="reference external" href="http://techspot.zzzeek.org">Mike Bayer</a>, and is
+loosely associated with the <a class="reference external" href="https://www.sqlalchemy.org">SQLAlchemy</a>, <a class="reference external" href="http://www.pylonsproject.org">Pylons</a>,
+and <a class="reference external" href="http://www.openstack.org">Openstack</a> projects.</p>
+<p>User issues, discussion of potential bugs and features should be posted
+to the Alembic Google Group at <a class="reference external" href="https://groups.google.com/group/sqlalchemy-alembic">sqlalchemy-alembic</a>.</p>
+</section>
+<section id="bugs">
+<span id="id2"></span><h2>Bugs<a class="headerlink" href="#bugs" title="Permalink to this headline">¶</a></h2>
+<p>Bugs and feature enhancements to Alembic should be reported on the <a class="reference external" href="https://github.com/sqlalchemy/alembic/issues/">GitHub
+issue tracker</a>.</p>
+</section>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><script async type="text/javascript" src="//cdn.carbonads.com/carbon.js?serve=CKYIL23W&placement=alembiczzzcomputingcom" id="_carbonads_js"></script>
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-28532944-2', 'auto');
+  ga('send', 'pageview');
+
+</script>
+
+
+<p>
+<a href="alembic_latest.zip">Download documentation as ZIP file</a>
+</p>
+
+
+  <h3><a href="index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Front Matter</a><ul>
+<li><a class="reference internal" href="#project-homepage">Project Homepage</a></li>
+<li><a class="reference internal" href="#installation">Installation</a><ul>
+<li><a class="reference internal" href="#dependencies">Dependencies</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#community">Community</a></li>
+<li><a class="reference internal" href="#bugs">Bugs</a></li>
+</ul>
+</li>
+</ul>
+
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="index.html"
+                        title="previous chapter">Welcome to Alembic’s documentation!</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="tutorial.html"
+                        title="next chapter">Tutorial</a></p>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="tutorial.html" title="Tutorial"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="Welcome to Alembic’s documentation!"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Alembic 1.7.5 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Front Matter</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2010-2021, Mike Bayer.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.2.0.
+    </div>
+  </body>
+</html>

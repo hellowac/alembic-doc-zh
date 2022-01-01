@@ -1,0 +1,993 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Auto Generating Migrations &#8212; Alembic 1.7.5 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/nature_override.css" />
+    <link rel="stylesheet" type="text/css" href="_static/changelog.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx_paramlinks.css" />
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Generating SQL Scripts (a.k.a. “Offline Mode”)" href="offline.html" />
+    <link rel="prev" title="Tutorial" href="tutorial.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="offline.html" title="Generating SQL Scripts (a.k.a. “Offline Mode”)"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="tutorial.html" title="Tutorial"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Alembic 1.7.5 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Auto Generating Migrations</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="auto-generating-migrations">
+<h1>Auto Generating Migrations<a class="headerlink" href="#auto-generating-migrations" title="Permalink to this headline">¶</a></h1>
+<p>Alembic can view the status of the database and compare against the table metadata
+in the application, generating the “obvious” migrations based on a comparison.  This
+is achieved using the <code class="docutils literal notranslate"><span class="pre">--autogenerate</span></code> option to the <code class="docutils literal notranslate"><span class="pre">alembic</span> <span class="pre">revision</span></code> command,
+which places so-called <em>candidate</em> migrations into our new migrations file.  We
+review and modify these by hand as needed, then proceed normally.</p>
+<p>To use autogenerate, we first need to modify our <code class="docutils literal notranslate"><span class="pre">env.py</span></code> so that it gets access
+to a table metadata object that contains the target.  Suppose our application
+has a <a class="reference external" href="https://docs.sqlalchemy.org/en/14/orm/extensions/declarative/index.html#declarative-toplevel" title="(in SQLAlchemy v1.4)"><span class="xref std std-ref">declarative base</span></a>
+in <code class="docutils literal notranslate"><span class="pre">myapp.mymodel</span></code>.  This base contains a <a class="reference external" href="https://docs.sqlalchemy.org/en/14/core/metadata.html#sqlalchemy.schema.MetaData" title="(in SQLAlchemy v1.4)"><code class="xref py py-class docutils literal notranslate"><span class="pre">MetaData</span></code></a> object which
+contains <a class="reference external" href="https://docs.sqlalchemy.org/en/14/core/metadata.html#sqlalchemy.schema.Table" title="(in SQLAlchemy v1.4)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Table</span></code></a> objects defining our database.  We make sure this
+is loaded in <code class="docutils literal notranslate"><span class="pre">env.py</span></code> and then passed to <a class="reference internal" href="api/runtime.html#alembic.runtime.environment.EnvironmentContext.configure" title="alembic.runtime.environment.EnvironmentContext.configure"><code class="xref py py-meth docutils literal notranslate"><span class="pre">EnvironmentContext.configure()</span></code></a> via the
+<code class="docutils literal notranslate"><span class="pre">target_metadata</span></code> argument.   The <code class="docutils literal notranslate"><span class="pre">env.py</span></code> sample script used in the
+generic template already has a
+variable declaration near the top for our convenience, where we replace <code class="docutils literal notranslate"><span class="pre">None</span></code>
+with our <a class="reference external" href="https://docs.sqlalchemy.org/en/14/core/metadata.html#sqlalchemy.schema.MetaData" title="(in SQLAlchemy v1.4)"><code class="xref py py-class docutils literal notranslate"><span class="pre">MetaData</span></code></a>.  Starting with:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># add your model&#39;s MetaData object here</span>
+<span class="c1"># for &#39;autogenerate&#39; support</span>
+<span class="c1"># from myapp import mymodel</span>
+<span class="c1"># target_metadata = mymodel.Base.metadata</span>
+<span class="n">target_metadata</span> <span class="o">=</span> <span class="kc">None</span>
+</pre></div>
+</div>
+<p>we change to:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">myapp.mymodel</span> <span class="kn">import</span> <span class="n">Base</span>
+<span class="n">target_metadata</span> <span class="o">=</span> <span class="n">Base</span><span class="o">.</span><span class="n">metadata</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The above example refers to the <strong>generic alembic env.py template</strong>, e.g.
+the one created by default when calling upon <code class="docutils literal notranslate"><span class="pre">alembic</span> <span class="pre">init</span></code>, and not
+the special-use templates such as <code class="docutils literal notranslate"><span class="pre">multidb</span></code>.   Please consult the source
+code and comments within the <code class="docutils literal notranslate"><span class="pre">env.py</span></code> script directly for specific
+guidance on where and how the autogenerate metadata is established.</p>
+</div>
+<p>If we look later in the script, down in <code class="docutils literal notranslate"><span class="pre">run_migrations_online()</span></code>,
+we can see the directive passed to <a class="reference internal" href="api/runtime.html#alembic.runtime.environment.EnvironmentContext.configure" title="alembic.runtime.environment.EnvironmentContext.configure"><code class="xref py py-meth docutils literal notranslate"><span class="pre">EnvironmentContext.configure()</span></code></a>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">run_migrations_online</span><span class="p">():</span>
+    <span class="n">engine</span> <span class="o">=</span> <span class="n">engine_from_config</span><span class="p">(</span>
+                <span class="n">config</span><span class="o">.</span><span class="n">get_section</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">config_ini_section</span><span class="p">),</span> <span class="n">prefix</span><span class="o">=</span><span class="s1">&#39;sqlalchemy.&#39;</span><span class="p">)</span>
+
+    <span class="k">with</span> <span class="n">engine</span><span class="o">.</span><span class="n">connect</span><span class="p">()</span> <span class="k">as</span> <span class="n">connection</span><span class="p">:</span>
+        <span class="n">context</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span>
+                    <span class="n">connection</span><span class="o">=</span><span class="n">connection</span><span class="p">,</span>
+                    <span class="n">target_metadata</span><span class="o">=</span><span class="n">target_metadata</span>
+                    <span class="p">)</span>
+
+        <span class="k">with</span> <span class="n">context</span><span class="o">.</span><span class="n">begin_transaction</span><span class="p">():</span>
+            <span class="n">context</span><span class="o">.</span><span class="n">run_migrations</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>We can then use the <code class="docutils literal notranslate"><span class="pre">alembic</span> <span class="pre">revision</span></code> command in conjunction with the
+<code class="docutils literal notranslate"><span class="pre">--autogenerate</span></code> option.  Suppose
+our <a class="reference external" href="https://docs.sqlalchemy.org/en/14/core/metadata.html#sqlalchemy.schema.MetaData" title="(in SQLAlchemy v1.4)"><code class="xref py py-class docutils literal notranslate"><span class="pre">MetaData</span></code></a> contained a definition for the <code class="docutils literal notranslate"><span class="pre">account</span></code> table,
+and the database did not.  We’d get output like:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ alembic revision --autogenerate -m &quot;Added account table&quot;
+INFO [alembic.context] Detected added table &#39;account&#39;
+Generating /path/to/foo/alembic/versions/27c6a30d7c24.py...done
+</pre></div>
+</div>
+<p>We can then view our file <code class="docutils literal notranslate"><span class="pre">27c6a30d7c24.py</span></code> and see that a rudimentary migration
+is already present:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="sd">&quot;&quot;&quot;empty message</span>
+
+<span class="sd">Revision ID: 27c6a30d7c24</span>
+<span class="sd">Revises: None</span>
+<span class="sd">Create Date: 2011-11-08 11:40:27.089406</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="c1"># revision identifiers, used by Alembic.</span>
+<span class="n">revision</span> <span class="o">=</span> <span class="s1">&#39;27c6a30d7c24&#39;</span>
+<span class="n">down_revision</span> <span class="o">=</span> <span class="kc">None</span>
+
+<span class="kn">from</span> <span class="nn">alembic</span> <span class="kn">import</span> <span class="n">op</span>
+<span class="kn">import</span> <span class="nn">sqlalchemy</span> <span class="k">as</span> <span class="nn">sa</span>
+
+<span class="k">def</span> <span class="nf">upgrade</span><span class="p">():</span>
+    <span class="c1">### commands auto generated by Alembic - please adjust! ###</span>
+    <span class="n">op</span><span class="o">.</span><span class="n">create_table</span><span class="p">(</span>
+    <span class="s1">&#39;account&#39;</span><span class="p">,</span>
+    <span class="n">sa</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="s1">&#39;id&#39;</span><span class="p">,</span> <span class="n">sa</span><span class="o">.</span><span class="n">Integer</span><span class="p">()),</span>
+    <span class="n">sa</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="s1">&#39;name&#39;</span><span class="p">,</span> <span class="n">sa</span><span class="o">.</span><span class="n">String</span><span class="p">(</span><span class="n">length</span><span class="o">=</span><span class="mi">50</span><span class="p">),</span> <span class="n">nullable</span><span class="o">=</span><span class="kc">False</span><span class="p">),</span>
+    <span class="n">sa</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="s1">&#39;description&#39;</span><span class="p">,</span> <span class="n">sa</span><span class="o">.</span><span class="n">VARCHAR</span><span class="p">(</span><span class="mi">200</span><span class="p">)),</span>
+    <span class="n">sa</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="s1">&#39;last_transaction_date&#39;</span><span class="p">,</span> <span class="n">sa</span><span class="o">.</span><span class="n">DateTime</span><span class="p">()),</span>
+    <span class="n">sa</span><span class="o">.</span><span class="n">PrimaryKeyConstraint</span><span class="p">(</span><span class="s1">&#39;id&#39;</span><span class="p">)</span>
+    <span class="p">)</span>
+    <span class="c1">### end Alembic commands ###</span>
+
+<span class="k">def</span> <span class="nf">downgrade</span><span class="p">():</span>
+    <span class="c1">### commands auto generated by Alembic - please adjust! ###</span>
+    <span class="n">op</span><span class="o">.</span><span class="n">drop_table</span><span class="p">(</span><span class="s2">&quot;account&quot;</span><span class="p">)</span>
+    <span class="c1">### end Alembic commands ###</span>
+</pre></div>
+</div>
+<p>The migration hasn’t actually run yet, of course.  We do that via the usual <code class="docutils literal notranslate"><span class="pre">upgrade</span></code>
+command.   We should also go into our migration file and alter it as needed, including
+adjustments to the directives as well as the addition of other directives which these may
+be dependent on - specifically data changes in between creates/alters/drops.</p>
+<section id="what-does-autogenerate-detect-and-what-does-it-not-detect">
+<span id="autogenerate-detects"></span><h2>What does Autogenerate Detect (and what does it <em>not</em> detect?)<a class="headerlink" href="#what-does-autogenerate-detect-and-what-does-it-not-detect" title="Permalink to this headline">¶</a></h2>
+<p>The vast majority of user issues with Alembic centers on the topic of what
+kinds of changes autogenerate can and cannot detect reliably, as well as
+how it renders Python code for what it does detect.     It is critical to
+note that <strong>autogenerate is not intended to be perfect</strong>.   It is <em>always</em>
+necessary to manually review and correct the <strong>candidate migrations</strong>
+that autogenerate produces.   The feature is getting more and more
+comprehensive and error-free as releases continue, but one should take
+note of the current limitations.</p>
+<p>Autogenerate <strong>will detect</strong>:</p>
+<ul class="simple">
+<li><p>Table additions, removals.</p></li>
+<li><p>Column additions, removals.</p></li>
+<li><p>Change of nullable status on columns.</p></li>
+<li><p>Basic changes in indexes and explicitly-named unique constraints</p></li>
+<li><p>Basic changes in foreign key constraints</p></li>
+</ul>
+<p>Autogenerate can <strong>optionally detect</strong>:</p>
+<ul>
+<li><p>Change of column type.  This will occur if you set
+the <a class="reference internal" href="api/runtime.html#alembic.runtime.environment.EnvironmentContext.configure.params.compare_type" title="alembic.runtime.environment.EnvironmentContext.configure"><code class="xref py py-paramref docutils literal notranslate"><span class="pre">EnvironmentContext.configure.compare_type</span></code></a> parameter to
+<code class="docutils literal notranslate"><span class="pre">True</span></code>.   The default implementation will reliably detect major changes,
+such as between <code class="xref py py-class docutils literal notranslate"><span class="pre">Numeric</span></code> and <code class="xref py py-class docutils literal notranslate"><span class="pre">String</span></code>, as well as
+accommodate for the types generated by SQLAlchemy’s “generic” types such as
+<code class="xref py py-class docutils literal notranslate"><span class="pre">Boolean</span></code>.   Arguments that are shared between both types, such as
+length and precision values, will also be compared.   If either the metadata
+type or database type has <strong>additional</strong> arguments beyond that of the other
+type, these are <strong>not</strong> compared, such as if one numeric type featured a
+“scale” and other type did not, this would be seen as the backing database
+not supporting the value, or reporting on a default that the metadata did not
+specify.</p>
+<p>The type comparison logic is fully extensible as well; see
+<a class="reference internal" href="#compare-types"><span class="std std-ref">Comparing Types</span></a> for details.</p>
+<div class="versionchanged">
+<p><span class="versionmodified changed">Changed in version 1.4: </span>type comparison code has been reworked such that
+column types are compared based on their rendered DDL, which should allow
+the functionality enabled by
+<a class="reference internal" href="api/runtime.html#alembic.runtime.environment.EnvironmentContext.configure.params.compare_type" title="alembic.runtime.environment.EnvironmentContext.configure"><code class="xref py py-paramref docutils literal notranslate"><span class="pre">EnvironmentContext.configure.compare_type</span></code></a>
+to be much more accurate, correctly accounting for the behavior of
+SQLAlchemy “generic” types as well as major arguments specified within
+types.</p>
+</div>
+</li>
+<li><p>Change of server default.  This will occur if you set
+the <a class="reference internal" href="api/runtime.html#alembic.runtime.environment.EnvironmentContext.configure.params.compare_server_default" title="alembic.runtime.environment.EnvironmentContext.configure"><code class="xref py py-paramref docutils literal notranslate"><span class="pre">EnvironmentContext.configure.compare_server_default</span></code></a>
+parameter to <code class="docutils literal notranslate"><span class="pre">True</span></code>, or to a custom callable function.
+This feature works well for simple cases but cannot always produce
+accurate results.  The Postgresql backend will actually invoke
+the “detected” and “metadata” values against the database to
+determine equivalence.  The feature is off by default so that
+it can be tested on the target schema first.  Like type comparison,
+it can also be customized by passing a callable; see the
+function’s documentation for details.</p></li>
+</ul>
+<p>Autogenerate <strong>can not detect</strong>:</p>
+<ul class="simple">
+<li><p>Changes of table name.   These will come out as an add/drop of two different
+tables, and should be hand-edited into a name change instead.</p></li>
+<li><p>Changes of column name.  Like table name changes, these are detected as
+a column add/drop pair, which is not at all the same as a name change.</p></li>
+<li><p>Anonymously named constraints.  Give your constraints a name,
+e.g. <code class="docutils literal notranslate"><span class="pre">UniqueConstraint('col1',</span> <span class="pre">'col2',</span> <span class="pre">name=&quot;my_name&quot;)</span></code>.  See the section
+<a class="reference internal" href="naming.html"><span class="doc">The Importance of Naming Constraints</span></a> for background on how to configure automatic naming schemes
+for constraints.</p></li>
+<li><p>Special SQLAlchemy types such as <a class="reference external" href="https://docs.sqlalchemy.org/en/14/core/type_basics.html#sqlalchemy.types.Enum" title="(in SQLAlchemy v1.4)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Enum</span></code></a> when generated
+on a backend which doesn’t support ENUM directly - this because the
+representation of such a type
+in the non-supporting database, i.e. a CHAR+ CHECK constraint, could be
+any kind of CHAR+CHECK.  For SQLAlchemy to determine that this is actually
+an ENUM would only be a guess, something that’s generally a bad idea.
+To implement your own “guessing” function here, use the
+<a class="reference external" href="https://docs.sqlalchemy.org/en/14/core/events.html#sqlalchemy.events.DDLEvents.column_reflect" title="(in SQLAlchemy v1.4)"><code class="xref py py-meth docutils literal notranslate"><span class="pre">sqlalchemy.events.DDLEvents.column_reflect()</span></code></a> event
+to detect when a CHAR (or whatever the target type is) is reflected,
+and change it to an ENUM (or whatever type is desired) if it is known that
+that’s the intent of the type.  The
+<a class="reference external" href="https://docs.sqlalchemy.org/en/14/core/events.html#sqlalchemy.events.DDLEvents.after_parent_attach" title="(in SQLAlchemy v1.4)"><code class="xref py py-meth docutils literal notranslate"><span class="pre">sqlalchemy.events.DDLEvents.after_parent_attach()</span></code></a>
+can be used within the autogenerate process to intercept and un-attach
+unwanted CHECK constraints.</p></li>
+</ul>
+<p>Autogenerate can’t currently, but <strong>will eventually detect</strong>:</p>
+<ul class="simple">
+<li><p>Some free-standing constraint additions and removals may not be supported,
+including PRIMARY KEY, EXCLUDE, CHECK; these are not necessarily implemented
+within the autogenerate detection system and also may not be supported by
+the supporting SQLAlchemy dialect.</p></li>
+<li><p>Sequence additions, removals - not yet implemented.</p></li>
+</ul>
+</section>
+<section id="autogenerating-multiple-metadata-collections">
+<h2>Autogenerating Multiple MetaData collections<a class="headerlink" href="#autogenerating-multiple-metadata-collections" title="Permalink to this headline">¶</a></h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">target_metadata</span></code> collection may also be defined as a sequence
+if an application has multiple <a class="reference external" href="https://docs.sqlalchemy.org/en/14/core/metadata.html#sqlalchemy.schema.MetaData" title="(in SQLAlchemy v1.4)"><code class="xref py py-class docutils literal notranslate"><span class="pre">MetaData</span></code></a>
+collections involved:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">myapp.mymodel1</span> <span class="kn">import</span> <span class="n">Model1Base</span>
+<span class="kn">from</span> <span class="nn">myapp.mymodel2</span> <span class="kn">import</span> <span class="n">Model2Base</span>
+<span class="n">target_metadata</span> <span class="o">=</span> <span class="p">[</span><span class="n">Model1Base</span><span class="o">.</span><span class="n">metadata</span><span class="p">,</span> <span class="n">Model2Base</span><span class="o">.</span><span class="n">metadata</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>The sequence of <a class="reference external" href="https://docs.sqlalchemy.org/en/14/core/metadata.html#sqlalchemy.schema.MetaData" title="(in SQLAlchemy v1.4)"><code class="xref py py-class docutils literal notranslate"><span class="pre">MetaData</span></code></a> collections will be
+consulted in order during the autogenerate process.  Note that each
+<a class="reference external" href="https://docs.sqlalchemy.org/en/14/core/metadata.html#sqlalchemy.schema.MetaData" title="(in SQLAlchemy v1.4)"><code class="xref py py-class docutils literal notranslate"><span class="pre">MetaData</span></code></a> must contain <strong>unique</strong> table keys
+(e.g. the “key” is the combination of the table’s name and schema);
+if two <a class="reference external" href="https://docs.sqlalchemy.org/en/14/core/metadata.html#sqlalchemy.schema.MetaData" title="(in SQLAlchemy v1.4)"><code class="xref py py-class docutils literal notranslate"><span class="pre">MetaData</span></code></a> objects contain a table
+with the same schema/name combination, an error is raised.</p>
+</section>
+<section id="controlling-what-to-be-autogenerated">
+<span id="autogenerate-include-hooks"></span><h2>Controlling What to be Autogenerated<a class="headerlink" href="#controlling-what-to-be-autogenerated" title="Permalink to this headline">¶</a></h2>
+<p>The autogenerate process scans across all table objects within
+the database that is referred towards by the current database connection
+in use.</p>
+<p>The list of objects that are scanned in the target database connection include:</p>
+<ul class="simple">
+<li><p>The “default” schema currently referred towards by the database connection.</p></li>
+<li><p>If the <a class="reference internal" href="api/runtime.html#alembic.runtime.environment.EnvironmentContext.configure.params.include_schemas" title="alembic.runtime.environment.EnvironmentContext.configure"><code class="xref py py-paramref docutils literal notranslate"><span class="pre">EnvironmentContext.configure.include_schemas</span></code></a> is set to
+<code class="docutils literal notranslate"><span class="pre">True</span></code>, all non-default “schemas”, which are those names returned by the
+<a class="reference external" href="https://docs.sqlalchemy.org/en/14/core/reflection.html#sqlalchemy.engine.reflection.Inspector.get_schema_names" title="(in SQLAlchemy v1.4)"><code class="xref py py-meth docutils literal notranslate"><span class="pre">get_schema_names()</span></code></a> method of
+<a class="reference external" href="https://docs.sqlalchemy.org/en/14/core/reflection.html#sqlalchemy.engine.reflection.Inspector" title="(in SQLAlchemy v1.4)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Inspector</span></code></a>.    The SQLAlchemy document
+<a class="reference external" href="https://docs.sqlalchemy.org/en/14/core/metadata.html#schema-table-schema-name" title="(in SQLAlchemy v1.4)"><span>Specifying the Schema Name</span></a> discusses the concept of a
+“schema” in detail.</p></li>
+<li><p>Within each “schema”, all tables present are scanned using the
+<a class="reference external" href="https://docs.sqlalchemy.org/en/14/core/reflection.html#sqlalchemy.engine.reflection.Inspector.get_table_names" title="(in SQLAlchemy v1.4)"><code class="xref py py-meth docutils literal notranslate"><span class="pre">get_table_names()</span></code></a> method of
+<a class="reference external" href="https://docs.sqlalchemy.org/en/14/core/reflection.html#sqlalchemy.engine.reflection.Inspector" title="(in SQLAlchemy v1.4)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Inspector</span></code></a>.</p></li>
+<li><p>Within each “table”, most sub-objects of the each
+<a class="reference external" href="https://docs.sqlalchemy.org/en/14/core/metadata.html#sqlalchemy.schema.Table" title="(in SQLAlchemy v1.4)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Table</span></code></a> construct are scanned, including columns
+and some forms of constraints.  This process ultimately involves the use of
+methods on <a class="reference external" href="https://docs.sqlalchemy.org/en/14/core/reflection.html#sqlalchemy.engine.reflection.Inspector" title="(in SQLAlchemy v1.4)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Inspector</span></code></a> including
+<a class="reference external" href="https://docs.sqlalchemy.org/en/14/core/reflection.html#sqlalchemy.engine.reflection.Inspector.get_columns" title="(in SQLAlchemy v1.4)"><code class="xref py py-meth docutils literal notranslate"><span class="pre">get_columns()</span></code></a>,
+<a class="reference external" href="https://docs.sqlalchemy.org/en/14/core/reflection.html#sqlalchemy.engine.reflection.Inspector.get_indexes" title="(in SQLAlchemy v1.4)"><code class="xref py py-meth docutils literal notranslate"><span class="pre">get_indexes()</span></code></a>,
+<a class="reference external" href="https://docs.sqlalchemy.org/en/14/core/reflection.html#sqlalchemy.engine.reflection.Inspector.get_unique_constraints" title="(in SQLAlchemy v1.4)"><code class="xref py py-meth docutils literal notranslate"><span class="pre">get_unique_constraints()</span></code></a>,
+<a class="reference external" href="https://docs.sqlalchemy.org/en/14/core/reflection.html#sqlalchemy.engine.reflection.Inspector.get_foreign_keys" title="(in SQLAlchemy v1.4)"><code class="xref py py-meth docutils literal notranslate"><span class="pre">get_foreign_keys()</span></code></a> (as of this
+writing, CHECK constraints and primary key constraints are not yet included).</p></li>
+</ul>
+<section id="omitting-schema-names-from-the-autogenerate-process">
+<h3>Omitting Schema Names from the Autogenerate Process<a class="headerlink" href="#omitting-schema-names-from-the-autogenerate-process" title="Permalink to this headline">¶</a></h3>
+<p>As the above set of database objects are typically to be compared to the contents of
+a single <a class="reference external" href="https://docs.sqlalchemy.org/en/14/core/metadata.html#sqlalchemy.schema.MetaData" title="(in SQLAlchemy v1.4)"><code class="xref py py-class docutils literal notranslate"><span class="pre">MetaData</span></code></a> object, particularly when the
+<a class="reference internal" href="api/runtime.html#alembic.runtime.environment.EnvironmentContext.configure.params.include_schemas" title="alembic.runtime.environment.EnvironmentContext.configure"><code class="xref py py-paramref docutils literal notranslate"><span class="pre">EnvironmentContext.configure.include_schemas</span></code></a> flag is enabled
+there is an important need to filter out unwanted “schemas”, which for some
+database backends might be the list of all the databases present.   This
+filtering is best performed using the <a class="reference internal" href="api/runtime.html#alembic.runtime.environment.EnvironmentContext.configure.params.include_name" title="alembic.runtime.environment.EnvironmentContext.configure"><code class="xref py py-paramref docutils literal notranslate"><span class="pre">EnvironmentContext.configure.include_name</span></code></a>
+hook, which provides for a callable that may return a boolean true/false
+indicating if a particular schema name should be included:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">include_name</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">type_</span><span class="p">,</span> <span class="n">parent_names</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">type_</span> <span class="o">==</span> <span class="s2">&quot;schema&quot;</span><span class="p">:</span>
+        <span class="c1"># note this will not include the default schema</span>
+        <span class="k">return</span> <span class="n">name</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;schema_one&quot;</span><span class="p">,</span> <span class="s2">&quot;schema_two&quot;</span><span class="p">]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">True</span>
+
+<span class="n">context</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span>
+    <span class="c1"># ...</span>
+    <span class="n">include_schemas</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="n">include_name</span> <span class="o">=</span> <span class="n">include_name</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>Above, when the list of schema names is first retrieved, the names will be
+filtered through the above <code class="docutils literal notranslate"><span class="pre">include_name</span></code> function so that only schemas
+named <code class="docutils literal notranslate"><span class="pre">&quot;schema_one&quot;</span></code> and <code class="docutils literal notranslate"><span class="pre">&quot;schema_two&quot;</span></code> will be considered by the
+autogenerate process.</p>
+<p>In order to include <strong>the default schema</strong>, that is, the schema that is
+referred towards by the database connection <strong>without</strong> any explicit
+schema being specified, the name passed to the hook is <code class="docutils literal notranslate"><span class="pre">None</span></code>.  To alter
+our above example to also include the default schema, we compare to
+<code class="docutils literal notranslate"><span class="pre">None</span></code> as well:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">include_name</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">type_</span><span class="p">,</span> <span class="n">parent_names</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">type_</span> <span class="o">==</span> <span class="s2">&quot;schema&quot;</span><span class="p">:</span>
+        <span class="c1"># this **will* include the default schema</span>
+        <span class="k">return</span> <span class="n">name</span> <span class="ow">in</span> <span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;schema_one&quot;</span><span class="p">,</span> <span class="s2">&quot;schema_two&quot;</span><span class="p">]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">True</span>
+
+<span class="n">context</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span>
+    <span class="c1"># ...</span>
+    <span class="n">include_schemas</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="n">include_name</span> <span class="o">=</span> <span class="n">include_name</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="omitting-table-names-from-the-autogenerate-process">
+<h3>Omitting Table Names from the Autogenerate Process<a class="headerlink" href="#omitting-table-names-from-the-autogenerate-process" title="Permalink to this headline">¶</a></h3>
+<p>The <a class="reference internal" href="api/runtime.html#alembic.runtime.environment.EnvironmentContext.configure.params.include_name" title="alembic.runtime.environment.EnvironmentContext.configure"><code class="xref py py-paramref docutils literal notranslate"><span class="pre">EnvironmentContext.configure.include_name</span></code></a> hook is also
+most appropriate to limit the names of tables in the target database
+to be considered.  If a target database has many tables that are not
+part of the <a class="reference external" href="https://docs.sqlalchemy.org/en/14/core/metadata.html#sqlalchemy.schema.MetaData" title="(in SQLAlchemy v1.4)"><code class="xref py py-class docutils literal notranslate"><span class="pre">MetaData</span></code></a>, the autogenerate process
+will normally assume these are extraneous tables in the database to be
+dropped, and it will generate a <a class="reference internal" href="ops.html#alembic.operations.Operations.drop_table" title="alembic.operations.Operations.drop_table"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Operations.drop_table()</span></code></a> operation
+for each.  To prevent this, the <a class="reference internal" href="api/runtime.html#alembic.runtime.environment.EnvironmentContext.configure.params.include_name" title="alembic.runtime.environment.EnvironmentContext.configure"><code class="xref py py-paramref docutils literal notranslate"><span class="pre">EnvironmentContext.configure.include_name</span></code></a>
+hook may be used to search for each name within the
+<a class="reference external" href="https://docs.sqlalchemy.org/en/14/core/metadata.html#sqlalchemy.schema.MetaData.tables" title="(in SQLAlchemy v1.4)"><code class="xref py py-attr docutils literal notranslate"><span class="pre">tables</span></code></a> collection of the
+<a class="reference external" href="https://docs.sqlalchemy.org/en/14/core/metadata.html#sqlalchemy.schema.MetaData" title="(in SQLAlchemy v1.4)"><code class="xref py py-class docutils literal notranslate"><span class="pre">MetaData</span></code></a> object and ensure names
+which aren’t present are not included:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">target_metadata</span> <span class="o">=</span> <span class="n">MyModel</span><span class="o">.</span><span class="n">metadata</span>
+
+<span class="k">def</span> <span class="nf">include_name</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">type_</span><span class="p">,</span> <span class="n">parent_names</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">type_</span> <span class="o">==</span> <span class="s2">&quot;table&quot;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">target_metadata</span><span class="o">.</span><span class="n">tables</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">True</span>
+
+<span class="n">context</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span>
+    <span class="c1"># ...</span>
+    <span class="n">target_metadata</span> <span class="o">=</span> <span class="n">target_metadata</span><span class="p">,</span>
+    <span class="n">include_name</span> <span class="o">=</span> <span class="n">include_name</span><span class="p">,</span>
+    <span class="n">include_schemas</span> <span class="o">=</span> <span class="kc">False</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>The above example is limited to table names present in the default schema only.
+In order to search within a <a class="reference external" href="https://docs.sqlalchemy.org/en/14/core/metadata.html#sqlalchemy.schema.MetaData" title="(in SQLAlchemy v1.4)"><code class="xref py py-class docutils literal notranslate"><span class="pre">MetaData</span></code></a> collection for
+schema-qualified table names as well, a table present in the non
+default schema will be present under a name of the form
+<code class="docutils literal notranslate"><span class="pre">&lt;schemaname&gt;.&lt;tablename&gt;</span></code>.   The
+<a class="reference internal" href="api/runtime.html#alembic.runtime.environment.EnvironmentContext.configure.params.include_name" title="alembic.runtime.environment.EnvironmentContext.configure"><code class="xref py py-paramref docutils literal notranslate"><span class="pre">EnvironmentContext.configure.include_name</span></code></a> hook will present
+this schema name on a per-tablename basis in the <code class="docutils literal notranslate"><span class="pre">parent_names</span></code> dictionary,
+using the key <code class="docutils literal notranslate"><span class="pre">&quot;schema_name&quot;</span></code> that refers to the name of the
+schema currently being considered, or <code class="docutils literal notranslate"><span class="pre">None</span></code> if the schema is the default
+schema of the database connection:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># example fragment</span>
+
+<span class="k">if</span> <span class="n">parent_names</span><span class="p">[</span><span class="s2">&quot;schema_name&quot;</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">target_metadata</span><span class="o">.</span><span class="n">tables</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="c1"># build out schema-qualified name explicitly...</span>
+    <span class="k">return</span> <span class="p">(</span>
+        <span class="s2">&quot;</span><span class="si">%s</span><span class="s2">.</span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">parent_names</span><span class="p">[</span><span class="s2">&quot;schema_name&quot;</span><span class="p">],</span> <span class="n">name</span><span class="p">)</span> <span class="ow">in</span>
+        <span class="n">target_metadata</span><span class="o">.</span><span class="n">tables</span>
+    <span class="p">)</span>
+</pre></div>
+</div>
+<p>However more simply, the <code class="docutils literal notranslate"><span class="pre">parent_names</span></code> dictionary will also include
+the dot-concatenated name already constructed under the key
+<code class="docutils literal notranslate"><span class="pre">&quot;schema_qualified_table_name&quot;</span></code>, which will also be suitably formatted
+for tables in the default schema as well with the dot omitted.  So the
+full example of omitting tables with schema support may look like:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">target_metadata</span> <span class="o">=</span> <span class="n">MyModel</span><span class="o">.</span><span class="n">metadata</span>
+
+<span class="k">def</span> <span class="nf">include_name</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">type_</span><span class="p">,</span> <span class="n">parent_names</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">type_</span> <span class="o">==</span> <span class="s2">&quot;schema&quot;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">name</span> <span class="ow">in</span> <span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;schema_one&quot;</span><span class="p">,</span> <span class="s2">&quot;schema_two&quot;</span><span class="p">]</span>
+    <span class="k">elif</span> <span class="n">type_</span> <span class="o">==</span> <span class="s2">&quot;table&quot;</span><span class="p">:</span>
+        <span class="c1"># use schema_qualified_table_name directly</span>
+        <span class="k">return</span> <span class="p">(</span>
+            <span class="n">parent_names</span><span class="p">[</span><span class="s2">&quot;schema_qualified_table_name&quot;</span><span class="p">]</span> <span class="ow">in</span>
+            <span class="n">target_metadata</span><span class="o">.</span><span class="n">tables</span>
+        <span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">True</span>
+
+<span class="n">context</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span>
+    <span class="c1"># ...</span>
+    <span class="n">target_metadata</span> <span class="o">=</span> <span class="n">target_metadata</span><span class="p">,</span>
+    <span class="n">include_name</span> <span class="o">=</span> <span class="n">include_name</span><span class="p">,</span>
+    <span class="n">include_schemas</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">parent_names</span></code> dictionary will also include the key <code class="docutils literal notranslate"><span class="pre">&quot;table_name&quot;</span></code>
+when the name being considered is that of a column or constraint object
+local to a particular table.</p>
+<p>The <a class="reference internal" href="api/runtime.html#alembic.runtime.environment.EnvironmentContext.configure.params.include_name" title="alembic.runtime.environment.EnvironmentContext.configure"><code class="xref py py-paramref docutils literal notranslate"><span class="pre">EnvironmentContext.configure.include_name</span></code></a> hook only refers
+to <strong>reflected</strong> objects, and not those located within the target
+<a class="reference external" href="https://docs.sqlalchemy.org/en/14/core/metadata.html#sqlalchemy.schema.MetaData" title="(in SQLAlchemy v1.4)"><code class="xref py py-class docutils literal notranslate"><span class="pre">MetaData</span></code></a> collection.   For more fine-grained
+rules that include both <a class="reference external" href="https://docs.sqlalchemy.org/en/14/core/metadata.html#sqlalchemy.schema.MetaData" title="(in SQLAlchemy v1.4)"><code class="xref py py-class docutils literal notranslate"><span class="pre">MetaData</span></code></a> and reflected
+object, the <a class="reference internal" href="api/runtime.html#alembic.runtime.environment.EnvironmentContext.configure.params.include_object" title="alembic.runtime.environment.EnvironmentContext.configure"><code class="xref py py-paramref docutils literal notranslate"><span class="pre">EnvironmentContext.configure.include_object</span></code></a> hook
+discussed in the next section is more appropriate.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in version 1.5: </span>added the <a class="reference internal" href="api/runtime.html#alembic.runtime.environment.EnvironmentContext.configure.params.include_name" title="alembic.runtime.environment.EnvironmentContext.configure"><code class="xref py py-paramref docutils literal notranslate"><span class="pre">EnvironmentContext.configure.include_name</span></code></a>
+hook.</p>
+</div>
+</section>
+<section id="omitting-based-on-object">
+<h3>Omitting Based on Object<a class="headerlink" href="#omitting-based-on-object" title="Permalink to this headline">¶</a></h3>
+<p>The <a class="reference internal" href="api/runtime.html#alembic.runtime.environment.EnvironmentContext.configure.params.include_object" title="alembic.runtime.environment.EnvironmentContext.configure"><code class="xref py py-paramref docutils literal notranslate"><span class="pre">EnvironmentContext.configure.include_object</span></code></a> hook provides
+for object-level inclusion/exclusion rules based on the <a class="reference external" href="https://docs.sqlalchemy.org/en/14/core/metadata.html#sqlalchemy.schema.Table" title="(in SQLAlchemy v1.4)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Table</span></code></a>
+object being reflected as well as the elements within it.   This hook can
+be used to limit objects both from the local <a class="reference external" href="https://docs.sqlalchemy.org/en/14/core/metadata.html#sqlalchemy.schema.MetaData" title="(in SQLAlchemy v1.4)"><code class="xref py py-class docutils literal notranslate"><span class="pre">MetaData</span></code></a>
+collection as well as from the target database.   The limitation is that when
+it reports on objects in the database, it will have fully reflected that object,
+which can be expensive if a large number of objects will be omitted.  The
+example below refers to a fine-grained rule that will skip changes on
+<a class="reference external" href="https://docs.sqlalchemy.org/en/14/core/metadata.html#sqlalchemy.schema.Column" title="(in SQLAlchemy v1.4)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Column</span></code></a> objects that have a user-defined flag
+<code class="docutils literal notranslate"><span class="pre">skip_autogenerate</span></code> placed into the <a class="reference external" href="https://docs.sqlalchemy.org/en/14/core/metadata.html#sqlalchemy.schema.Column.info" title="(in SQLAlchemy v1.4)"><code class="xref py py-attr docutils literal notranslate"><span class="pre">info</span></code></a>
+dictionary:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">include_object</span><span class="p">(</span><span class="nb">object</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">type_</span><span class="p">,</span> <span class="n">reflected</span><span class="p">,</span> <span class="n">compare_to</span><span class="p">):</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">type_</span> <span class="o">==</span> <span class="s2">&quot;column&quot;</span> <span class="ow">and</span>
+        <span class="ow">not</span> <span class="n">reflected</span> <span class="ow">and</span>
+        <span class="nb">object</span><span class="o">.</span><span class="n">info</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;skip_autogenerate&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)):</span>
+        <span class="k">return</span> <span class="kc">False</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">True</span>
+
+<span class="n">context</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span>
+    <span class="c1"># ...</span>
+    <span class="n">include_object</span> <span class="o">=</span> <span class="n">include_object</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="comparing-and-rendering-types">
+<h2>Comparing and Rendering Types<a class="headerlink" href="#comparing-and-rendering-types" title="Permalink to this headline">¶</a></h2>
+<p>The area of autogenerate’s behavior of comparing and rendering Python-based type objects
+in migration scripts presents a challenge, in that there’s
+a very wide variety of types to be rendered in scripts, including those
+part of SQLAlchemy as well as user-defined types.   A few options
+are given to help out with this task.</p>
+<section id="controlling-the-module-prefix">
+<span id="autogen-module-prefix"></span><h3>Controlling the Module Prefix<a class="headerlink" href="#controlling-the-module-prefix" title="Permalink to this headline">¶</a></h3>
+<p>When types are rendered, they are generated with a <strong>module prefix</strong>, so
+that they are available based on a relatively small number of imports.
+The rules for what the prefix is is based on the kind of datatype as well
+as configurational settings.   For example, when Alembic renders SQLAlchemy
+types, it will by default prefix the type name with the prefix <code class="docutils literal notranslate"><span class="pre">sa.</span></code>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Column</span><span class="p">(</span><span class="s2">&quot;my_column&quot;</span><span class="p">,</span> <span class="n">sa</span><span class="o">.</span><span class="n">Integer</span><span class="p">())</span>
+</pre></div>
+</div>
+<p>The use of the <code class="docutils literal notranslate"><span class="pre">sa.</span></code> prefix is controllable by altering the value
+of <a class="reference internal" href="api/runtime.html#alembic.runtime.environment.EnvironmentContext.configure.params.sqlalchemy_module_prefix" title="alembic.runtime.environment.EnvironmentContext.configure"><code class="xref py py-paramref docutils literal notranslate"><span class="pre">EnvironmentContext.configure.sqlalchemy_module_prefix</span></code></a>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">run_migrations_online</span><span class="p">():</span>
+    <span class="c1"># ...</span>
+
+    <span class="n">context</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span>
+                <span class="n">connection</span><span class="o">=</span><span class="n">connection</span><span class="p">,</span>
+                <span class="n">target_metadata</span><span class="o">=</span><span class="n">target_metadata</span><span class="p">,</span>
+                <span class="n">sqlalchemy_module_prefix</span><span class="o">=</span><span class="s2">&quot;sqla.&quot;</span><span class="p">,</span>
+                <span class="c1"># ...</span>
+                <span class="p">)</span>
+
+    <span class="c1"># ...</span>
+</pre></div>
+</div>
+<p>In either case, the <code class="docutils literal notranslate"><span class="pre">sa.</span></code> prefix, or whatever prefix is desired, should
+also be included in the imports section of <code class="docutils literal notranslate"><span class="pre">script.py.mako</span></code>; it also
+defaults to <code class="docutils literal notranslate"><span class="pre">import</span> <span class="pre">sqlalchemy</span> <span class="pre">as</span> <span class="pre">sa</span></code>.</p>
+<p>For user-defined types, that is, any custom type that
+is not within the <code class="docutils literal notranslate"><span class="pre">sqlalchemy.</span></code> module namespace, by default Alembic will
+use the <strong>value of __module__ for the custom type</strong>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Column</span><span class="p">(</span><span class="s2">&quot;my_column&quot;</span><span class="p">,</span> <span class="n">myapp</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">types</span><span class="o">.</span><span class="n">MyCustomType</span><span class="p">())</span>
+</pre></div>
+</div>
+<p>The imports for the above type again must be made present within the migration,
+either manually, or by adding it to <code class="docutils literal notranslate"><span class="pre">script.py.mako</span></code>.</p>
+<p>The above custom type has a long and cumbersome name based on the use
+of <code class="docutils literal notranslate"><span class="pre">__module__</span></code> directly, which also implies that lots of imports would
+be needed in order to accommodate lots of types.  For this reason, it is
+recommended that user-defined types used in migration scripts be made
+available from a single module.  Suppose we call it <code class="docutils literal notranslate"><span class="pre">myapp.migration_types</span></code>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># myapp/migration_types.py</span>
+
+<span class="kn">from</span> <span class="nn">myapp.models.utils.types</span> <span class="kn">import</span> <span class="n">MyCustomType</span>
+</pre></div>
+</div>
+<p>We can first add an import for <code class="docutils literal notranslate"><span class="pre">migration_types</span></code> to our <code class="docutils literal notranslate"><span class="pre">script.py.mako</span></code>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>from alembic import op
+import sqlalchemy as sa
+import myapp.migration_types
+${imports if imports else &quot;&quot;}
+</pre></div>
+</div>
+<p>We then override Alembic’s use of <code class="docutils literal notranslate"><span class="pre">__module__</span></code> by providing a fixed
+prefix, using the <a class="reference internal" href="api/runtime.html#alembic.runtime.environment.EnvironmentContext.configure.params.user_module_prefix" title="alembic.runtime.environment.EnvironmentContext.configure"><code class="xref py py-paramref docutils literal notranslate"><span class="pre">EnvironmentContext.configure.user_module_prefix</span></code></a>
+option:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">run_migrations_online</span><span class="p">():</span>
+    <span class="c1"># ...</span>
+
+    <span class="n">context</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span>
+                <span class="n">connection</span><span class="o">=</span><span class="n">connection</span><span class="p">,</span>
+                <span class="n">target_metadata</span><span class="o">=</span><span class="n">target_metadata</span><span class="p">,</span>
+                <span class="n">user_module_prefix</span><span class="o">=</span><span class="s2">&quot;myapp.migration_types.&quot;</span><span class="p">,</span>
+                <span class="c1"># ...</span>
+                <span class="p">)</span>
+
+    <span class="c1"># ...</span>
+</pre></div>
+</div>
+<p>Above, we now would get a migration like:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Column</span><span class="p">(</span><span class="s2">&quot;my_column&quot;</span><span class="p">,</span> <span class="n">myapp</span><span class="o">.</span><span class="n">migration_types</span><span class="o">.</span><span class="n">MyCustomType</span><span class="p">())</span>
+</pre></div>
+</div>
+<p>Now, when we inevitably refactor our application to move <code class="docutils literal notranslate"><span class="pre">MyCustomType</span></code>
+somewhere else, we only need modify the <code class="docutils literal notranslate"><span class="pre">myapp.migration_types</span></code> module,
+instead of searching and replacing all instances within our migration scripts.</p>
+</section>
+<section id="affecting-the-rendering-of-types-themselves">
+<span id="autogen-render-types"></span><h3>Affecting the Rendering of Types Themselves<a class="headerlink" href="#affecting-the-rendering-of-types-themselves" title="Permalink to this headline">¶</a></h3>
+<p>The methodology Alembic uses to generate SQLAlchemy and user-defined type constructs
+as Python code is plain old <code class="docutils literal notranslate"><span class="pre">__repr__()</span></code>.   SQLAlchemy’s built-in types
+for the most part have a <code class="docutils literal notranslate"><span class="pre">__repr__()</span></code> that faithfully renders a
+Python-compatible constructor call, but there are some exceptions, particularly
+in those cases when a constructor accepts arguments that aren’t compatible
+with <code class="docutils literal notranslate"><span class="pre">__repr__()</span></code>, such as a pickling function.</p>
+<p>When building a custom type that will be rendered into a migration script,
+it is often necessary to explicitly give the type a <code class="docutils literal notranslate"><span class="pre">__repr__()</span></code> that will
+faithfully reproduce the constructor for that type.   This, in combination
+with <a class="reference internal" href="api/runtime.html#alembic.runtime.environment.EnvironmentContext.configure.params.user_module_prefix" title="alembic.runtime.environment.EnvironmentContext.configure"><code class="xref py py-paramref docutils literal notranslate"><span class="pre">EnvironmentContext.configure.user_module_prefix</span></code></a>, is usually
+enough.  However, if additional behaviors are needed, a more comprehensive
+hook is the <a class="reference internal" href="api/runtime.html#alembic.runtime.environment.EnvironmentContext.configure.params.render_item" title="alembic.runtime.environment.EnvironmentContext.configure"><code class="xref py py-paramref docutils literal notranslate"><span class="pre">EnvironmentContext.configure.render_item</span></code></a> option.
+This hook allows one to provide a callable function within <code class="docutils literal notranslate"><span class="pre">env.py</span></code> that will fully take
+over how a type is rendered, including its module prefix:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">render_item</span><span class="p">(</span><span class="n">type_</span><span class="p">,</span> <span class="n">obj</span><span class="p">,</span> <span class="n">autogen_context</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Apply custom rendering for selected items.&quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="n">type_</span> <span class="o">==</span> <span class="s1">&#39;type&#39;</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">MySpecialType</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s2">&quot;mypackage.</span><span class="si">%r</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">obj</span>
+
+    <span class="c1"># default rendering for other objects</span>
+    <span class="k">return</span> <span class="kc">False</span>
+
+<span class="k">def</span> <span class="nf">run_migrations_online</span><span class="p">():</span>
+    <span class="c1"># ...</span>
+
+    <span class="n">context</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span>
+                <span class="n">connection</span><span class="o">=</span><span class="n">connection</span><span class="p">,</span>
+                <span class="n">target_metadata</span><span class="o">=</span><span class="n">target_metadata</span><span class="p">,</span>
+                <span class="n">render_item</span><span class="o">=</span><span class="n">render_item</span><span class="p">,</span>
+                <span class="c1"># ...</span>
+                <span class="p">)</span>
+
+    <span class="c1"># ...</span>
+</pre></div>
+</div>
+<p>In the above example, we’d ensure our <code class="docutils literal notranslate"><span class="pre">MySpecialType</span></code> includes an appropriate
+<code class="docutils literal notranslate"><span class="pre">__repr__()</span></code> method, which is invoked when we call it against <code class="docutils literal notranslate"><span class="pre">&quot;%r&quot;</span></code>.</p>
+<p>The callable we use for <a class="reference internal" href="api/runtime.html#alembic.runtime.environment.EnvironmentContext.configure.params.render_item" title="alembic.runtime.environment.EnvironmentContext.configure"><code class="xref py py-paramref docutils literal notranslate"><span class="pre">EnvironmentContext.configure.render_item</span></code></a>
+can also add imports to our migration script.  The <a class="reference internal" href="api/autogenerate.html#alembic.autogenerate.api.AutogenContext" title="alembic.autogenerate.api.AutogenContext"><code class="xref py py-class docutils literal notranslate"><span class="pre">AutogenContext</span></code></a> passed in
+contains a datamember called <a class="reference internal" href="api/autogenerate.html#alembic.autogenerate.api.AutogenContext.imports" title="alembic.autogenerate.api.AutogenContext.imports"><code class="xref py py-attr docutils literal notranslate"><span class="pre">AutogenContext.imports</span></code></a>, which is a Python
+<code class="docutils literal notranslate"><span class="pre">set()</span></code> for which we can add new imports.  For example, if <code class="docutils literal notranslate"><span class="pre">MySpecialType</span></code>
+were in a module called <code class="docutils literal notranslate"><span class="pre">mymodel.types</span></code>, we can add the import for it
+as we encounter the type:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">render_item</span><span class="p">(</span><span class="n">type_</span><span class="p">,</span> <span class="n">obj</span><span class="p">,</span> <span class="n">autogen_context</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Apply custom rendering for selected items.&quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="n">type_</span> <span class="o">==</span> <span class="s1">&#39;type&#39;</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">MySpecialType</span><span class="p">):</span>
+        <span class="c1"># add import for this type</span>
+        <span class="n">autogen_context</span><span class="o">.</span><span class="n">imports</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="s2">&quot;from mymodel import types&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="s2">&quot;types.</span><span class="si">%r</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">obj</span>
+
+    <span class="c1"># default rendering for other objects</span>
+    <span class="k">return</span> <span class="kc">False</span>
+</pre></div>
+</div>
+<p>The finished migration script will include our imports where the
+<code class="docutils literal notranslate"><span class="pre">${imports}</span></code> expression is used, producing output such as:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">alembic</span> <span class="kn">import</span> <span class="n">op</span>
+<span class="kn">import</span> <span class="nn">sqlalchemy</span> <span class="k">as</span> <span class="nn">sa</span>
+<span class="kn">from</span> <span class="nn">mymodel</span> <span class="kn">import</span> <span class="n">types</span>
+
+<span class="k">def</span> <span class="nf">upgrade</span><span class="p">():</span>
+    <span class="n">op</span><span class="o">.</span><span class="n">add_column</span><span class="p">(</span><span class="s1">&#39;sometable&#39;</span><span class="p">,</span> <span class="n">Column</span><span class="p">(</span><span class="s1">&#39;mycolumn&#39;</span><span class="p">,</span> <span class="n">types</span><span class="o">.</span><span class="n">MySpecialType</span><span class="p">()))</span>
+</pre></div>
+</div>
+</section>
+<section id="comparing-types">
+<span id="compare-types"></span><h3>Comparing Types<a class="headerlink" href="#comparing-types" title="Permalink to this headline">¶</a></h3>
+<p>The default type comparison logic will work for SQLAlchemy built in types as
+well as basic user defined types.   This logic is only enabled if the
+<a class="reference internal" href="api/runtime.html#alembic.runtime.environment.EnvironmentContext.configure.params.compare_type" title="alembic.runtime.environment.EnvironmentContext.configure"><code class="xref py py-paramref docutils literal notranslate"><span class="pre">EnvironmentContext.configure.compare_type</span></code></a> parameter
+is set to True:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">context</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span>
+    <span class="c1"># ...</span>
+    <span class="n">compare_type</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The default type comparison logic (which is end-user extensible) currently
+(as of Alembic version 1.4.0) works by comparing the generated SQL for a
+column. It does this in two steps-</p>
+<ul class="simple">
+<li><p>First, it compares the outer type of each column such as <code class="docutils literal notranslate"><span class="pre">VARCHAR</span></code>
+or <code class="docutils literal notranslate"><span class="pre">TEXT</span></code>. Dialect implementations can have synonyms that are considered
+equivalent- this is because some databases support types by converting them
+to another type. For example, NUMERIC and DECIMAL are considered equivalent
+on all backends, while on the Oracle backend the additional synonyms
+BIGINT, INTEGER, NUMBER, SMALLINT are added to this list of equivalents</p></li>
+<li><p>Next, the arguments within the type, such as the lengths of
+strings, precision values for numerics, the elements inside of an
+enumeration are compared. If BOTH columns have arguments AND they are
+different, a change will be detected. If one column is just set to the
+default and the other has arguments, Alembic will pass on attempting to
+compare these. The rationale is that it is difficult to detect what a
+database backend sets as a default value without generating false
+positives.</p></li>
+</ul>
+</div>
+<div class="versionchanged">
+<p><span class="versionmodified changed">Changed in version 1.4.0: </span>Added the text and keyword comparison for column types</p>
+</div>
+<p>Alternatively, the <a class="reference internal" href="api/runtime.html#alembic.runtime.environment.EnvironmentContext.configure.params.compare_type" title="alembic.runtime.environment.EnvironmentContext.configure"><code class="xref py py-paramref docutils literal notranslate"><span class="pre">EnvironmentContext.configure.compare_type</span></code></a>
+parameter accepts a callable function which may be used to implement custom type
+comparison logic, for cases such as where special user defined types
+are being used:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">my_compare_type</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="n">inspected_column</span><span class="p">,</span>
+            <span class="n">metadata_column</span><span class="p">,</span> <span class="n">inspected_type</span><span class="p">,</span> <span class="n">metadata_type</span><span class="p">):</span>
+    <span class="c1"># return False if the metadata_type is the same as the inspected_type</span>
+    <span class="c1"># or None to allow the default implementation to compare these</span>
+    <span class="c1"># types. a return value of True means the two types do not</span>
+    <span class="c1"># match and should result in a type change operation.</span>
+    <span class="k">return</span> <span class="kc">None</span>
+
+<span class="n">context</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span>
+    <span class="c1"># ...</span>
+    <span class="n">compare_type</span> <span class="o">=</span> <span class="n">my_compare_type</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>Above, <code class="docutils literal notranslate"><span class="pre">inspected_column</span></code> is a <a class="reference external" href="https://docs.sqlalchemy.org/en/14/core/metadata.html#sqlalchemy.schema.Column" title="(in SQLAlchemy v1.4)"><code class="xref py py-class docutils literal notranslate"><span class="pre">sqlalchemy.schema.Column</span></code></a> as
+returned by
+<a class="reference external" href="https://docs.sqlalchemy.org/en/14/core/reflection.html#sqlalchemy.engine.reflection.Inspector.reflect_table" title="(in SQLAlchemy v1.4)"><code class="xref py py-meth docutils literal notranslate"><span class="pre">sqlalchemy.engine.reflection.Inspector.reflect_table()</span></code></a>, whereas
+<code class="docutils literal notranslate"><span class="pre">metadata_column</span></code> is a <a class="reference external" href="https://docs.sqlalchemy.org/en/14/core/metadata.html#sqlalchemy.schema.Column" title="(in SQLAlchemy v1.4)"><code class="xref py py-class docutils literal notranslate"><span class="pre">sqlalchemy.schema.Column</span></code></a> from the
+local model environment.  A return value of <code class="docutils literal notranslate"><span class="pre">None</span></code> indicates that default
+type comparison to proceed.</p>
+<p>Additionally, custom types that are part of imported or third party
+packages which have special behaviors such as per-dialect behavior
+should implement a method called <code class="docutils literal notranslate"><span class="pre">compare_against_backend()</span></code>
+on their SQLAlchemy type.   If this method is present, it will be called
+where it can also return True or False to specify the types compare as
+equivalent or not; if it returns None, default type comparison logic
+will proceed:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">MySpecialType</span><span class="p">(</span><span class="n">TypeDecorator</span><span class="p">):</span>
+
+    <span class="c1"># ...</span>
+
+    <span class="k">def</span> <span class="nf">compare_against_backend</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dialect</span><span class="p">,</span> <span class="n">conn_type</span><span class="p">):</span>
+        <span class="c1"># return True if this type is the same as the given database type,</span>
+        <span class="c1"># or None to allow the default implementation to compare these</span>
+        <span class="c1"># types. a return value of False means the given type does not</span>
+        <span class="c1"># match this type.</span>
+
+        <span class="k">if</span> <span class="n">dialect</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s1">&#39;postgresql&#39;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">conn_type</span><span class="p">,</span> <span class="n">postgresql</span><span class="o">.</span><span class="n">UUID</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">conn_type</span><span class="p">,</span> <span class="n">String</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>The boolean return values for the above
+<code class="docutils literal notranslate"><span class="pre">compare_against_backend</span></code> method, which is part of SQLAlchemy and not
+Alembic,are <strong>the opposite</strong> of that of the
+<a class="reference internal" href="api/runtime.html#alembic.runtime.environment.EnvironmentContext.configure.params.compare_type" title="alembic.runtime.environment.EnvironmentContext.configure"><code class="xref py py-paramref docutils literal notranslate"><span class="pre">EnvironmentContext.configure.compare_type</span></code></a> callable, returning
+<code class="docutils literal notranslate"><span class="pre">True</span></code> for types that are the same vs. <code class="docutils literal notranslate"><span class="pre">False</span></code> for types that are
+different.The <a class="reference internal" href="api/runtime.html#alembic.runtime.environment.EnvironmentContext.configure.params.compare_type" title="alembic.runtime.environment.EnvironmentContext.configure"><code class="xref py py-paramref docutils literal notranslate"><span class="pre">EnvironmentContext.configure.compare_type</span></code></a>
+callable on the other hand should return <code class="docutils literal notranslate"><span class="pre">True</span></code> for types that are
+<strong>different</strong>.</p>
+</div>
+<p>The order of precedence regarding the
+<a class="reference internal" href="api/runtime.html#alembic.runtime.environment.EnvironmentContext.configure.params.compare_type" title="alembic.runtime.environment.EnvironmentContext.configure"><code class="xref py py-paramref docutils literal notranslate"><span class="pre">EnvironmentContext.configure.compare_type</span></code></a> callable vs. the
+type itself implementing <code class="docutils literal notranslate"><span class="pre">compare_against_backend</span></code> is that the
+<a class="reference internal" href="api/runtime.html#alembic.runtime.environment.EnvironmentContext.configure.params.compare_type" title="alembic.runtime.environment.EnvironmentContext.configure"><code class="xref py py-paramref docutils literal notranslate"><span class="pre">EnvironmentContext.configure.compare_type</span></code></a> callable is favored
+first; if it returns <code class="docutils literal notranslate"><span class="pre">None</span></code>, then the <code class="docutils literal notranslate"><span class="pre">compare_against_backend</span></code> method
+will be used, if present on the metadata type.  If that returns <code class="docutils literal notranslate"><span class="pre">None</span></code>,
+then a basic check for type equivalence is run.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in version 1.4.0: </span>- added column keyword comparisons and the
+<code class="docutils literal notranslate"><span class="pre">type_synonyms</span></code> property.</p>
+</div>
+</section>
+</section>
+<section id="applying-post-processing-and-python-code-formatters-to-generated-revisions">
+<span id="post-write-hooks"></span><h2>Applying Post Processing and Python Code Formatters to Generated Revisions<a class="headerlink" href="#applying-post-processing-and-python-code-formatters-to-generated-revisions" title="Permalink to this headline">¶</a></h2>
+<p>Revision scripts generated by the <code class="docutils literal notranslate"><span class="pre">alembic</span> <span class="pre">revision</span></code> command can optionally
+be piped through a series of post-production functions which may analyze or
+rewrite Python source code generated by Alembic, within the scope of running
+the <code class="docutils literal notranslate"><span class="pre">revision</span></code> command.   The primary intended use of this feature is to run
+code-formatting tools such as <a class="reference external" href="https://black.readthedocs.io/">Black</a> or
+<a class="reference external" href="https://pypi.org/project/autopep8/">autopep8</a>, as well as custom-written
+formatting and linter functions, on revision files as Alembic generates them.
+Any number of hooks can be configured and they will be run in series, given the
+path to the newly generated file as well as configuration options.</p>
+<p>The post write hooks, when configured,  run against generated revision files
+regardless of whether or not the autogenerate feature was used.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in version 1.2.</span></p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Alembic’s post write system is partially inspired by the <a class="reference external" href="https://pre-commit.com/">pre-commit</a> tool, which configures git hooks that reformat
+source files as they are committed to a git repository.  Pre-commit can
+serve this role for Alembic revision files as well, applying code
+formatters to them as they are committed.  Alembic’s post write hooks are
+useful only in that they can format the files immediately upon generation,
+rather than at commit time, and also can be useful for projects that prefer
+not to use pre-commit.</p>
+</div>
+<section id="basic-formatter-configuration">
+<h3>Basic Formatter Configuration<a class="headerlink" href="#basic-formatter-configuration" title="Permalink to this headline">¶</a></h3>
+<p>The <code class="docutils literal notranslate"><span class="pre">alembic.ini</span></code> samples now include commented-out configuration
+illustrating how to configure code-formatting tools to run against the newly
+generated file path.    Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">post_write_hooks</span><span class="p">]</span>
+
+<span class="c1"># format using &quot;black&quot;</span>
+<span class="n">hooks</span><span class="o">=</span><span class="n">black</span>
+
+<span class="n">black</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span class="n">console_scripts</span>
+<span class="n">black</span><span class="o">.</span><span class="n">entrypoint</span> <span class="o">=</span> <span class="n">black</span>
+<span class="n">black</span><span class="o">.</span><span class="n">options</span> <span class="o">=</span> <span class="o">-</span><span class="n">l</span> <span class="mi">79</span>
+</pre></div>
+</div>
+<p>Above, we configure <code class="docutils literal notranslate"><span class="pre">hooks</span></code> to be a single post write hook labeled
+<code class="docutils literal notranslate"><span class="pre">&quot;black&quot;</span></code>.   Note that this label is arbitrary.   We then define the
+configuration for the <code class="docutils literal notranslate"><span class="pre">&quot;black&quot;</span></code> post write hook, which includes:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">type</span></code> - this is the type of hook we are running.  Alembic includes
+a hook runner called <code class="docutils literal notranslate"><span class="pre">&quot;console_scripts&quot;</span></code>, which is specifically a
+Python function that uses <code class="docutils literal notranslate"><span class="pre">subprocess.run()</span></code> to invoke a separate
+Python script against the revision file.  For a custom-written hook
+function, this configuration variable would refer to the name under
+which the custom hook was registered; see the next section for an example.</p></li>
+</ul>
+<p>The following configuration options are specific to the <code class="docutils literal notranslate"><span class="pre">&quot;console_scripts&quot;</span></code>
+hook runner:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">entrypoint</span></code> - the name of the <a class="reference external" href="https://setuptools.readthedocs.io/en/latest/pkg_resources.html#entry-points">setuptools entrypoint</a>
+that is used to define the console script.   Within the scope of standard
+Python console scripts, this name will match the name of the shell command
+that is usually run for the code formatting tool, in this case <code class="docutils literal notranslate"><span class="pre">black</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">options</span></code> - a line of command-line options that will be passed to
+the code formatting tool.  In this case, we want to run the command
+<code class="docutils literal notranslate"><span class="pre">black</span> <span class="pre">/path/to/revision.py</span> <span class="pre">-l</span> <span class="pre">79</span></code>.  By default, the revision path is
+positioned as the first argument.  In order specify a different position,
+we can use the <code class="docutils literal notranslate"><span class="pre">REVISION_SCRIPT_FILENAME</span></code> token as illustrated by the
+subsequent examples.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Make sure options for the script are provided such that it will
+rewrite the input file <strong>in place</strong>.  For example, when running
+<code class="docutils literal notranslate"><span class="pre">autopep8</span></code>, the <code class="docutils literal notranslate"><span class="pre">--in-place</span></code> option should be provided:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">post_write_hooks</span><span class="p">]</span>
+<span class="n">hooks</span> <span class="o">=</span> <span class="n">autopep8</span>
+<span class="n">autopep8</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span class="n">console_scripts</span>
+<span class="n">autopep8</span><span class="o">.</span><span class="n">entrypoint</span> <span class="o">=</span> <span class="n">autopep8</span>
+<span class="n">autopep8</span><span class="o">.</span><span class="n">options</span> <span class="o">=</span> <span class="o">--</span><span class="ow">in</span><span class="o">-</span><span class="n">place</span> <span class="n">REVISION_SCRIPT_FILENAME</span>
+</pre></div>
+</div>
+</div>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">cwd</span></code> - optional working directory from which the console script is run.</p></li>
+</ul>
+<p>When running <code class="docutils literal notranslate"><span class="pre">alembic</span> <span class="pre">revision</span> <span class="pre">-m</span> <span class="pre">&quot;rev1&quot;</span></code>, we will now see the <code class="docutils literal notranslate"><span class="pre">black</span></code>
+tool’s output as well:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ alembic revision -m &quot;rev1&quot;
+  Generating /path/to/project/versions/481b13bc369a_rev1.py ... done
+  Running post write hook &quot;black&quot; ...
+reformatted /path/to/project/versions/481b13bc369a_rev1.py
+All done! ✨ 🍰 ✨
+1 file reformatted.
+  done
+</pre></div>
+</div>
+<p>Hooks may also be specified as a list of names, which correspond to hook
+runners that will run sequentially.  As an example, we can also run the
+<a class="reference external" href="https://pypi.org/project/zimports/">zimports</a> import rewriting tool (written
+by Alembic’s author) subsequent to running the <code class="docutils literal notranslate"><span class="pre">black</span></code> tool, using a
+configuration as follows:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">post_write_hooks</span><span class="p">]</span>
+
+<span class="c1"># format using &quot;black&quot;, then &quot;zimports&quot;</span>
+<span class="n">hooks</span><span class="o">=</span><span class="n">black</span><span class="p">,</span> <span class="n">zimports</span>
+
+<span class="n">black</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span class="n">console_scripts</span>
+<span class="n">black</span><span class="o">.</span><span class="n">entrypoint</span> <span class="o">=</span> <span class="n">black</span>
+<span class="n">black</span><span class="o">.</span><span class="n">options</span> <span class="o">=</span> <span class="o">-</span><span class="n">l</span> <span class="mi">79</span> <span class="n">REVISION_SCRIPT_FILENAME</span>
+
+<span class="n">zimports</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span class="n">console_scripts</span>
+<span class="n">zimports</span><span class="o">.</span><span class="n">entrypoint</span> <span class="o">=</span> <span class="n">zimports</span>
+<span class="n">zimports</span><span class="o">.</span><span class="n">options</span> <span class="o">=</span> <span class="o">--</span><span class="n">style</span> <span class="n">google</span> <span class="n">REVISION_SCRIPT_FILENAME</span>
+</pre></div>
+</div>
+<p>When using the above configuration, a newly generated revision file will
+be processed first by the “black” tool, then by the “zimports” tool.</p>
+<p>Alternatively, one can run pre-commit itself as follows:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">post_write_hooks</span><span class="p">]</span>
+
+<span class="n">hooks</span> <span class="o">=</span> <span class="n">pre</span><span class="o">-</span><span class="n">commit</span>
+
+<span class="n">pre</span><span class="o">-</span><span class="n">commit</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span class="n">console_scripts</span>
+<span class="n">pre</span><span class="o">-</span><span class="n">commit</span><span class="o">.</span><span class="n">entrypoint</span> <span class="o">=</span> <span class="n">pre</span><span class="o">-</span><span class="n">commit</span>
+<span class="n">pre</span><span class="o">-</span><span class="n">commit</span><span class="o">.</span><span class="n">options</span> <span class="o">=</span> <span class="n">run</span> <span class="o">--</span><span class="n">files</span> <span class="n">REVISION_SCRIPT_FILENAME</span>
+<span class="n">pre</span><span class="o">-</span><span class="n">commit</span><span class="o">.</span><span class="n">cwd</span> <span class="o">=</span> <span class="o">%</span><span class="p">(</span><span class="n">here</span><span class="p">)</span><span class="n">s</span>
+</pre></div>
+</div>
+<p>(The last line helps to ensure that the <code class="docutils literal notranslate"><span class="pre">.pre-commit-config.yaml</span></code> file
+will always be found, regardless of from where the hook was called.)</p>
+</section>
+<section id="writing-custom-hooks-as-python-functions">
+<span id="post-write-hooks-custom"></span><h3>Writing Custom Hooks as Python Functions<a class="headerlink" href="#writing-custom-hooks-as-python-functions" title="Permalink to this headline">¶</a></h3>
+<p>The previous section illustrated how to run command-line code formatters,
+through the use of a post write hook provided by Alembic known as
+<code class="docutils literal notranslate"><span class="pre">console_scripts</span></code>.  This hook is in fact a Python function that is registered
+under that name using a registration function that may be used to register
+other types of hooks as well.</p>
+<p>To illustrate, we will use the example of a short Python function that wants
+to rewrite the generated code to use tabs instead of four spaces.   For simplicity,
+we will illustrate how this function can be present directly in the <code class="docutils literal notranslate"><span class="pre">env.py</span></code>
+file.   The function is declared and registered using the <a class="reference internal" href="api/script.html#alembic.script.write_hooks.register" title="alembic.script.write_hooks.register"><code class="xref py py-func docutils literal notranslate"><span class="pre">write_hooks.register()</span></code></a>
+decorator:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">alembic.script</span> <span class="kn">import</span> <span class="n">write_hooks</span>
+<span class="kn">import</span> <span class="nn">re</span>
+
+<span class="nd">@write_hooks</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s2">&quot;spaces_to_tabs&quot;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">convert_spaces_to_tabs</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">options</span><span class="p">):</span>
+    <span class="n">lines</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span> <span class="k">as</span> <span class="n">file_</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">file_</span><span class="p">:</span>
+            <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span>
+                    <span class="sa">r</span><span class="s2">&quot;^(    )+&quot;</span><span class="p">,</span>
+                    <span class="k">lambda</span> <span class="n">m</span><span class="p">:</span> <span class="s2">&quot;</span><span class="se">\t</span><span class="s2">&quot;</span> <span class="o">*</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span> <span class="o">//</span> <span class="mi">4</span><span class="p">),</span>
+                    <span class="n">line</span>
+                <span class="p">)</span>
+            <span class="p">)</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">to_write</span><span class="p">:</span>
+        <span class="n">to_write</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">lines</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>Our new <code class="docutils literal notranslate"><span class="pre">&quot;spaces_to_tabs&quot;</span></code> hook can be configured in alembic.ini as follows:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">alembic</span><span class="p">]</span>
+
+<span class="c1"># ...</span>
+
+<span class="c1"># ensure the revision command loads env.py</span>
+<span class="n">revision_environment</span> <span class="o">=</span> <span class="n">true</span>
+
+<span class="p">[</span><span class="n">post_write_hooks</span><span class="p">]</span>
+
+<span class="n">hooks</span> <span class="o">=</span> <span class="n">spaces_to_tabs</span>
+
+<span class="n">spaces_to_tabs</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span class="n">spaces_to_tabs</span>
+</pre></div>
+</div>
+<p>When <code class="docutils literal notranslate"><span class="pre">alembic</span> <span class="pre">revision</span></code> is run, the <code class="docutils literal notranslate"><span class="pre">env.py</span></code> file will be loaded in all
+cases, the custom “spaces_to_tabs” function will be registered and it will then
+be run against the newly generated file path:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ alembic revision -m &quot;rev1&quot;
+  Generating /path/to/project/versions/481b13bc369a_rev1.py ... done
+  Running post write hook &quot;spaces_to_tabs&quot; ...
+  done
+</pre></div>
+</div>
+</section>
+</section>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><script async type="text/javascript" src="//cdn.carbonads.com/carbon.js?serve=CKYIL23W&placement=alembiczzzcomputingcom" id="_carbonads_js"></script>
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-28532944-2', 'auto');
+  ga('send', 'pageview');
+
+</script>
+
+
+<p>
+<a href="alembic_latest.zip">Download documentation as ZIP file</a>
+</p>
+
+
+  <h3><a href="index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Auto Generating Migrations</a><ul>
+<li><a class="reference internal" href="#what-does-autogenerate-detect-and-what-does-it-not-detect">What does Autogenerate Detect (and what does it <em>not</em> detect?)</a></li>
+<li><a class="reference internal" href="#autogenerating-multiple-metadata-collections">Autogenerating Multiple MetaData collections</a></li>
+<li><a class="reference internal" href="#controlling-what-to-be-autogenerated">Controlling What to be Autogenerated</a><ul>
+<li><a class="reference internal" href="#omitting-schema-names-from-the-autogenerate-process">Omitting Schema Names from the Autogenerate Process</a></li>
+<li><a class="reference internal" href="#omitting-table-names-from-the-autogenerate-process">Omitting Table Names from the Autogenerate Process</a></li>
+<li><a class="reference internal" href="#omitting-based-on-object">Omitting Based on Object</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#comparing-and-rendering-types">Comparing and Rendering Types</a><ul>
+<li><a class="reference internal" href="#controlling-the-module-prefix">Controlling the Module Prefix</a></li>
+<li><a class="reference internal" href="#affecting-the-rendering-of-types-themselves">Affecting the Rendering of Types Themselves</a></li>
+<li><a class="reference internal" href="#comparing-types">Comparing Types</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#applying-post-processing-and-python-code-formatters-to-generated-revisions">Applying Post Processing and Python Code Formatters to Generated Revisions</a><ul>
+<li><a class="reference internal" href="#basic-formatter-configuration">Basic Formatter Configuration</a></li>
+<li><a class="reference internal" href="#writing-custom-hooks-as-python-functions">Writing Custom Hooks as Python Functions</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="tutorial.html"
+                        title="previous chapter">Tutorial</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="offline.html"
+                        title="next chapter">Generating SQL Scripts (a.k.a. “Offline Mode”)</a></p>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="offline.html" title="Generating SQL Scripts (a.k.a. “Offline Mode”)"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="tutorial.html" title="Tutorial"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Alembic 1.7.5 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Auto Generating Migrations</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2010-2021, Mike Bayer.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.2.0.
+    </div>
+  </body>
+</html>

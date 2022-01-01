@@ -1,0 +1,924 @@
+<!DOCTYPE HTML>
+<html lang="en" class="sidebar-visible no-js light">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>alembic 中文文档</title>
+        <meta name="robots" content="noindex" />
+        <!-- Custom HTML head -->
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff" />
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="highlight.css">
+        <link rel="stylesheet" href="tomorrow-night.css">
+        <link rel="stylesheet" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+    </head>
+    <body>
+        <!-- Provide site root to javascript -->
+        <script type="text/javascript">
+            var path_to_root = "";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script type="text/javascript">
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script type="text/javascript">
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            var html = document.querySelector('html');
+            html.classList.remove('no-js')
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add('js');
+        </script>
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script type="text/javascript">
+            var html = document.querySelector('html');
+            var sidebar = 'hidden';
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            }
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li class="chapter-item expanded affix "><a href="zh/_front_matter.html">前言</a></li><li class="spacer"></li><li class="chapter-item expanded "><a href="zh/00_tutorial.html"><strong aria-hidden="true">1.</strong> 指南</a></li><li class="chapter-item expanded "><a href="zh/01_auto_generating_migrations.html"><strong aria-hidden="true">2.</strong> 自动生成迁移</a></li><li class="chapter-item expanded "><a href="zh/02_generating_sql_scripts.html"><strong aria-hidden="true">3.</strong> 生成SQL脚本(又称离线模式)</a></li><li class="chapter-item expanded "><a href="zh/03_the_importance_of_naming_constraints.html"><strong aria-hidden="true">4.</strong> 命名约束的重要性</a></li><li class="chapter-item expanded "><a href="zh/04_running_batch_migrations_for_sqlite_and_other_databases.html"><strong aria-hidden="true">5.</strong> 在SQLite和其他数据中运行&quot;Batch&quot;迁移脚本</a></li><li class="chapter-item expanded "><a href="zh/05_working_with_branches.html"><strong aria-hidden="true">6.</strong> 工作分支</a></li><li class="chapter-item expanded "><a href="zh/06_operation_reference.html"><strong aria-hidden="true">7.</strong> 操作参考</a></li><li class="chapter-item expanded "><a href="zh/07_cook_book.html"><strong aria-hidden="true">8.</strong> cookbook</a></li><li class="chapter-item expanded "><a href="zh/08_api_details.html"><strong aria-hidden="true">9.</strong> API详细</a></li><li class="chapter-item expanded "><a href="zh/09_change_log.html"><strong aria-hidden="true">10.</strong> 更新历史</a></li><li class="spacer"></li><li class="chapter-item expanded affix "><a href="en/index.html">原文 - 英文</a></li></ol>
+            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky bordered">
+                    <div class="left-buttons">
+                        <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </button>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light (default)</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">alembic 中文文档</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script type="text/javascript">
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="前言"><a class="header" href="#前言">前言</a></h1>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="指南"><a class="header" href="#指南">指南</a></h1>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="自动生成迁移"><a class="header" href="#自动生成迁移">自动生成迁移</a></h1>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="生成sql脚本又称离线模式"><a class="header" href="#生成sql脚本又称离线模式">生成SQL脚本(又称离线模式)</a></h1>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="命名约束的重要性"><a class="header" href="#命名约束的重要性">命名约束的重要性</a></h1>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="在sqlite和其他数据中运行batch迁移脚本"><a class="header" href="#在sqlite和其他数据中运行batch迁移脚本">在SQLite和其他数据中运行&quot;Batch&quot;迁移脚本</a></h1>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="工作分支"><a class="header" href="#工作分支">工作分支</a></h1>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="操作参考"><a class="header" href="#操作参考">操作参考</a></h1>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="cookbook"><a class="header" href="#cookbook">cookbook</a></h1>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="api详细"><a class="header" href="#api详细">API详细</a></h1>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="更新历史"><a class="header" href="#更新历史">更新历史</a></h1>
+<div style="break-before: page; page-break-before: always;"></div><!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+<pre><code>&lt;title&gt;Welcome to Alembic’s documentation! &amp;#8212; Alembic 1.7.5 documentation&lt;/title&gt;
+&lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; href=&quot;_static/pygments.css&quot; /&gt;
+&lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; href=&quot;_static/nature_override.css&quot; /&gt;
+&lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; href=&quot;_static/changelog.css&quot; /&gt;
+&lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; href=&quot;_static/sphinx_paramlinks.css&quot; /&gt;
+&lt;script data-url_root=&quot;./&quot; id=&quot;documentation_options&quot; src=&quot;_static/documentation_options.js&quot;&gt;&lt;/script&gt;
+&lt;script src=&quot;_static/jquery.js&quot;&gt;&lt;/script&gt;
+&lt;script src=&quot;_static/underscore.js&quot;&gt;&lt;/script&gt;
+&lt;script src=&quot;_static/doctools.js&quot;&gt;&lt;/script&gt;
+&lt;link rel=&quot;index&quot; title=&quot;Index&quot; href=&quot;genindex.html&quot; /&gt;
+&lt;link rel=&quot;search&quot; title=&quot;Search&quot; href=&quot;search.html&quot; /&gt;
+&lt;link rel=&quot;next&quot; title=&quot;Front Matter&quot; href=&quot;front.html&quot; /&gt; 
+</code></pre>
+</head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3 id="navigation"><a class="header" href="#navigation">Navigation</a></h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="en/genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="en/py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="en/front.html" title="Front Matter"
+             accesskey="N">next</a> |</li>
+        <li class="nav-item nav-item-0"><a href="en/index.html#">Alembic 1.7.5 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Welcome to Alembic’s documentation!</a></li> 
+      </ul>
+    </div>  
+<pre><code>&lt;div class=&quot;document&quot;&gt;
+  &lt;div class=&quot;documentwrapper&quot;&gt;
+    &lt;div class=&quot;bodywrapper&quot;&gt;
+      &lt;div class=&quot;body&quot; role=&quot;main&quot;&gt;
+</code></pre>
+<section id="welcome-to-alembic-s-documentation">
+<h1 id="welcome-to-alembics-documentation"><a class="header" href="#welcome-to-alembics-documentation">Welcome to Alembic’s documentation!<a class="headerlink" href="en/index.html#welcome-to-alembic-s-documentation" title="Permalink to this headline">¶</a></a></h1>
+<p><a class="reference external" href="https://alembic.sqlalchemy.org">Alembic</a> is a lightweight database migration tool for usage
+with the <a class="reference external" href="https://www.sqlalchemy.org">SQLAlchemy</a> Database Toolkit for Python.</p>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="en/front.html">Front Matter</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="en/front.html#project-homepage">Project Homepage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="en/front.html#installation">Installation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="en/front.html#dependencies">Dependencies</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="en/front.html#community">Community</a></li>
+<li class="toctree-l2"><a class="reference internal" href="en/front.html#bugs">Bugs</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="en/tutorial.html">Tutorial</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="en/tutorial.html#the-migration-environment">The Migration Environment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="en/tutorial.html#creating-an-environment">Creating an Environment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="en/tutorial.html#editing-the-ini-file">Editing the .ini File</a></li>
+<li class="toctree-l2"><a class="reference internal" href="en/tutorial.html#create-a-migration-script">Create a Migration Script</a></li>
+<li class="toctree-l2"><a class="reference internal" href="en/tutorial.html#running-our-first-migration">Running our First Migration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="en/tutorial.html#running-our-second-migration">Running our Second Migration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="en/tutorial.html#partial-revision-identifiers">Partial Revision Identifiers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="en/tutorial.html#relative-migration-identifiers">Relative Migration Identifiers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="en/tutorial.html#getting-information">Getting Information</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="en/tutorial.html#viewing-history-ranges">Viewing History Ranges</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="en/tutorial.html#downgrading">Downgrading</a></li>
+<li class="toctree-l2"><a class="reference internal" href="en/tutorial.html#next-steps">Next Steps</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="en/autogenerate.html">Auto Generating Migrations</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="en/autogenerate.html#what-does-autogenerate-detect-and-what-does-it-not-detect">What does Autogenerate Detect (and what does it <em>not</em> detect?)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="en/autogenerate.html#autogenerating-multiple-metadata-collections">Autogenerating Multiple MetaData collections</a></li>
+<li class="toctree-l2"><a class="reference internal" href="en/autogenerate.html#controlling-what-to-be-autogenerated">Controlling What to be Autogenerated</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="en/autogenerate.html#omitting-schema-names-from-the-autogenerate-process">Omitting Schema Names from the Autogenerate Process</a></li>
+<li class="toctree-l3"><a class="reference internal" href="en/autogenerate.html#omitting-table-names-from-the-autogenerate-process">Omitting Table Names from the Autogenerate Process</a></li>
+<li class="toctree-l3"><a class="reference internal" href="en/autogenerate.html#omitting-based-on-object">Omitting Based on Object</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="en/autogenerate.html#comparing-and-rendering-types">Comparing and Rendering Types</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="en/autogenerate.html#controlling-the-module-prefix">Controlling the Module Prefix</a></li>
+<li class="toctree-l3"><a class="reference internal" href="en/autogenerate.html#affecting-the-rendering-of-types-themselves">Affecting the Rendering of Types Themselves</a></li>
+<li class="toctree-l3"><a class="reference internal" href="en/autogenerate.html#comparing-types">Comparing Types</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="en/autogenerate.html#applying-post-processing-and-python-code-formatters-to-generated-revisions">Applying Post Processing and Python Code Formatters to Generated Revisions</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="en/autogenerate.html#basic-formatter-configuration">Basic Formatter Configuration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="en/autogenerate.html#writing-custom-hooks-as-python-functions">Writing Custom Hooks as Python Functions</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="en/offline.html">Generating SQL Scripts (a.k.a. “Offline Mode”)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="en/offline.html#getting-the-start-version">Getting the Start Version</a></li>
+<li class="toctree-l2"><a class="reference internal" href="en/offline.html#writing-migration-scripts-to-support-script-generation">Writing Migration Scripts to Support Script Generation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="en/offline.html#customizing-the-environment">Customizing the Environment</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="en/naming.html">The Importance of Naming Constraints</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="en/naming.html#integration-of-naming-conventions-into-operations-autogenerate">Integration of Naming Conventions into Operations, Autogenerate</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="en/batch.html">Running “Batch” Migrations for SQLite and Other Databases</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="en/batch.html#controlling-table-reflection">Controlling Table Reflection</a></li>
+<li class="toctree-l2"><a class="reference internal" href="en/batch.html#dealing-with-constraints">Dealing with Constraints</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="en/batch.html#dropping-unnamed-or-named-foreign-key-constraints">Dropping Unnamed or Named Foreign Key Constraints</a></li>
+<li class="toctree-l3"><a class="reference internal" href="en/batch.html#including-unnamed-unique-constraints">Including unnamed UNIQUE constraints</a></li>
+<li class="toctree-l3"><a class="reference internal" href="en/batch.html#changing-the-type-of-boolean-enum-and-other-implicit-check-datatypes">Changing the Type of Boolean, Enum and other implicit CHECK datatypes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="en/batch.html#including-check-constraints">Including CHECK constraints</a></li>
+<li class="toctree-l3"><a class="reference internal" href="en/batch.html#dealing-with-referencing-foreign-keys">Dealing with Referencing Foreign Keys</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="en/batch.html#working-in-offline-mode">Working in Offline Mode</a></li>
+<li class="toctree-l2"><a class="reference internal" href="en/batch.html#batch-mode-with-autogenerate">Batch mode with Autogenerate</a></li>
+<li class="toctree-l2"><a class="reference internal" href="en/batch.html#batch-mode-with-databases-other-than-sqlite">Batch mode with databases other than SQLite</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="en/branches.html">Working with Branches</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="en/branches.html#merging-branches">Merging Branches</a></li>
+<li class="toctree-l2"><a class="reference internal" href="en/branches.html#working-with-explicit-branches">Working with Explicit Branches</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="en/branches.html#referring-to-all-heads-at-once">Referring to all heads at once</a></li>
+<li class="toctree-l3"><a class="reference internal" href="en/branches.html#referring-to-a-specific-version">Referring to a Specific Version</a></li>
+<li class="toctree-l3"><a class="reference internal" href="en/branches.html#working-with-branch-labels">Working with Branch Labels</a></li>
+<li class="toctree-l3"><a class="reference internal" href="en/branches.html#more-label-syntaxes">More Label Syntaxes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="en/branches.html#working-with-multiple-bases">Working with Multiple Bases</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="en/branches.html#setting-up-multiple-version-directories">Setting up Multiple Version Directories</a></li>
+<li class="toctree-l3"><a class="reference internal" href="en/branches.html#creating-a-labeled-base-revision">Creating a Labeled Base Revision</a></li>
+<li class="toctree-l3"><a class="reference internal" href="en/branches.html#running-with-multiple-bases">Running with Multiple Bases</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="en/branches.html#branch-dependencies">Branch Dependencies</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="en/ops.html">Operation Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="en/cookbook.html">Cookbook</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="en/cookbook.html#building-an-up-to-date-database-from-scratch">Building an Up to Date Database from Scratch</a></li>
+<li class="toctree-l2"><a class="reference internal" href="en/cookbook.html#conditional-migration-elements">Conditional Migration Elements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="en/cookbook.html#sharing-a-connection-with-a-series-of-migration-commands-and-environments">Sharing a Connection with a Series of Migration Commands and Environments</a></li>
+<li class="toctree-l2"><a class="reference internal" href="en/cookbook.html#replaceable-objects">Replaceable Objects</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="en/cookbook.html#the-replaceable-object-structure">The Replaceable Object Structure</a></li>
+<li class="toctree-l3"><a class="reference internal" href="en/cookbook.html#create-operations-for-the-target-objects">Create Operations for the Target Objects</a></li>
+<li class="toctree-l3"><a class="reference internal" href="en/cookbook.html#create-initial-migrations">Create Initial Migrations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="en/cookbook.html#create-revision-migrations">Create Revision Migrations</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="en/cookbook.html#rudimental-schema-level-multi-tenancy-for-postgresql-databases">Rudimental Schema-Level Multi Tenancy for PostgreSQL Databases</a></li>
+<li class="toctree-l2"><a class="reference internal" href="en/cookbook.html#don-t-generate-empty-migrations-with-autogenerate">Don’t Generate Empty Migrations with Autogenerate</a></li>
+<li class="toctree-l2"><a class="reference internal" href="en/cookbook.html#don-t-emit-drop-index-when-the-table-is-to-be-dropped-as-well">Don’t emit DROP INDEX when the table is to be dropped as well</a></li>
+<li class="toctree-l2"><a class="reference internal" href="en/cookbook.html#don-t-generate-any-drop-table-directives-with-autogenerate">Don’t generate any DROP TABLE directives with autogenerate</a></li>
+<li class="toctree-l2"><a class="reference internal" href="en/cookbook.html#apply-custom-sorting-to-table-columns-within-create-table">Apply Custom Sorting to Table Columns within CREATE TABLE</a></li>
+<li class="toctree-l2"><a class="reference internal" href="en/cookbook.html#don-t-emit-create-table-statements-for-views">Don’t emit CREATE TABLE statements for Views</a></li>
+<li class="toctree-l2"><a class="reference internal" href="en/cookbook.html#run-multiple-alembic-environments-from-one-ini-file">Run Multiple Alembic Environments from one .ini file</a></li>
+<li class="toctree-l2"><a class="reference internal" href="en/cookbook.html#print-python-code-to-generate-particular-database-tables">Print Python Code to Generate Particular Database Tables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="en/cookbook.html#run-alembic-operation-objects-directly-as-in-from-autogenerate">Run Alembic Operation Objects Directly (as in from autogenerate)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="en/cookbook.html#test-current-database-revision-is-at-head-s">Test current database revision is at head(s)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="en/cookbook.html#using-asyncio-with-alembic">Using Asyncio with Alembic</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="en/api/index.html">API Details</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="en/api/overview.html">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="en/api/runtime.html">Runtime Objects</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="en/api/runtime.html#the-environment-context">The Environment Context</a></li>
+<li class="toctree-l3"><a class="reference internal" href="en/api/runtime.html#the-migration-context">The Migration Context</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="en/api/config.html">Configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="en/api/commands.html">Commands</a></li>
+<li class="toctree-l2"><a class="reference internal" href="en/api/operations.html">Operation Directives</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="en/api/operations.html#operation-plugins">Operation Plugins</a></li>
+<li class="toctree-l3"><a class="reference internal" href="en/api/operations.html#built-in-operation-objects">Built-in Operation Objects</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="en/api/autogenerate.html">Autogeneration</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="en/api/autogenerate.html#getting-diffs">Getting Diffs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="en/api/autogenerate.html#customizing-revision-generation">Customizing Revision Generation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="en/api/autogenerate.html#autogenerating-custom-operation-directives">Autogenerating Custom Operation Directives</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="en/api/script.html">Script Directory</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="en/api/script.html#revision">Revision</a></li>
+<li class="toctree-l3"><a class="reference internal" href="en/api/script.html#module-alembic.script.write_hooks">Write Hooks</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="en/api/ddl.html">DDL Internals</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="en/api/ddl.html#module-alembic.ddl.mysql">MySQL</a></li>
+<li class="toctree-l3"><a class="reference internal" href="en/api/ddl.html#module-alembic.ddl.mssql">MS-SQL</a></li>
+<li class="toctree-l3"><a class="reference internal" href="en/api/ddl.html#module-alembic.ddl.postgresql">Postgresql</a></li>
+<li class="toctree-l3"><a class="reference internal" href="en/api/ddl.html#module-alembic.ddl.sqlite">SQLite</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="en/changelog.html">Changelog</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="en/changelog.html#change-1.7.6">1.7.6</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="en/changelog.html#change-1.7.6-usecase">usecase</a></li>
+<li class="toctree-l3"><a class="reference internal" href="en/changelog.html#change-1.7.6-bug">bug</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="en/changelog.html#change-1.7.5">1.7.5</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="en/changelog.html#change-1.7.5-bug">bug</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="en/changelog.html#change-1.7.4">1.7.4</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="en/changelog.html#change-1.7.4-bug">bug</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="en/changelog.html#change-1.7.3">1.7.3</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="en/changelog.html#change-1.7.3-bug">bug</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="en/changelog.html#change-1.7.2">1.7.2</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="en/changelog.html#change-1.7.2-bug">bug</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="en/changelog.html#change-1.7.1">1.7.1</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="en/changelog.html#change-1.7.1-bug">bug</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="en/changelog.html#change-1.7.0">1.7.0</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="en/changelog.html#change-1.7.0-changed">changed</a></li>
+<li class="toctree-l3"><a class="reference internal" href="en/changelog.html#change-1.7.0-feature">feature</a></li>
+<li class="toctree-l3"><a class="reference internal" href="en/changelog.html#change-1.7.0-usecase">usecase</a></li>
+<li class="toctree-l3"><a class="reference internal" href="en/changelog.html#change-1.7.0-bug">bug</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="en/changelog.html#change-1.6.5">1.6.5</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="en/changelog.html#change-1.6.5-bug">bug</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="en/changelog.html#change-1.6.4">1.6.4</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="en/changelog.html#change-1.6.4-bug">bug</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="en/changelog.html#change-1.6.3">1.6.3</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="en/changelog.html#change-1.6.3-bug">bug</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="en/changelog.html#change-1.6.2">1.6.2</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="en/changelog.html#change-1.6.2-bug">bug</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="en/changelog.html#change-1.6.1">1.6.1</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="en/changelog.html#change-1.6.1-bug">bug</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="en/changelog.html#change-1.6.0">1.6.0</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="en/changelog.html#change-1.6.0-feature">feature</a></li>
+<li class="toctree-l3"><a class="reference internal" href="en/changelog.html#change-1.6.0-bug">bug</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="en/changelog.html#change-1.5.8">1.5.8</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="en/changelog.html#change-1.5.8-bug">bug</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="en/changelog.html#change-1.5.7">1.5.7</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="en/changelog.html#change-1.5.7-bug">bug</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="en/changelog.html#change-1.5.6">1.5.6</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="en/changelog.html#change-1.5.6-bug">bug</a></li>
+<li class="toctree-l3"><a class="reference internal" href="en/changelog.html#change-1.5.6-misc">misc</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="en/changelog.html#change-1.5.5">1.5.5</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="en/changelog.html#change-1.5.5-bug">bug</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="en/changelog.html#change-1.5.4">1.5.4</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="en/changelog.html#change-1.5.4-bug">bug</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="en/changelog.html#change-1.5.3">1.5.3</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="en/changelog.html#change-1.5.3-bug">bug</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="en/changelog.html#change-1.5.2">1.5.2</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="en/changelog.html#change-1.5.2-bug">bug</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="en/changelog.html#change-1.5.1">1.5.1</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="en/changelog.html#change-1.5.1-bug">bug</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="en/changelog.html#change-1.5.0">1.5.0</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="en/changelog.html#change-1.5.0-changed">changed</a></li>
+<li class="toctree-l3"><a class="reference internal" href="en/changelog.html#change-1.5.0-feature">feature</a></li>
+<li class="toctree-l3"><a class="reference internal" href="en/changelog.html#change-1.5.0-usecase">usecase</a></li>
+<li class="toctree-l3"><a class="reference internal" href="en/changelog.html#change-1.5.0-bug">bug</a></li>
+<li class="toctree-l3"><a class="reference internal" href="en/changelog.html#change-1.5.0-removed">removed</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="en/changelog.html#change-1.4.3">1.4.3</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="en/changelog.html#change-1.4.3-bug">bug</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="en/changelog.html#change-1.4.2">1.4.2</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="en/changelog.html#change-1.4.2-usecase">usecase</a></li>
+<li class="toctree-l3"><a class="reference internal" href="en/changelog.html#change-1.4.2-bug">bug</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="en/changelog.html#change-1.4.1">1.4.1</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="en/changelog.html#change-1.4.1-bug">bug</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="en/changelog.html#change-1.4.0">1.4.0</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="en/changelog.html#change-1.4.0-feature">feature</a></li>
+<li class="toctree-l3"><a class="reference internal" href="en/changelog.html#change-1.4.0-usecase">usecase</a></li>
+<li class="toctree-l3"><a class="reference internal" href="en/changelog.html#change-1.4.0-bug">bug</a></li>
+<li class="toctree-l3"><a class="reference internal" href="en/changelog.html#change-1.4.0-misc">misc</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="en/changelog.html#change-1.3.3">1.3.3</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="en/changelog.html#change-1.3.3-usecase">usecase</a></li>
+<li class="toctree-l3"><a class="reference internal" href="en/changelog.html#change-1.3.3-bug">bug</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="en/changelog.html#change-1.3.2">1.3.2</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="en/changelog.html#change-1.3.2-bug">bug</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="en/changelog.html#change-1.3.1">1.3.1</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="en/changelog.html#change-1.3.1-bug">bug</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="en/changelog.html#change-1.3.0">1.3.0</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="en/changelog.html#change-1.3.0-feature">feature</a></li>
+<li class="toctree-l3"><a class="reference internal" href="en/changelog.html#change-1.3.0-bug">bug</a></li>
+<li class="toctree-l3"><a class="reference internal" href="en/changelog.html#change-1.3.0-misc">misc</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="en/changelog.html#change-1.2.1">1.2.1</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="en/changelog.html#change-1.2.1-bug">bug</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="en/changelog.html#change-1.2.0">1.2.0</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="en/changelog.html#change-1.2.0-feature">feature</a></li>
+<li class="toctree-l3"><a class="reference internal" href="en/changelog.html#change-1.2.0-usecase">usecase</a></li>
+<li class="toctree-l3"><a class="reference internal" href="en/changelog.html#change-1.2.0-bug">bug</a></li>
+<li class="toctree-l3"><a class="reference internal" href="en/changelog.html#change-1.2.0-misc">misc</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="en/changelog.html#change-1.1.0">1.1.0</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="en/changelog.html#change-1.1.0-usecase">usecase</a></li>
+<li class="toctree-l3"><a class="reference internal" href="en/changelog.html#change-1.1.0-bug">bug</a></li>
+<li class="toctree-l3"><a class="reference internal" href="en/changelog.html#change-1.1.0-misc">misc</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="en/changelog.html#change-1.0.11">1.0.11</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="en/changelog.html#change-1.0.11-bug">bug</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="en/changelog.html#change-1.0.10">1.0.10</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="en/changelog.html#change-1.0.10-bug">bug</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="en/changelog.html#change-1.0.9">1.0.9</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="en/changelog.html#change-1.0.9-bug">bug</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="en/changelog.html#change-1.0.8">1.0.8</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="en/changelog.html#change-1.0.8-bug">bug</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="en/changelog.html#change-1.0.7">1.0.7</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="en/changelog.html#change-1.0.7-bug">bug</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="en/changelog.html#change-1.0.6">1.0.6</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="en/changelog.html#change-1.0.6-feature">feature</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="en/changelog.html#change-1.0.5">1.0.5</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="en/changelog.html#change-1.0.5-bug">bug</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="en/changelog.html#change-1.0.4">1.0.4</a></li>
+<li class="toctree-l2"><a class="reference internal" href="en/changelog.html#change-1.0.3">1.0.3</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="en/changelog.html#change-1.0.3-bug">bug</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="en/changelog.html#change-1.0.2">1.0.2</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="en/changelog.html#change-1.0.2-bug">bug</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="en/changelog.html#change-1.0.1">1.0.1</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="en/changelog.html#change-1.0.1-bug">bug</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="en/changelog.html#change-1.0.0">1.0.0</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="en/changelog.html#change-1.0.0-feature">feature</a></li>
+<li class="toctree-l3"><a class="reference internal" href="en/changelog.html#change-1.0.0-bug">bug</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="en/changelog.html#change-0.9.10">0.9.10</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="en/changelog.html#change-0.9.10-bug">bug</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="en/changelog.html#change-0.9.9">0.9.9</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="en/changelog.html#change-0.9.9-feature">feature</a></li>
+<li class="toctree-l3"><a class="reference internal" href="en/changelog.html#change-0.9.9-bug">bug</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="en/changelog.html#change-0.9.8">0.9.8</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="en/changelog.html#change-0.9.8-bug">bug</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="en/changelog.html#change-0.9.7">0.9.7</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="en/changelog.html#change-0.9.7-bug">bug</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="en/changelog.html#change-0.9.6">0.9.6</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="en/changelog.html#change-0.9.6-feature">feature</a></li>
+<li class="toctree-l3"><a class="reference internal" href="en/changelog.html#change-0.9.6-bug">bug</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="en/changelog.html#change-0.9.5">0.9.5</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="en/changelog.html#change-0.9.5-bug">bug</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="en/changelog.html#change-0.9.4">0.9.4</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="en/changelog.html#change-0.9.4-bug">bug</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="en/changelog.html#change-0.9.3">0.9.3</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="en/changelog.html#change-0.9.3-feature">feature</a></li>
+<li class="toctree-l3"><a class="reference internal" href="en/changelog.html#change-0.9.3-bug">bug</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="en/changelog.html#change-0.9.2">0.9.2</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="en/changelog.html#change-0.9.2-feature">feature</a></li>
+<li class="toctree-l3"><a class="reference internal" href="en/changelog.html#change-0.9.2-bug">bug</a></li>
+<li class="toctree-l3"><a class="reference internal" href="en/changelog.html#change-0.9.2-misc">misc</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="en/changelog.html#change-0.9.1">0.9.1</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="en/changelog.html#change-0.9.1-bug">bug</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="en/changelog.html#change-0.9.0">0.9.0</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="en/changelog.html#change-0.9.0-feature">feature</a></li>
+<li class="toctree-l3"><a class="reference internal" href="en/changelog.html#change-0.9.0-bug">bug</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="en/changelog.html#change-0.8.10">0.8.10</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="en/changelog.html#change-0.8.10-bug">bug</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="en/changelog.html#change-0.8.9">0.8.9</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="en/changelog.html#change-0.8.9-bug">bug</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="en/changelog.html#change-0.8.8">0.8.8</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="en/changelog.html#change-0.8.8-feature">feature</a></li>
+<li class="toctree-l3"><a class="reference internal" href="en/changelog.html#change-0.8.8-misc">misc</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="en/changelog.html#change-0.8.7">0.8.7</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="en/changelog.html#change-0.8.7-bug">bug</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="en/changelog.html#change-0.8.6">0.8.6</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="en/changelog.html#change-0.8.6-bug">bug</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="en/changelog.html#change-0.8.5">0.8.5</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="en/changelog.html#change-0.8.5-bug">bug</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="en/changelog.html#change-0.8.4">0.8.4</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="en/changelog.html#change-0.8.4-feature">feature</a></li>
+<li class="toctree-l3"><a class="reference internal" href="en/changelog.html#change-0.8.4-bug">bug</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="en/changelog.html#change-0.8.3">0.8.3</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="en/changelog.html#change-0.8.3-bug">bug</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="en/changelog.html#change-0.8.2">0.8.2</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="en/changelog.html#change-0.8.2-bug">bug</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="en/changelog.html#change-0.8.1">0.8.1</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="en/changelog.html#change-0.8.1-feature">feature</a></li>
+<li class="toctree-l3"><a class="reference internal" href="en/changelog.html#change-0.8.1-bug">bug</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="en/changelog.html#change-0.8.0">0.8.0</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="en/changelog.html#change-0.8.0-feature">feature</a></li>
+<li class="toctree-l3"><a class="reference internal" href="en/changelog.html#change-0.8.0-bug">bug</a></li>
+<li class="toctree-l3"><a class="reference internal" href="en/changelog.html#change-0.8.0-misc">misc</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="en/changelog.html#change-0.7.7">0.7.7</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="en/changelog.html#change-0.7.7-feature">feature</a></li>
+<li class="toctree-l3"><a class="reference internal" href="en/changelog.html#change-0.7.7-bug">bug</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="en/changelog.html#change-0.7.6">0.7.6</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="en/changelog.html#change-0.7.6-feature">feature</a></li>
+<li class="toctree-l3"><a class="reference internal" href="en/changelog.html#change-0.7.6-bug">bug</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="en/changelog.html#change-0.7.5">0.7.5</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="en/changelog.html#change-0.7.5-feature">feature</a></li>
+<li class="toctree-l3"><a class="reference internal" href="en/changelog.html#change-0.7.5-bug">bug</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="en/changelog.html#change-0.7.4">0.7.4</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="en/changelog.html#change-0.7.4-bug">bug</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="en/changelog.html#change-0.7.3">0.7.3</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="en/changelog.html#change-0.7.3-bug">bug</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="en/changelog.html#change-0.7.2">0.7.2</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="en/changelog.html#change-0.7.2-bug">bug</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="en/changelog.html#change-0.7.1">0.7.1</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="en/changelog.html#change-0.7.1-feature">feature</a></li>
+<li class="toctree-l3"><a class="reference internal" href="en/changelog.html#change-0.7.1-bug">bug</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="en/changelog.html#change-0.7.0">0.7.0</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="en/changelog.html#change-0.7.0-changed">changed</a></li>
+<li class="toctree-l3"><a class="reference internal" href="en/changelog.html#change-0.7.0-feature">feature</a></li>
+<li class="toctree-l3"><a class="reference internal" href="en/changelog.html#change-0.7.0-bug">bug</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="en/changelog.html#change-0.6.7">0.6.7</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="en/changelog.html#change-0.6.7-feature">feature</a></li>
+<li class="toctree-l3"><a class="reference internal" href="en/changelog.html#change-0.6.7-bug">bug</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="en/changelog.html#change-0.6.6">0.6.6</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="en/changelog.html#change-0.6.6-feature">feature</a></li>
+<li class="toctree-l3"><a class="reference internal" href="en/changelog.html#change-0.6.6-bug">bug</a></li>
+<li class="toctree-l3"><a class="reference internal" href="en/changelog.html#change-0.6.6-misc">misc</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="en/changelog.html#change-0.6.5">0.6.5</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="en/changelog.html#change-0.6.5-feature">feature</a></li>
+<li class="toctree-l3"><a class="reference internal" href="en/changelog.html#change-0.6.5-bug">bug</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="en/changelog.html#change-0.6.4">0.6.4</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="en/changelog.html#change-0.6.4-feature">feature</a></li>
+<li class="toctree-l3"><a class="reference internal" href="en/changelog.html#change-0.6.4-bug">bug</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="en/changelog.html#change-0.6.3">0.6.3</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="en/changelog.html#change-0.6.3-feature">feature</a></li>
+<li class="toctree-l3"><a class="reference internal" href="en/changelog.html#change-0.6.3-bug">bug</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="en/changelog.html#change-0.6.2">0.6.2</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="en/changelog.html#change-0.6.2-feature">feature</a></li>
+<li class="toctree-l3"><a class="reference internal" href="en/changelog.html#change-0.6.2-bug">bug</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="en/changelog.html#change-0.6.1">0.6.1</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="en/changelog.html#change-0.6.1-feature">feature</a></li>
+<li class="toctree-l3"><a class="reference internal" href="en/changelog.html#change-0.6.1-bug">bug</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="en/changelog.html#change-0.6.0">0.6.0</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="en/changelog.html#change-0.6.0-feature">feature</a></li>
+<li class="toctree-l3"><a class="reference internal" href="en/changelog.html#change-0.6.0-bug">bug</a></li>
+<li class="toctree-l3"><a class="reference internal" href="en/changelog.html#change-0.6.0-misc">misc</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="en/changelog.html#change-0.5.0">0.5.0</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="en/changelog.html#change-0.5.0-feature">feature</a></li>
+<li class="toctree-l3"><a class="reference internal" href="en/changelog.html#change-0.5.0-bug">bug</a></li>
+<li class="toctree-l3"><a class="reference internal" href="en/changelog.html#change-0.5.0-misc">misc</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="en/changelog.html#change-0.4.2">0.4.2</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="en/changelog.html#change-0.4.2-feature">feature</a></li>
+<li class="toctree-l3"><a class="reference internal" href="en/changelog.html#change-0.4.2-bug">bug</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="en/changelog.html#change-0.4.1">0.4.1</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="en/changelog.html#change-0.4.1-feature">feature</a></li>
+<li class="toctree-l3"><a class="reference internal" href="en/changelog.html#change-0.4.1-bug">bug</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="en/changelog.html#change-0.4.0">0.4.0</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="en/changelog.html#change-0.4.0-feature">feature</a></li>
+<li class="toctree-l3"><a class="reference internal" href="en/changelog.html#change-0.4.0-bug">bug</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="en/changelog.html#change-0.3.6">0.3.6</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="en/changelog.html#change-0.3.6-feature">feature</a></li>
+<li class="toctree-l3"><a class="reference internal" href="en/changelog.html#change-0.3.6-bug">bug</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="en/changelog.html#change-0.3.5">0.3.5</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="en/changelog.html#change-0.3.5-feature">feature</a></li>
+<li class="toctree-l3"><a class="reference internal" href="en/changelog.html#change-0.3.5-bug">bug</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="en/changelog.html#change-0.3.4">0.3.4</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="en/changelog.html#change-0.3.4-bug">bug</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="en/changelog.html#change-0.3.3">0.3.3</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="en/changelog.html#change-0.3.3-feature">feature</a></li>
+<li class="toctree-l3"><a class="reference internal" href="en/changelog.html#change-0.3.3-bug">bug</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="en/changelog.html#change-0.3.2">0.3.2</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="en/changelog.html#change-0.3.2-feature">feature</a></li>
+<li class="toctree-l3"><a class="reference internal" href="en/changelog.html#change-0.3.2-bug">bug</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="en/changelog.html#change-0.3.1">0.3.1</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="en/changelog.html#change-0.3.1-bug">bug</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="en/changelog.html#change-0.3.0">0.3.0</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="en/changelog.html#change-0.3.0-feature">feature</a></li>
+<li class="toctree-l3"><a class="reference internal" href="en/changelog.html#change-0.3.0-misc">misc</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="en/changelog.html#change-0.2.2">0.2.2</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="en/changelog.html#change-0.2.2-feature">feature</a></li>
+<li class="toctree-l3"><a class="reference internal" href="en/changelog.html#change-0.2.2-bug">bug</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="en/changelog.html#change-0.2.1">0.2.1</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="en/changelog.html#change-0.2.1-bug">bug</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="en/changelog.html#change-0.2.0">0.2.0</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="en/changelog.html#change-0.2.0-feature">feature</a></li>
+<li class="toctree-l3"><a class="reference internal" href="en/changelog.html#change-0.2.0-bug">bug</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="en/changelog.html#change-0.1.1">0.1.1</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="en/changelog.html#change-0.1.1-feature">feature</a></li>
+<li class="toctree-l3"><a class="reference internal" href="en/changelog.html#change-0.1.1-bug">bug</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="en/changelog.html#change-0.1.0">0.1.0</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<section id="indices-and-tables">
+<h2 id="indices-and-tables"><a class="header" href="#indices-and-tables">Indices and tables<a class="headerlink" href="en/index.html#indices-and-tables" title="Permalink to this headline">¶</a></a></h2>
+<ul class="simple">
+<li><p><a class="reference internal" href="en/genindex.html"><span class="std std-ref">Index</span></a></p></li>
+<li><p><a class="reference internal" href="en/py-modindex.html"><span class="std std-ref">Module Index</span></a></p></li>
+<li><p><a class="reference internal" href="en/search.html"><span class="std std-ref">Search Page</span></a></p></li>
+</ul>
+</section>
+</section>
+<pre><code>        &lt;div class=&quot;clearer&quot;&gt;&lt;/div&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+  &lt;div class=&quot;sphinxsidebar&quot; role=&quot;navigation&quot; aria-label=&quot;main navigation&quot;&gt;
+    &lt;div class=&quot;sphinxsidebarwrapper&quot;&gt;&lt;script async type=&quot;text/javascript&quot; src=&quot;//cdn.carbonads.com/carbon.js?serve=CKYIL23W&amp;placement=alembiczzzcomputingcom&quot; id=&quot;_carbonads_js&quot;&gt;&lt;/script&gt;
+</code></pre>
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-28532944-2', 'auto');
+  ga('send', 'pageview');
+
+</script>
+<p>
+<a href="en/alembic_latest.zip">Download documentation as ZIP file</a>
+</p>
+<h3 id="table-of-contents"><a class="header" href="#table-of-contents"><a href="en/index.html#">Table of Contents</a></a></h3>
+  <ul>
+<li><a class="reference internal" href="en/index.html#">Welcome to Alembic’s documentation!</a><ul>
+<li><a class="reference internal" href="en/index.html#indices-and-tables">Indices and tables</a></li>
+</ul>
+</li>
+</ul>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+  <h4 id="next-topic"><a class="header" href="#next-topic">Next topic</a></h4>
+  <p class="topless"><a href="en/front.html"
+                        title="next chapter">Front Matter</a></p>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3 id="navigation-1"><a class="header" href="#navigation-1">Navigation</a></h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="en/genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="en/py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="en/front.html" title="Front Matter"
+             >next</a> |</li>
+        <li class="nav-item nav-item-0"><a href="en/index.html#">Alembic 1.7.5 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Welcome to Alembic’s documentation!</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2010-2021, Mike Bayer.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.2.0.
+    </div>
+  </body>
+</html>
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+            </nav>
+
+        </div>
+
+        <!-- Livereload script (if served using the cli tool) -->
+        <script type="text/javascript">
+            var socket = new WebSocket("ws://localhost:3001/__livereload");
+            socket.onmessage = function (event) {
+                if (event.data === "reload") {
+                    socket.close();
+                    location.reload();
+                }
+            };
+
+            window.onbeforeunload = function() {
+                socket.close();
+            }
+        </script>
+        <script type="text/javascript">
+            window.playground_copyable = true;
+        </script>
+        <script src="elasticlunr.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="mark.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="searcher.js" type="text/javascript" charset="utf-8"></script>
+        <script src="clipboard.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="highlight.js" type="text/javascript" charset="utf-8"></script>
+        <script src="book.js" type="text/javascript" charset="utf-8"></script>
+
+        <!-- Custom JS scripts -->
+        <script type="text/javascript">
+        window.addEventListener('load', function() {
+            window.setTimeout(window.print, 100);
+        });
+        </script>
+    </body>
+</html>
