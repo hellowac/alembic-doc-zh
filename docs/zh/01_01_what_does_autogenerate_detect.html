@@ -1,0 +1,235 @@
+<!DOCTYPE HTML>
+<html lang="en" class="sidebar-visible no-js light">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Autogenerate 检测什么 - alembic 中文文档</title>
+                
+
+        <!-- Custom HTML head -->
+        
+
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff" />
+
+                <link rel="icon" href="../favicon.svg">
+                        <link rel="shortcut icon" href="../favicon.png">
+                <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+                <link rel="stylesheet" href="../css/print.css" media="print">
+        
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+                <link rel="stylesheet" href="../fonts/fonts.css">
+        
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../highlight.css">
+        <link rel="stylesheet" href="../tomorrow-night.css">
+        <link rel="stylesheet" href="../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+        
+            </head>
+    <body>
+        <!-- Provide site root to javascript -->
+        <script type="text/javascript">
+            var path_to_root = "../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script type="text/javascript">
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script type="text/javascript">
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            var html = document.querySelector('html');
+            html.classList.remove('no-js')
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add('js');
+        </script>
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script type="text/javascript">
+            var html = document.querySelector('html');
+            var sidebar = 'hidden';
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            }
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li class="chapter-item expanded affix "><a href="../zh/_front_matter.html">前言</a></li><li class="spacer"></li><li class="chapter-item expanded "><a href="../zh/00_tutorial.html"><strong aria-hidden="true">1.</strong> 指南</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../zh/00_01_the_migration_enviroment.html"><strong aria-hidden="true">1.1.</strong> 迁移环境</a></li><li class="chapter-item "><a href="../zh/00_02_creating_an_enviroment.html"><strong aria-hidden="true">1.2.</strong> 创建环境</a></li><li class="chapter-item "><a href="../zh/00_03_Editing_the_ini_file.html"><strong aria-hidden="true">1.3.</strong> 编辑.ini文件</a></li><li class="chapter-item "><a href="../zh/00_04_create_a_migration_script.html"><strong aria-hidden="true">1.4.</strong> 创建迁移脚本</a></li><li class="chapter-item "><a href="../zh/00_05_Running_our_first_migration.html"><strong aria-hidden="true">1.5.</strong> 初次运行迁移</a></li><li class="chapter-item "><a href="../zh/00_06_Running_our_second_migration.html"><strong aria-hidden="true">1.6.</strong> 再次运行迁移</a></li><li class="chapter-item "><a href="../zh/00_07_partial_revision_identifiers.html"><strong aria-hidden="true">1.7.</strong> 部分修订标识符</a></li><li class="chapter-item "><a href="../zh/00_08_relative_migration_identifiers.html"><strong aria-hidden="true">1.8.</strong> 相对迁移标识符</a></li><li class="chapter-item "><a href="../zh/00_09_getting_information.html"><strong aria-hidden="true">1.9.</strong> 获取信息</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../zh/00_09_01_viewing_history_ranges.html"><strong aria-hidden="true">1.9.1.</strong> 查看历史范围</a></li></ol></li><li class="chapter-item "><a href="../zh/00_10_downgrading.html"><strong aria-hidden="true">1.10.</strong> 降级</a></li><li class="chapter-item "><a href="../zh/00_11_next_steps.html"><strong aria-hidden="true">1.11.</strong> 下一步</a></li></ol></li><li class="chapter-item expanded "><a href="../zh/01_auto_generating_migrations.html"><strong aria-hidden="true">2.</strong> 自动生成迁移</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../zh/01_01_what_does_autogenerate_detect.html" class="active"><strong aria-hidden="true">2.1.</strong> Autogenerate 检测什么</a></li><li class="chapter-item "><a href="../zh/01_02_autogenerating_multiple_metadata_collections.html"><strong aria-hidden="true">2.2.</strong> 自动生成多个元数据集合</a></li><li class="chapter-item "><a href="../zh/01_03_controlling_what_to_be_autogenerated.html"><strong aria-hidden="true">2.3.</strong> 控制要自动生成的内容</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../zh/01_03_01_omitting_schema_names_from_the_autogenerate_process.html"><strong aria-hidden="true">2.3.1.</strong> 从自动生成过程中省略模式名称</a></li><li class="chapter-item "><a href="../zh/01_03_02_omitting_table_names_from_the_autogenerate_process.html"><strong aria-hidden="true">2.3.2.</strong> 从自动生成过程中省略表名</a></li><li class="chapter-item "><a href="../zh/01_03_03_omitting_based_on_object.html"><strong aria-hidden="true">2.3.3.</strong> 基于对象的省略</a></li></ol></li><li class="chapter-item "><a href="../zh/01_04_comparing_and_rendering_types.html"><strong aria-hidden="true">2.4.</strong> 比较和渲染类型</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../zh/01_04_01_controlling_the_module_prefix.html"><strong aria-hidden="true">2.4.1.</strong> 控制模块前缀</a></li><li class="chapter-item "><a href="../zh/01_04_02_affecting_the_rendering_of_types_themselves.html"><strong aria-hidden="true">2.4.2.</strong> 影响类型本身的渲染</a></li><li class="chapter-item "><a href="../zh/01_04_03_comparing_types.html"><strong aria-hidden="true">2.4.3.</strong> 比较类型</a></li></ol></li><li class="chapter-item "><a href="../zh/01_05_applying_post_processing.html"><strong aria-hidden="true">2.5.</strong> 将提交处理过程和 Python 代码格式化程序应用于生成的修订</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../zh/01_05_01_basic_formatter_configuration.html"><strong aria-hidden="true">2.5.1.</strong> 基本格式化程序配置</a></li><li class="chapter-item "><a href="../zh/01_05_02_writing_custom_hooks_as_python_functions.html"><strong aria-hidden="true">2.5.2.</strong> 自定义Python函数钩子</a></li></ol></li></ol></li><li class="chapter-item expanded "><a href="../zh/02_generating_sql_scripts.html"><strong aria-hidden="true">3.</strong> 生成SQL脚本(又称离线模式)</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../zh/02_01_getting_the_start_version.html"><strong aria-hidden="true">3.1.</strong> Getting the Start Version</a></li><li class="chapter-item "><a href="../zh/02_02_writing_migration_scripts_to_support_script_generation.html"><strong aria-hidden="true">3.2.</strong> Writing Migration Scripts to Support Script Generation</a></li><li class="chapter-item "><a href="../zh/02_03_customizing_the_environment.html"><strong aria-hidden="true">3.3.</strong> Customizing the Environment</a></li></ol></li><li class="chapter-item expanded "><a href="../zh/03_the_importance_of_naming_constraints.html"><strong aria-hidden="true">4.</strong> 命名约束的重要性</a></li><li class="chapter-item expanded "><a href="../zh/04_running_batch_migrations_for_sqlite_and_other_databases.html"><strong aria-hidden="true">5.</strong> 在SQLite和其他数据中运行&quot;Batch&quot;迁移脚本</a></li><li class="chapter-item expanded "><a href="../zh/05_working_with_branches.html"><strong aria-hidden="true">6.</strong> 工作分支</a></li><li class="chapter-item expanded "><a href="../zh/06_operation_reference.html"><strong aria-hidden="true">7.</strong> 操作参考</a></li><li class="chapter-item expanded "><a href="../zh/07_cook_book.html"><strong aria-hidden="true">8.</strong> cookbook</a></li><li class="chapter-item expanded "><a href="../zh/08_api_details.html"><strong aria-hidden="true">9.</strong> API详细</a></li><li class="chapter-item expanded "><a href="../zh/09_change_log.html"><strong aria-hidden="true">10.</strong> 更新历史</a></li><li class="spacer"></li><li class="chapter-item expanded affix "><a href="../en/index.html">原文 - 英文</a></li></ol>            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky bordered">
+                    <div class="left-buttons">
+                        <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </button>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light (default)</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                                                <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                                            </div>
+
+                    <h1 class="menu-title">alembic 中文文档</h1>
+
+                    <div class="right-buttons">
+                                                <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                                                                        
+                    </div>
+                </div>
+
+                                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+                
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script type="text/javascript">
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="what-does-autogenerate-detect"><a class="header" href="#what-does-autogenerate-detect">What does Autogenerate Detect</a></h1>
+<p>The vast majority of user issues with Alembic centers on the topic of what kinds of changes autogenerate can and cannot detect reliably, as well as how it renders Python code for what it does detect. It is critical to note that <strong>autogenerate is not intended to be perfect</strong>. It is <em>always</em> necessary to manually review and correct the <strong>candidate migrations</strong> that autogenerate produces. The feature is getting more and more comprehensive and error-free as releases continue, but one should take note of the current limitations.</p>
+<p>Autogenerate <strong>will detect</strong>:</p>
+<ul>
+<li>Table additions, removals.</li>
+<li>Column additions, removals.</li>
+<li>Change of nullable status on columns.</li>
+<li>Basic changes in indexes and explicitly-named unique constraints</li>
+<li>Basic changes in foreign key constraints</li>
+</ul>
+<p>Autogenerate can <strong>optionally detect</strong>:</p>
+<ul>
+<li>
+<p>Change of column type. This will occur if you set the <strong><a href="../en/api/runtime.html#alembic.runtime.environment.EnvironmentContext.configure.params.compare_type">EnvironmentContext.configure.compare_type</a></strong> parameter to <code>True</code>. The default implementation will reliably detect major changes, such as between <strong>Numeric</strong> and <strong>String</strong>, as well as accommodate for the types generated by SQLAlchemy’s “generic” types such as <strong>Boolean</strong>. Arguments that are shared between both types, such as length and precision values, will also be compared. If either the metadata type or database type has <strong>additional</strong> arguments beyond that of the other type, these are <strong>not</strong> compared, such as if one numeric type featured a “scale” and other type did not, this would be seen as the backing database not supporting the value, or reporting on a default that the metadata did not specify.</p>
+<p>The type comparison logic is fully extensible as well; see <a href="../en/autogenerate.html#compare-types">Comparing Types</a> for details.</p>
+<blockquote>
+<p>Changed in version 1.4: type comparison code has been reworked such that column types are compared based on their rendered DDL, which should allow the functionality enabled by <strong><a href="../en/api/runtime.html#alembic.runtime.environment.EnvironmentContext.configure.params.compare_type">EnvironmentContext.configure.compare_type</a></strong> to be much more accurate, correctly accounting for the behavior of SQLAlchemy “generic” types as well as major arguments specified within types.</p>
+</blockquote>
+</li>
+<li>
+<p>Change of server default. This will occur if you set the <strong><a href="../en/api/runtime.html#alembic.runtime.environment.EnvironmentContext.configure.params.compare_server_default">EnvironmentContext.configure.compare_server_default</a></strong> parameter to True, or to a custom callable function. This feature works well for simple cases but cannot always produce accurate results. The Postgresql backend will actually invoke the “detected” and “metadata” values against the database to determine equivalence. The feature is off by default so that it can be tested on the target schema first. Like type comparison, it can also be customized by passing a callable; see the function’s documentation for details.</p>
+</li>
+</ul>
+<p>Autogenerate can <strong>not detect</strong>:</p>
+<ul>
+<li>Changes of table name. These will come out as an add/drop of two different tables, and should be hand-edited into a name change instead.</li>
+<li>Changes of column name. Like table name changes, these are detected as a column add/drop pair, which is not at all the same as a name change.</li>
+<li>Anonymously named constraints. Give your constraints a name, e.g. <strong>UniqueConstraint('col1', 'col2', name=&quot;my_name&quot;)</strong>. See the section <a href="../en/naming.html">The Importance of Naming Constraints</a> for background on how to configure automatic naming schemes for constraints.</li>
+<li>Special SQLAlchemy types such as <strong><a href="https://docs.sqlalchemy.org/en/14/core/type_basics.html#sqlalchemy.types.Enum">Enum</a></strong> when generated on a backend which doesn’t support ENUM directly - this because the representation of such a type in the non-supporting database, i.e. a CHAR+ CHECK constraint, could be any kind of CHAR+CHECK. For SQLAlchemy to determine that this is actually an ENUM would only be a guess, something that’s generally a bad idea. To implement your own “guessing” function here, use the <strong><a href="https://docs.sqlalchemy.org/en/14/core/events.html#sqlalchemy.events.DDLEvents.column_reflect">sqlalchemy.events.DDLEvents.column_reflect()</a></strong> event to detect when a CHAR (or whatever the target type is) is reflected, and change it to an ENUM (or whatever type is desired) if it is known that that’s the intent of the type. The <strong><a href="https://docs.sqlalchemy.org/en/14/core/events.html#sqlalchemy.events.DDLEvents.after_parent_attach">sqlalchemy.events.DDLEvents.after_parent_attach()</a></strong> can be used within the autogenerate process to intercept and un-attach unwanted CHECK constraints.</li>
+</ul>
+<p>Autogenerate can’t currently, but <strong>will eventually detect</strong>:</p>
+<ul>
+<li>
+<p>Some free-standing constraint additions and removals may not be supported, including PRIMARY KEY, EXCLUDE, CHECK; these are not necessarily implemented within the autogenerate detection system and also may not be supported by the supporting SQLAlchemy dialect.</p>
+</li>
+<li>
+<p>Sequence additions, removals - not yet implemented.</p>
+</li>
+</ul>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                                                    <a rel="prev" href="../zh/01_auto_generating_migrations.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+                        
+                                                    <a rel="next" href="../zh/01_02_autogenerating_multiple_metadata_collections.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+                        
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                                    <a rel="prev" href="../zh/01_auto_generating_migrations.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+                
+                                    <a rel="next" href="../zh/01_02_autogenerating_multiple_metadata_collections.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+                            </nav>
+
+        </div>
+
+        
+        
+        
+                <script type="text/javascript">
+            window.playground_copyable = true;
+        </script>
+        
+        
+                <script src="../elasticlunr.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../mark.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../searcher.js" type="text/javascript" charset="utf-8"></script>
+        
+        <script src="../clipboard.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../highlight.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../book.js" type="text/javascript" charset="utf-8"></script>
+
+        <!-- Custom JS scripts -->
+        
+        
+    </body>
+</html>

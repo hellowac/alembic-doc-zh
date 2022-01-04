@@ -4,28 +4,35 @@
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
         <title>自动生成迁移 - alembic 中文文档</title>
+                
+
         <!-- Custom HTML head -->
+        
+
         <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="theme-color" content="#ffffff" />
 
-        <link rel="icon" href="../favicon.svg">
-        <link rel="shortcut icon" href="../favicon.png">
-        <link rel="stylesheet" href="../css/variables.css">
+                <link rel="icon" href="../favicon.svg">
+                        <link rel="shortcut icon" href="../favicon.png">
+                <link rel="stylesheet" href="../css/variables.css">
         <link rel="stylesheet" href="../css/general.css">
         <link rel="stylesheet" href="../css/chrome.css">
-        <link rel="stylesheet" href="../css/print.css" media="print">
+                <link rel="stylesheet" href="../css/print.css" media="print">
+        
         <!-- Fonts -->
         <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
-        <link rel="stylesheet" href="../fonts/fonts.css">
+                <link rel="stylesheet" href="../fonts/fonts.css">
+        
         <!-- Highlight.js Stylesheets -->
         <link rel="stylesheet" href="../highlight.css">
         <link rel="stylesheet" href="../tomorrow-night.css">
         <link rel="stylesheet" href="../ayu-highlight.css">
 
         <!-- Custom theme stylesheets -->
-    </head>
+        
+            </head>
     <body>
         <!-- Provide site root to javascript -->
         <script type="text/javascript">
@@ -75,14 +82,14 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded affix "><a href="../zh/_front_matter.html">前言</a></li><li class="spacer"></li><li class="chapter-item expanded "><a href="../zh/00_tutorial.html"><strong aria-hidden="true">1.</strong> 指南</a></li><li class="chapter-item expanded "><a href="../zh/01_auto_generating_migrations.html" class="active"><strong aria-hidden="true">2.</strong> 自动生成迁移</a></li><li class="chapter-item expanded "><a href="../zh/02_generating_sql_scripts.html"><strong aria-hidden="true">3.</strong> 生成SQL脚本(又称离线模式)</a></li><li class="chapter-item expanded "><a href="../zh/03_the_importance_of_naming_constraints.html"><strong aria-hidden="true">4.</strong> 命名约束的重要性</a></li><li class="chapter-item expanded "><a href="../zh/04_running_batch_migrations_for_sqlite_and_other_databases.html"><strong aria-hidden="true">5.</strong> 在SQLite和其他数据中运行&quot;Batch&quot;迁移脚本</a></li><li class="chapter-item expanded "><a href="../zh/05_working_with_branches.html"><strong aria-hidden="true">6.</strong> 工作分支</a></li><li class="chapter-item expanded "><a href="../zh/06_operation_reference.html"><strong aria-hidden="true">7.</strong> 操作参考</a></li><li class="chapter-item expanded "><a href="../zh/07_cook_book.html"><strong aria-hidden="true">8.</strong> cookbook</a></li><li class="chapter-item expanded "><a href="../zh/08_api_details.html"><strong aria-hidden="true">9.</strong> API详细</a></li><li class="chapter-item expanded "><a href="../zh/09_change_log.html"><strong aria-hidden="true">10.</strong> 更新历史</a></li><li class="spacer"></li><li class="chapter-item expanded affix "><a href="../en/index.html">原文 - 英文</a></li></ol>
-            </div>
+                <ol class="chapter"><li class="chapter-item expanded affix "><a href="../zh/_front_matter.html">前言</a></li><li class="spacer"></li><li class="chapter-item expanded "><a href="../zh/00_tutorial.html"><strong aria-hidden="true">1.</strong> 指南</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../zh/00_01_the_migration_enviroment.html"><strong aria-hidden="true">1.1.</strong> 迁移环境</a></li><li class="chapter-item "><a href="../zh/00_02_creating_an_enviroment.html"><strong aria-hidden="true">1.2.</strong> 创建环境</a></li><li class="chapter-item "><a href="../zh/00_03_Editing_the_ini_file.html"><strong aria-hidden="true">1.3.</strong> 编辑.ini文件</a></li><li class="chapter-item "><a href="../zh/00_04_create_a_migration_script.html"><strong aria-hidden="true">1.4.</strong> 创建迁移脚本</a></li><li class="chapter-item "><a href="../zh/00_05_Running_our_first_migration.html"><strong aria-hidden="true">1.5.</strong> 初次运行迁移</a></li><li class="chapter-item "><a href="../zh/00_06_Running_our_second_migration.html"><strong aria-hidden="true">1.6.</strong> 再次运行迁移</a></li><li class="chapter-item "><a href="../zh/00_07_partial_revision_identifiers.html"><strong aria-hidden="true">1.7.</strong> 部分修订标识符</a></li><li class="chapter-item "><a href="../zh/00_08_relative_migration_identifiers.html"><strong aria-hidden="true">1.8.</strong> 相对迁移标识符</a></li><li class="chapter-item "><a href="../zh/00_09_getting_information.html"><strong aria-hidden="true">1.9.</strong> 获取信息</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../zh/00_09_01_viewing_history_ranges.html"><strong aria-hidden="true">1.9.1.</strong> 查看历史范围</a></li></ol></li><li class="chapter-item "><a href="../zh/00_10_downgrading.html"><strong aria-hidden="true">1.10.</strong> 降级</a></li><li class="chapter-item "><a href="../zh/00_11_next_steps.html"><strong aria-hidden="true">1.11.</strong> 下一步</a></li></ol></li><li class="chapter-item expanded "><a href="../zh/01_auto_generating_migrations.html" class="active"><strong aria-hidden="true">2.</strong> 自动生成迁移</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../zh/01_01_what_does_autogenerate_detect.html"><strong aria-hidden="true">2.1.</strong> Autogenerate 检测什么</a></li><li class="chapter-item "><a href="../zh/01_02_autogenerating_multiple_metadata_collections.html"><strong aria-hidden="true">2.2.</strong> 自动生成多个元数据集合</a></li><li class="chapter-item "><a href="../zh/01_03_controlling_what_to_be_autogenerated.html"><strong aria-hidden="true">2.3.</strong> 控制要自动生成的内容</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../zh/01_03_01_omitting_schema_names_from_the_autogenerate_process.html"><strong aria-hidden="true">2.3.1.</strong> 从自动生成过程中省略模式名称</a></li><li class="chapter-item "><a href="../zh/01_03_02_omitting_table_names_from_the_autogenerate_process.html"><strong aria-hidden="true">2.3.2.</strong> 从自动生成过程中省略表名</a></li><li class="chapter-item "><a href="../zh/01_03_03_omitting_based_on_object.html"><strong aria-hidden="true">2.3.3.</strong> 基于对象的省略</a></li></ol></li><li class="chapter-item "><a href="../zh/01_04_comparing_and_rendering_types.html"><strong aria-hidden="true">2.4.</strong> 比较和渲染类型</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../zh/01_04_01_controlling_the_module_prefix.html"><strong aria-hidden="true">2.4.1.</strong> 控制模块前缀</a></li><li class="chapter-item "><a href="../zh/01_04_02_affecting_the_rendering_of_types_themselves.html"><strong aria-hidden="true">2.4.2.</strong> 影响类型本身的渲染</a></li><li class="chapter-item "><a href="../zh/01_04_03_comparing_types.html"><strong aria-hidden="true">2.4.3.</strong> 比较类型</a></li></ol></li><li class="chapter-item "><a href="../zh/01_05_applying_post_processing.html"><strong aria-hidden="true">2.5.</strong> 将提交处理过程和 Python 代码格式化程序应用于生成的修订</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../zh/01_05_01_basic_formatter_configuration.html"><strong aria-hidden="true">2.5.1.</strong> 基本格式化程序配置</a></li><li class="chapter-item "><a href="../zh/01_05_02_writing_custom_hooks_as_python_functions.html"><strong aria-hidden="true">2.5.2.</strong> 自定义Python函数钩子</a></li></ol></li></ol></li><li class="chapter-item expanded "><a href="../zh/02_generating_sql_scripts.html"><strong aria-hidden="true">3.</strong> 生成SQL脚本(又称离线模式)</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../zh/02_01_getting_the_start_version.html"><strong aria-hidden="true">3.1.</strong> Getting the Start Version</a></li><li class="chapter-item "><a href="../zh/02_02_writing_migration_scripts_to_support_script_generation.html"><strong aria-hidden="true">3.2.</strong> Writing Migration Scripts to Support Script Generation</a></li><li class="chapter-item "><a href="../zh/02_03_customizing_the_environment.html"><strong aria-hidden="true">3.3.</strong> Customizing the Environment</a></li></ol></li><li class="chapter-item expanded "><a href="../zh/03_the_importance_of_naming_constraints.html"><strong aria-hidden="true">4.</strong> 命名约束的重要性</a></li><li class="chapter-item expanded "><a href="../zh/04_running_batch_migrations_for_sqlite_and_other_databases.html"><strong aria-hidden="true">5.</strong> 在SQLite和其他数据中运行&quot;Batch&quot;迁移脚本</a></li><li class="chapter-item expanded "><a href="../zh/05_working_with_branches.html"><strong aria-hidden="true">6.</strong> 工作分支</a></li><li class="chapter-item expanded "><a href="../zh/06_operation_reference.html"><strong aria-hidden="true">7.</strong> 操作参考</a></li><li class="chapter-item expanded "><a href="../zh/07_cook_book.html"><strong aria-hidden="true">8.</strong> cookbook</a></li><li class="chapter-item expanded "><a href="../zh/08_api_details.html"><strong aria-hidden="true">9.</strong> API详细</a></li><li class="chapter-item expanded "><a href="../zh/09_change_log.html"><strong aria-hidden="true">10.</strong> 更新历史</a></li><li class="spacer"></li><li class="chapter-item expanded affix "><a href="../en/index.html">原文 - 英文</a></li></ol>            </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
         </nav>
 
         <div id="page-wrapper" class="page-wrapper">
 
             <div class="page">
+                
                 <div id="menu-bar-hover-placeholder"></div>
                 <div id="menu-bar" class="menu-bar sticky bordered">
                     <div class="left-buttons">
@@ -99,21 +106,22 @@
                             <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
                             <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
                         </ul>
-                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                                                <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
                             <i class="fa fa-search"></i>
                         </button>
-                    </div>
+                                            </div>
 
                     <h1 class="menu-title">alembic 中文文档</h1>
 
                     <div class="right-buttons">
-                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                                                <a href="../print.html" title="Print this book" aria-label="Print this book">
                             <i id="print-button" class="fa fa-print"></i>
                         </a>
+                                                                        
                     </div>
                 </div>
 
-                <div id="search-wrapper" class="hidden">
+                                <div id="search-wrapper" class="hidden">
                     <form id="searchbar-outer" class="searchbar-outer">
                         <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
                     </form>
@@ -123,6 +131,7 @@
                         </ul>
                     </div>
                 </div>
+                
                 <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
                 <script type="text/javascript">
                     document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
@@ -134,58 +143,152 @@
 
                 <div id="content" class="content">
                     <main>
-                        <h1 id="自动生成迁移"><a class="header" href="#自动生成迁移">自动生成迁移</a></h1>
+                        <h1 id="auto-generating-migrations"><a class="header" href="#auto-generating-migrations">Auto Generating Migrations</a></h1>
+<p><strong>自动生成迁移</strong></p>
+<p>Alembic can view the status of the database and compare against the table metadata in the application, generating the “obvious” migrations based on a comparison. This is achieved using the <code>--autogenerate</code> option to the <code>alembic revision</code> command, which places so-called candidate migrations into our new migrations file. We review and modify these by hand as needed, then proceed normally.</p>
+<blockquote>
+<p>Alembic 可以查看数据库的状态并与应用程序中的表元数据进行比较，根据比较生成“显而易见”的迁移。 这是通过使用 <code>alembic revision</code> 命令的 <code>--autogenerate</code> 选项来实现的，它将所有的待迁移放入我们的新迁移文件中。 我们根据需要手动审查和修改这些，然后正常进行。</p>
+</blockquote>
+<p>To use autogenerate, we first need to modify our <code>env.py</code> so that it gets access to a table metadata object that contains the target. Suppose our application has a <a href="https://docs.sqlalchemy.org/en/14/orm/extensions/declarative/index.html#declarative-toplevel">declarative base</a> in <code>myapp.mymodel</code>. This base contains a <strong><a href="https://docs.sqlalchemy.org/en/14/core/metadata.html#sqlalchemy.schema.MetaData">MetaData</a></strong> object which contains <strong><a href="https://docs.sqlalchemy.org/en/14/core/metadata.html#sqlalchemy.schema.Table">Table</a></strong> objects defining our database. We make sure this is loaded in <code>env.py</code> and then passed to <a href="/en/api/runtime.html#alembic.runtime.environment.EnvironmentContext.configure">EnvironmentContext.configure()</a> via the <code>target_metadata</code> argument. The <code>env.py</code> sample script used in the generic template already has a variable declaration near the top for our convenience, where we replace <code>None</code> with our <strong><a href="https://docs.sqlalchemy.org/en/14/core/metadata.html#sqlalchemy.schema.MetaData">MetaData</a></strong>. Starting with:</p>
+<blockquote>
+<p>要使用自动生成，我们首先需要修改我们的 <code>env.py</code> 以便它可以访问包含目标的表元数据对象。 假设我们的应用程序在 <code>myapp.mymodel</code> 中有一个 <a href="https://docs.sqlalchemy.org/en/14/orm/extensions/declarative/index.html#declarative-toplevel">declarative base</a>。 该 <strong>base</strong> 包含一个 <strong>MetaData</strong> 对象，该对象包含我们定义的数据库的 <strong><a href="https://docs.sqlalchemy.org/en/14/core/metadata.html#sqlalchemy.schema.Table">Table</a></strong> 对象。 我们确保它被加载到 <code>env.py</code> 中，然后通过 <code>target_metadata</code> 参数传递给 <a href="/en/api/runtime.html#alembic.runtime.environment.EnvironmentContext.configure">EnvironmentContext.configure()</a>。 为方便起见，通用模板中使用的 <code>env.py</code> 示例脚本在靠近顶部的地方已经有一个变量声明，我们用 <strong><a href="https://docs.sqlalchemy.org/en/14/core/metadata.html#sqlalchemy.schema.MetaData">MetaData</a></strong> 替换了 <code>None</code>。 比如：</p>
+</blockquote>
+<pre><code class="language-python"># add your model's MetaData object here
+# for 'autogenerate' support
+# from myapp import mymodel
+# target_metadata = mymodel.Base.metadata
+target_metadata = None
+</code></pre>
+<p>we change to:</p>
+<blockquote>
+<p>我们改变成:</p>
+</blockquote>
+<pre><code class="language-python">from myapp.mymodel import Base
+target_metadata = Base.metadata
+</code></pre>
+<ul>
+<li>
+<p><strong>Note</strong>: The above example refers to the <code>generic alembic env.py template</code>, e.g. the one created by default when calling upon <code>alembic init</code>, and not the special-use templates such as <code>multidb</code>. Please consult the source code and comments within the <code>env.py</code> script directly for specific guidance on where and how the autogenerate metadata is established.</p>
+</li>
+<li>
+<blockquote>
+<p><strong>注意</strong>: 上面的例子指的是“通用的 alembic env.py 模板”，例如 调用<code>alembic init</code>时默认创建的那个，而不是像<code>multidb</code>这样的特殊模板。 请直接查阅“env.py”脚本中的源代码和注释，以获取有关在何处以及如何建立自动生成元数据的具体指导。</p>
+</blockquote>
+</li>
+</ul>
+<p>If we look later in the script, down in <code>run_migrations_online()</code>, we can see the directive passed to <strong><a href="/en/api/runtime.html#alembic.runtime.environment.EnvironmentContext.configure">EnvironmentContext.configure()</a></strong>:</p>
+<blockquote>
+<p>如果我们稍后查看脚本，在 <code>run_migrations_online()</code> 中，我们可以看到传递给 <strong><a href="/en/api/runtime.html#alembic.runtime.environment.EnvironmentContext.configure">EnvironmentContext.configure()</a></strong> 的指令：</p>
+</blockquote>
+<pre><code class="language-python">def run_migrations_online():
+    engine = engine_from_config(
+                config.get_section(config.config_ini_section), prefix='sqlalchemy.')
+
+    with engine.connect() as connection:
+        context.configure(
+                    connection=connection,
+                    target_metadata=target_metadata
+                    )
+
+        with context.begin_transaction():
+            context.run_migrations()
+</code></pre>
+<p>We can then use the <code>alembic revision</code> command in conjunction with the <code>--autogenerate</code> option. Suppose our <a href="https://docs.sqlalchemy.org/en/14/core/metadata.html#sqlalchemy.schema.MetaData">MetaData</a> contained a definition for the <code>account</code> table, and the database did not. We’d get output like:</p>
+<blockquote>
+<p>然后我们可以将<code>alembic revision</code> 命令与<code>--autogenerate</code> 选项结合使用。 假设我们的 <a href="https://docs.sqlalchemy.org/en/14/core/metadata.html#sqlalchemy.schema.MetaData">MetaData</a> 包含对 <code>account</code> 表的定义，而数据库没有。 我们会得到如下输出：</p>
+</blockquote>
+<pre><code class="language-bash">$ alembic revision --autogenerate -m &quot;Added account table&quot;
+INFO [alembic.context] Detected added table 'account'
+Generating /path/to/foo/alembic/versions/27c6a30d7c24.py...done
+</code></pre>
+<p>We can then view our file <code>27c6a30d7c24.py</code> and see that a rudimentary migration is already present:</p>
+<blockquote>
+<p>然后我们可以查看我们的 <code>27c6a30d7c24.py</code> 文件, 并看到一个基本的迁移已经存在：</p>
+</blockquote>
+<pre><code class="language-python">&quot;&quot;&quot;empty message
+
+Revision ID: 27c6a30d7c24
+Revises: None
+Create Date: 2011-11-08 11:40:27.089406
+
+&quot;&quot;&quot;
+
+# revision identifiers, used by Alembic.
+revision = '27c6a30d7c24'
+down_revision = None
+
+from alembic import op
+import sqlalchemy as sa
+
+def upgrade():
+    ### commands auto generated by Alembic - please adjust! ###
+    op.create_table(
+    'account',
+    sa.Column('id', sa.Integer()),
+    sa.Column('name', sa.String(length=50), nullable=False),
+    sa.Column('description', sa.VARCHAR(200)),
+    sa.Column('last_transaction_date', sa.DateTime()),
+    sa.PrimaryKeyConstraint('id')
+    )
+    ### end Alembic commands ###
+
+def downgrade():
+    ### commands auto generated by Alembic - please adjust! ###
+    op.drop_table(&quot;account&quot;)
+    ### end Alembic commands ###
+</code></pre>
+<p>The migration hasn’t actually run yet, of course. We do that via the usual <code>upgrade</code> command. We should also go into our migration file and alter it as needed, including adjustments to the directives as well as the addition of other directives which these may be dependent on - specifically data changes in between creates/alters/drops.</p>
+<blockquote>
+<p>当然，迁移还没有真正运行。 我们通过常用的<code>upgrade</code>命令来做到这一点。 我们还应该进入我们的迁移文件并根据需要更改它，包括对指令的调整以及添加这些可能依赖的其他指令 - 特别是在创建/更改/删除之间的数据更改。</p>
+</blockquote>
 
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">
                         <!-- Mobile navigation buttons -->
-                            <a rel="prev" href="../zh/00_tutorial.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                                    <a rel="prev" href="../zh/00_11_next_steps.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                                 <i class="fa fa-angle-left"></i>
                             </a>
-                            <a rel="next" href="../zh/02_generating_sql_scripts.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        
+                                                    <a rel="next" href="../zh/01_01_what_does_autogenerate_detect.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                                 <i class="fa fa-angle-right"></i>
                             </a>
+                        
                         <div style="clear: both"></div>
                     </nav>
                 </div>
             </div>
 
             <nav class="nav-wide-wrapper" aria-label="Page navigation">
-                    <a rel="prev" href="../zh/00_tutorial.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                    <a rel="prev" href="../zh/00_11_next_steps.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                         <i class="fa fa-angle-left"></i>
                     </a>
-                    <a rel="next" href="../zh/02_generating_sql_scripts.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                
+                                    <a rel="next" href="../zh/01_01_what_does_autogenerate_detect.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                         <i class="fa fa-angle-right"></i>
                     </a>
-            </nav>
+                            </nav>
 
         </div>
 
-        <!-- Livereload script (if served using the cli tool) -->
-        <script type="text/javascript">
-            var socket = new WebSocket("ws://localhost:3001/__livereload");
-            socket.onmessage = function (event) {
-                if (event.data === "reload") {
-                    socket.close();
-                    location.reload();
-                }
-            };
-
-            window.onbeforeunload = function() {
-                socket.close();
-            }
-        </script>
-        <script type="text/javascript">
+        
+        
+        
+                <script type="text/javascript">
             window.playground_copyable = true;
         </script>
-        <script src="../elasticlunr.min.js" type="text/javascript" charset="utf-8"></script>
+        
+        
+                <script src="../elasticlunr.min.js" type="text/javascript" charset="utf-8"></script>
         <script src="../mark.min.js" type="text/javascript" charset="utf-8"></script>
         <script src="../searcher.js" type="text/javascript" charset="utf-8"></script>
+        
         <script src="../clipboard.min.js" type="text/javascript" charset="utf-8"></script>
         <script src="../highlight.js" type="text/javascript" charset="utf-8"></script>
         <script src="../book.js" type="text/javascript" charset="utf-8"></script>
 
         <!-- Custom JS scripts -->
+        
+        
     </body>
 </html>
