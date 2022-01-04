@@ -9,11 +9,11 @@
 
 Alembic placed a file `alembic.ini` into the current directory. This is a file that the `alembic` script looks for when invoked. This file can exist in a different directory, with the location to it specified by either the `--config` option for the `alembic` runner or the `ALEMBIC_CONFIG` environment variable (the former takes precedence).
 
-Alembic 将文件 `alembic.ini` 放入当前目录。 这是 `alembic` 脚本在调用时查找的文件。 该文件可以存在于不同的目录中，其位置由 alembic runner 的 `--config` 选项或 `ALEMBIC_CONFIG` 环境变量（前者优先）指定。
+> Alembic 将文件 `alembic.ini` 放入当前目录。 这是 `alembic` 脚本在调用时查找的文件。 该文件可以存在于不同的目录中，其位置由 alembic runner 的 `--config` 选项或 `ALEMBIC_CONFIG` 环境变量（前者优先）指定。
 
 The file generated with the “generic” configuration looks like:
 
-使用“通用(generic)”配置生成的文件如下所示：
+> 使用“通用(generic)”配置生成的文件如下所示：
 
 ```ini
 # A generic, single database configuration.
@@ -152,32 +152,32 @@ datefmt = %H:%M:%S
 
 The file is read using **Python’s ConfigParser.SafeConfigParser** object. The `%(here)s` variable is provided as a substitution variable, which can be used to produce absolute pathnames to directories and files, as we do above with the path to the Alembic script location.
 
-该文件是使用 Python 的 **ConfigParser.SafeConfigParser** 对象读取的。 **%(here)s** 变量作为替代变量提供，可用于生成目录和文件的绝对路径名，就像我们上面对 Alembic 脚本位置的路径所做的那样。
+> 该文件是使用 Python 的 **ConfigParser.SafeConfigParser** 对象读取的。 **%(here)s** 变量作为替代变量提供，可用于生成目录和文件的绝对路径名，就像我们上面对 Alembic 脚本位置的路径所做的那样。
 
 This file contains the following features:
 
-该文件包含以下功能：
+> 该文件包含以下功能：
 
 * [alembic] - this is the section read by Alembic to determine configuration. Alembic itself does not directly read any other areas of the file. The name “alembic” can be customized using the **--name** commandline flag; see [Run Multiple Alembic Environments from one .ini] file for a basic example of this.
-* [alembic] - 这是 Alembic 读取的用于确定配置的部分。 Alembic 本身不直接读取文件的任何其他区域。 可以使用 **--name** 命令行标志自定义名称“alembic”； 有关此操作的基本示例，请参阅[从一个 .ini 文件运行多个 Alembic 环境]。
+* > [alembic] - 这是 Alembic 读取的用于确定配置的部分。 Alembic 本身不直接读取文件的任何其他区域。 可以使用 **--name** 命令行标志自定义名称“alembic”； 有关此操作的基本示例，请参阅[从一个 .ini 文件运行多个 Alembic 环境]。
 * **script_location** - this is the location of the Alembic environment. It is normally specified as a filesystem location, either relative or absolute. If the location is a relative path, it’s interpreted as relative to the current directory.
-* **script_location** - 这是 Alembic 环境的位置。 它通常被指定为相对或绝对的文件系统位置。 如果位置是相对路径，则将其解释为相对于当前目录。
+* > **script_location** - 这是 Alembic 环境的位置。 它通常被指定为相对或绝对的文件系统位置。 如果位置是相对路径，则将其解释为相对于当前目录。
 
     This is the only key required by Alembic in all cases. The generation of the .ini file by the command `alembic init alembic` automatically placed the directory name `alembic` here. The special variable `%(here)s` can also be used, as in `%(here)s/alembic`.
 
-    这是 Alembic 在所有情况下都需要的唯一密钥。 通过命令 `alembic init alembic` 生成的 `.ini` 文件会自动将目录名 `alembic` 放置在这里。 也可以使用特殊变量 `%(here)s`，如 `%(here)s/alembic`。
+    > 这是 Alembic 在所有情况下都需要的唯一密钥。 通过命令 `alembic init alembic` 生成的 `.ini` 文件会自动将目录名 `alembic` 放置在这里。 也可以使用特殊变量 `%(here)s`，如 `%(here)s/alembic`。
 
     For support of applications that package themselves into .egg files, the value can also be specified as a [package resource](https://setuptools.readthedocs.io/en/latest/pkg_resources.html), in which case **resource_filename()** is used to find the file (new in 0.2.2). Any non-absolute URI which contains colons is interpreted here as a resource name, rather than a straight filename.
 
-    为了支持将自身打包成 .egg 文件的应用程序，该值也可以指定为[包资源](https://setuptools.readthedocs.io/en/latest/pkg_resources.html)，在这种情况下，**resource_filename()** 用于查找文件（版本0.2.2 中的新功能）。 任何包含冒号的非绝对 URI 在这里都被解释为资源名称，而不是直接的文件名。
+    > 为了支持将自身打包成 .egg 文件的应用程序，该值也可以指定为[包资源](https://setuptools.readthedocs.io/en/latest/pkg_resources.html)，在这种情况下，**resource_filename()** 用于查找文件（版本0.2.2 中的新功能）。 任何包含冒号的非绝对 URI 在这里都被解释为资源名称，而不是直接的文件名。
 
 * **file_template** - this is the naming scheme used to generate new migration files. The value present is the default, so is commented out. Tokens available include:
-* **file_template** - 这是用于生成新迁移文件的命名方案。 存在的值是默认值，因此被注释掉。 可用的token包括：
+* > **file_template** - 这是用于生成新迁移文件的命名方案。 存在的值是默认值，因此被注释掉。 可用的token包括：
   * **%%(rev)s** - revision id (修订号)
   * **%%(slug)s** - a truncated string derived from the revision message (从修订消息派生的截断字符串)
   * **%%(year)d**, **%%(month).2d**, **%%(day).2d**, **%%(hour).2d**, **%%(minute).2d**, **%%(second).2d** - components of the create date, by default **datetime.datetime.now()** unless the **timezone** configuration option is also used. （创建日期的组成部分，默认为 **datetime.datetime.now()** 除非还使用了 **timezone** 配置选项。）
 * **timezone** - an optional timezone name (e.g. UTC, EST5EDT, etc.) that will be applied to the timestamp which renders inside the migration file’s comment as well as within the filename. This option requires installing the **python-dateutil** library. If **timezone** is specified, the create date object is no longer derived from **datetime.datetime.now()** and is instead generated as:
-* **timezone** - 一个可选的时区名称（例如 UTC、EST5EDT 等），它将应用于在迁移文件的注释以及文件名中呈现的时间戳。 此选项需要安装 **python-dateutil** 库。 如果指定了时区，则创建日期对象不再从 **datetime.datetime.now()** 派生，而是生成为：
+* > **timezone** - 一个可选的时区名称（例如 UTC、EST5EDT 等），它将应用于在迁移文件的注释以及文件名中呈现的时间戳。 此选项需要安装 **python-dateutil** 库。 如果指定了时区，则创建日期对象不再从 **datetime.datetime.now()** 派生，而是生成为：
 
     ```python
     datetime.datetime.utcnow().replace(
@@ -188,25 +188,25 @@ This file contains the following features:
     ```
 
 * **truncate_slug_length** - defaults to 40, the max number of characters to include in the “slug” field.
-* **truncate_slug_length** - 默认为 40，即“slug”字段中包含的最大字符数。
+* > **truncate_slug_length** - 默认为 40，即“slug”字段中包含的最大字符数。
 * **sqlalchemy.url** - A URL to connect to the database via SQLAlchemy. This configuration value is only used if the **env.py** file calls upon them; in the “generic” template, the call to **config.get_main_option("sqlalchemy.url")** in the **run_migrations_offline()** function and the call to **engine_from_config(prefix="sqlalchemy.")** in the **run_migrations_online()** function are where this key is referenced. If the SQLAlchemy URL should come from some other source, such as from environment variables or a global registry, or if the migration environment makes use of multiple database URLs, the developer is encouraged to alter the **env.py** file to use whatever methods are appropriate in order to acquire the database URL or URLs.
-* **sqlalchemy.url** - 通过 SQLAlchemy 连接到数据库的 URL。 此配置值仅在 **env.py** 文件调用它们时使用； 在“通用”模板中，**run_migrations_offline()** 函数中对 **config.get_main_option("sqlalchemy.url")** 的调用和 **run_migrations_online()** 函数中对 **engine_from_config(prefix="sqlalchemy.")** 的调用是该键所在的位置参考。 如果 SQLAlchemy URL 应该来自某些其他源，例如来自环境变量或全局注册表，或者如果迁移环境使用多个数据库 URL，则鼓励开发人员更改 **env.py** 文件以使用任何合适的方法以获取数据库 URL 或 其他URL。
+* > **sqlalchemy.url** - 通过 SQLAlchemy 连接到数据库的 URL。 此配置值仅在 **env.py** 文件调用它们时使用； 在“通用”模板中，**run_migrations_offline()** 函数中对 **config.get_main_option("sqlalchemy.url")** 的调用和 **run_migrations_online()** 函数中对 **engine_from_config(prefix="sqlalchemy.")** 的调用是该键所在的位置参考。 如果 SQLAlchemy URL 应该来自某些其他源，例如来自环境变量或全局注册表，或者如果迁移环境使用多个数据库 URL，则鼓励开发人员更改 **env.py** 文件以使用任何合适的方法以获取数据库 URL 或 其他URL。
 * **revision_environment** - this is a flag which when set to the value ‘true’, will indicate that the migration environment script **env.py** should be run unconditionally when generating new revision files, as well as when running the **alembic history** command.
-* **revision_environment** - 这是一个标志，当设置为值“true”时，将指示在生成新修订文件以及运行 alembic 历史命令时应无条件运行迁移环境脚本 **env.py**。
+* > **revision_environment** - 这是一个标志，当设置为值“true”时，将指示在生成新修订文件以及运行 alembic 历史命令时应无条件运行迁移环境脚本 **env.py**。
 * **sourceless** - when set to ‘true’, revision files that only exist as .pyc or .pyo files in the versions directory will be used as versions, allowing “sourceless” versioning folders. When left at the default of ‘false’, only .py files are consumed as version files.
-* **sourceless** - 当设置为“true”时，版本目录中仅作为 .pyc 或 .pyo 文件存在的修订文件将用作版本，允许“无源”版本控制文件夹。 当保留默认值“false”时，只有 .py 文件被用作版本文件。
+* > **sourceless** - 当设置为“true”时，版本目录中仅作为 .pyc 或 .pyo 文件存在的修订文件将用作版本，允许“无源”版本控制文件夹。 当保留默认值“false”时，只有 .py 文件被用作版本文件。
 * **version_locations** - an optional list of revision file locations, to allow revisions to exist in multiple directories simultaneously. See [Working with Multiple Bases] for examples.
-* **version_locations** - 一个可选的修订文件位置列表，允许修订同时存在于多个目录中。 有关示例，请参阅 [Working with Multiple Bases]。
+* > **version_locations** - 一个可选的修订文件位置列表，允许修订同时存在于多个目录中。 有关示例，请参阅 [Working with Multiple Bases]。
 * **version_path_separator** - a separator of **version_locations** paths. It should be defined if multiple version_locations is used. See [Working with Multiple Bases] for examples.
-* **version_path_separator** - version_locations 路径的分隔符。 如果使用多个 **version_locations**，则应定义它。 有关示例，请参阅[Working with Multiple Bases]。
+* > **version_path_separator** - version_locations 路径的分隔符。 如果使用多个 **version_locations**，则应定义它。 有关示例，请参阅[Working with Multiple Bases]。
 * **output_encoding** - the encoding to use when Alembic writes the **script.py.mako** file into a new migration file. Defaults to `'utf-8'`.
-* **output_encoding** - 当 Alembic 将 **script.py.mako** 文件写入新的迁移文件时使用的编码。 默认为“utf-8”。
+* > **output_encoding** - 当 Alembic 将 **script.py.mako** 文件写入新的迁移文件时使用的编码。 默认为“utf-8”。
 * [loggers], [handlers], [formatters], [logger_*], [handler_*], [formatter_*] - these sections are all part of Python’s standard logging configuration, the mechanics of which are documented at [Configuration File Format]. As is the case with the database connection, these directives are used directly as the result of the **logging.config.fileConfig()** call present in the **env.py** script, which you’re free to modify.
-* [loggers], [handlers], [formatters], [logger_*], [handler_*], [formatter_*] - 这些部分都是 Python 标准日志配置的一部分，其机制记录在配置文件格式中。 与数据库连接的情况一样，这些指令直接作为 **env.py** 脚本中存在的 **logging.config.fileConfig()** 调用的结果使用，您可以自由修改。
+* > [loggers], [handlers], [formatters], [logger_*], [handler_*], [formatter_*] - 这些部分都是 Python 标准日志配置的一部分，其机制记录在配置文件格式中。 与数据库连接的情况一样，这些指令直接作为 **env.py** 脚本中存在的 **logging.config.fileConfig()** 调用的结果使用，您可以自由修改。
 
 For starting up with just a single database and the generic configuration, setting up the SQLAlchemy URL is all that’s needed:
 
-对于只使用单个数据库和通用配置的启动，只需要设置 SQLAlchemy URL：
+> 对于只使用单个数据库和通用配置的启动，只需要设置 SQLAlchemy URL：
 
 ```python
 sqlalchemy.url = postgresql://scott:tiger@localhost/test
