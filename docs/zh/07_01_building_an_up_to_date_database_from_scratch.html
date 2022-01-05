@@ -1,0 +1,220 @@
+<!DOCTYPE HTML>
+<html lang="en" class="sidebar-visible no-js light">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>从头开始构建最新的数据库 - alembic 中文文档</title>
+                
+
+        <!-- Custom HTML head -->
+        
+
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff" />
+
+                <link rel="icon" href="../favicon.svg">
+                        <link rel="shortcut icon" href="../favicon.png">
+                <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+                <link rel="stylesheet" href="../css/print.css" media="print">
+        
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+                <link rel="stylesheet" href="../fonts/fonts.css">
+        
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../highlight.css">
+        <link rel="stylesheet" href="../tomorrow-night.css">
+        <link rel="stylesheet" href="../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+        
+            </head>
+    <body>
+        <!-- Provide site root to javascript -->
+        <script type="text/javascript">
+            var path_to_root = "../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script type="text/javascript">
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script type="text/javascript">
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            var html = document.querySelector('html');
+            html.classList.remove('no-js')
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add('js');
+        </script>
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script type="text/javascript">
+            var html = document.querySelector('html');
+            var sidebar = 'hidden';
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            }
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li class="chapter-item expanded affix "><a href="../zh/_front_matter.html">前言</a></li><li class="spacer"></li><li class="chapter-item expanded "><a href="../zh/00_tutorial.html"><strong aria-hidden="true">1.</strong> 指南</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../zh/00_01_the_migration_enviroment.html"><strong aria-hidden="true">1.1.</strong> 迁移环境</a></li><li class="chapter-item "><a href="../zh/00_02_creating_an_enviroment.html"><strong aria-hidden="true">1.2.</strong> 创建环境</a></li><li class="chapter-item "><a href="../zh/00_03_Editing_the_ini_file.html"><strong aria-hidden="true">1.3.</strong> 编辑.ini文件</a></li><li class="chapter-item "><a href="../zh/00_04_create_a_migration_script.html"><strong aria-hidden="true">1.4.</strong> 创建迁移脚本</a></li><li class="chapter-item "><a href="../zh/00_05_Running_our_first_migration.html"><strong aria-hidden="true">1.5.</strong> 初次运行迁移</a></li><li class="chapter-item "><a href="../zh/00_06_Running_our_second_migration.html"><strong aria-hidden="true">1.6.</strong> 再次运行迁移</a></li><li class="chapter-item "><a href="../zh/00_07_partial_revision_identifiers.html"><strong aria-hidden="true">1.7.</strong> 部分修订标识符</a></li><li class="chapter-item "><a href="../zh/00_08_relative_migration_identifiers.html"><strong aria-hidden="true">1.8.</strong> 相对迁移标识符</a></li><li class="chapter-item "><a href="../zh/00_09_getting_information.html"><strong aria-hidden="true">1.9.</strong> 获取信息</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../zh/00_09_01_viewing_history_ranges.html"><strong aria-hidden="true">1.9.1.</strong> 查看历史范围</a></li></ol></li><li class="chapter-item "><a href="../zh/00_10_downgrading.html"><strong aria-hidden="true">1.10.</strong> 降级</a></li><li class="chapter-item "><a href="../zh/00_11_next_steps.html"><strong aria-hidden="true">1.11.</strong> 下一步</a></li></ol></li><li class="chapter-item expanded "><a href="../zh/01_auto_generating_migrations.html"><strong aria-hidden="true">2.</strong> 自动生成迁移</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../zh/01_01_what_does_autogenerate_detect.html"><strong aria-hidden="true">2.1.</strong> Autogenerate 检测什么</a></li><li class="chapter-item "><a href="../zh/01_02_autogenerating_multiple_metadata_collections.html"><strong aria-hidden="true">2.2.</strong> 自动生成多个元数据集合</a></li><li class="chapter-item "><a href="../zh/01_03_controlling_what_to_be_autogenerated.html"><strong aria-hidden="true">2.3.</strong> 控制要自动生成的内容</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../zh/01_03_01_omitting_schema_names_from_the_autogenerate_process.html"><strong aria-hidden="true">2.3.1.</strong> 从自动生成过程中省略模式名称</a></li><li class="chapter-item "><a href="../zh/01_03_02_omitting_table_names_from_the_autogenerate_process.html"><strong aria-hidden="true">2.3.2.</strong> 从自动生成过程中省略表名</a></li><li class="chapter-item "><a href="../zh/01_03_03_omitting_based_on_object.html"><strong aria-hidden="true">2.3.3.</strong> 基于对象的省略</a></li></ol></li><li class="chapter-item "><a href="../zh/01_04_comparing_and_rendering_types.html"><strong aria-hidden="true">2.4.</strong> 比较和渲染类型</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../zh/01_04_01_controlling_the_module_prefix.html"><strong aria-hidden="true">2.4.1.</strong> 控制模块前缀</a></li><li class="chapter-item "><a href="../zh/01_04_02_affecting_the_rendering_of_types_themselves.html"><strong aria-hidden="true">2.4.2.</strong> 影响类型本身的渲染</a></li><li class="chapter-item "><a href="../zh/01_04_03_comparing_types.html"><strong aria-hidden="true">2.4.3.</strong> 比较类型</a></li></ol></li><li class="chapter-item "><a href="../zh/01_05_applying_post_processing.html"><strong aria-hidden="true">2.5.</strong> 将提交处理过程和 Python 代码格式化程序应用于生成的修订</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../zh/01_05_01_basic_formatter_configuration.html"><strong aria-hidden="true">2.5.1.</strong> 基本格式化程序配置</a></li><li class="chapter-item "><a href="../zh/01_05_02_writing_custom_hooks_as_python_functions.html"><strong aria-hidden="true">2.5.2.</strong> 自定义Python函数钩子</a></li></ol></li></ol></li><li class="chapter-item expanded "><a href="../zh/02_generating_sql_scripts.html"><strong aria-hidden="true">3.</strong> 生成SQL脚本(又称离线模式)</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../zh/02_01_getting_the_start_version.html"><strong aria-hidden="true">3.1.</strong> 获取开始版本</a></li><li class="chapter-item "><a href="../zh/02_02_writing_migration_scripts_to_support_script_generation.html"><strong aria-hidden="true">3.2.</strong> 编写迁移脚本以支持脚本生成</a></li><li class="chapter-item "><a href="../zh/02_03_customizing_the_environment.html"><strong aria-hidden="true">3.3.</strong> 自定义环境</a></li></ol></li><li class="chapter-item expanded "><a href="../zh/03_the_importance_of_naming_constraints.html"><strong aria-hidden="true">4.</strong> 命名约束的重要性</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../zh/03_01_integration_of_naming_conventions_into_operations_autogenerate.html"><strong aria-hidden="true">4.1.</strong> 将命名约定集成到操作中以及自动生成中</a></li></ol></li><li class="chapter-item expanded "><a href="../zh/04_running_batch_migrations_for_sqlite_and_other_databases.html"><strong aria-hidden="true">5.</strong> 在SQLite和其他数据中运行&quot;Batch&quot;迁移脚本</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../zh/04_01_controlling_table_reflection.html"><strong aria-hidden="true">5.1.</strong> 控制表反射</a></li><li class="chapter-item "><a href="../zh/04_02_dealing_with_constraints.html"><strong aria-hidden="true">5.2.</strong> 处理约束</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../zh/04_02_01_dropping_unnamed_or_named_foreign_key_constraints.html"><strong aria-hidden="true">5.2.1.</strong> 删除未命名或命名的外键约束</a></li><li class="chapter-item "><a href="../zh/04_02_02_including_unnamed_unique_constraints.html"><strong aria-hidden="true">5.2.2.</strong> 包含未命名的 UNIQUE 约束</a></li><li class="chapter-item "><a href="../zh/04_02_03_changing_the_type_of_boolean.html"><strong aria-hidden="true">5.2.3.</strong> 更改布尔、枚举和其他隐式 CHECK 数据类型的类型</a></li><li class="chapter-item "><a href="../zh/04_02_04_including_check_constraints.html"><strong aria-hidden="true">5.2.4.</strong> 包括 CHECK 约束</a></li><li class="chapter-item "><a href="../zh/04_02_05_dealing_with_referencing_foreign_keys.html"><strong aria-hidden="true">5.2.5.</strong> 处理引用外键</a></li></ol></li><li class="chapter-item "><a href="../zh/04_03_working_in_offline_mode.html"><strong aria-hidden="true">5.3.</strong> 在离线模式下工作</a></li><li class="chapter-item "><a href="../zh/04_04_batch_mode_with_autogenerate.html"><strong aria-hidden="true">5.4.</strong> 带自动生成的批处理模式</a></li><li class="chapter-item "><a href="../zh/04_05_batch_mode_with_databases_other_than_sqlite.html"><strong aria-hidden="true">5.5.</strong> SQLite 以外的数据库的批处理模式</a></li></ol></li><li class="chapter-item expanded "><a href="../zh/05_working_with_branches.html"><strong aria-hidden="true">6.</strong> 工作分支</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../zh/05_01_merging_branches.html"><strong aria-hidden="true">6.1.</strong> 合并分支</a></li><li class="chapter-item "><a href="../zh/05_02_working_with_explicit_branches.html"><strong aria-hidden="true">6.2.</strong> 使用显式分支</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../zh/05_02_01_referring_to_all_heads_at_once.html"><strong aria-hidden="true">6.2.1.</strong> 一次引用到所有的head</a></li><li class="chapter-item "><a href="../zh/05_02_02_referring_to_a_specific_version.html"><strong aria-hidden="true">6.2.2.</strong> 引用特定版本</a></li><li class="chapter-item "><a href="../zh/05_02_03_working_with_branch_labels.html"><strong aria-hidden="true">6.2.3.</strong> 使用分支标注</a></li><li class="chapter-item "><a href="../zh/05_02_04_more_label_syntaxes.html"><strong aria-hidden="true">6.2.4.</strong> 更多标注语法</a></li></ol></li><li class="chapter-item "><a href="../zh/05_03_working_with_multiple_bases.html"><strong aria-hidden="true">6.3.</strong> 基于多个base工作</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../zh/05_03_01_setting_up_multiple_version_directories.html"><strong aria-hidden="true">6.3.1.</strong> 设置多版本目录</a></li><li class="chapter-item "><a href="../zh/05_03_01_creating_a_labeled_base_revision.html"><strong aria-hidden="true">6.3.2.</strong> 创建带标注的基本修订</a></li><li class="chapter-item "><a href="../zh/05_03_02_running_with_multiple_bases.html"><strong aria-hidden="true">6.3.3.</strong> 基于多个base运行</a></li></ol></li><li class="chapter-item "><a href="../zh/05_04_branch_dependencies.html"><strong aria-hidden="true">6.4.</strong> 分支依赖</a></li></ol></li><li class="chapter-item expanded "><a href="../zh/06_operation_reference.html"><strong aria-hidden="true">7.</strong> operation参考</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../zh/06_01_operations.html"><strong aria-hidden="true">7.1.</strong> alembic.operations.Operations</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../zh/06_01_01_add_column.html"><strong aria-hidden="true">7.1.1.</strong> add_column</a></li><li class="chapter-item "><a href="../zh/06_01_02_alter_column.html"><strong aria-hidden="true">7.1.2.</strong> alter_column</a></li><li class="chapter-item "><a href="../zh/06_01_03_batch_alter_table.html"><strong aria-hidden="true">7.1.3.</strong> batch_alter_table</a></li><li class="chapter-item "><a href="../zh/06_01_04_bulk_insert.html"><strong aria-hidden="true">7.1.4.</strong> bulk_insert</a></li><li class="chapter-item "><a href="../zh/06_01_05_create_check_constraint.html"><strong aria-hidden="true">7.1.5.</strong> create_check_constraint</a></li><li class="chapter-item "><a href="../zh/06_01_06_create_exclude_constraint.html"><strong aria-hidden="true">7.1.6.</strong> create_exclude_constraint</a></li><li class="chapter-item "><a href="../zh/06_01_07_create_foreign_key.html"><strong aria-hidden="true">7.1.7.</strong> create_foreign_key</a></li><li class="chapter-item "><a href="../zh/06_01_08_create_index.html"><strong aria-hidden="true">7.1.8.</strong> create_index</a></li><li class="chapter-item "><a href="../zh/06_01_09_create_primary_key.html"><strong aria-hidden="true">7.1.9.</strong> create_primary_key</a></li><li class="chapter-item "><a href="../zh/06_01_10_create_table.html"><strong aria-hidden="true">7.1.10.</strong> create_table</a></li><li class="chapter-item "><a href="../zh/06_01_11_create_table_comment.html"><strong aria-hidden="true">7.1.11.</strong> create_table_comment</a></li><li class="chapter-item "><a href="../zh/06_01_12_create_unique_constraint.html"><strong aria-hidden="true">7.1.12.</strong> create_unique_constraint</a></li><li class="chapter-item "><a href="../zh/06_01_13_drop_column.html"><strong aria-hidden="true">7.1.13.</strong> drop_column</a></li><li class="chapter-item "><a href="../zh/06_01_14_drop_constraint.html"><strong aria-hidden="true">7.1.14.</strong> drop_constraint</a></li><li class="chapter-item "><a href="../zh/06_01_15_drop_index.html"><strong aria-hidden="true">7.1.15.</strong> drop_index</a></li><li class="chapter-item "><a href="../zh/06_01_16_drop_table.html"><strong aria-hidden="true">7.1.16.</strong> drop_table</a></li><li class="chapter-item "><a href="../zh/06_01_17_drop_table_comment.html"><strong aria-hidden="true">7.1.17.</strong> drop_table_comment</a></li><li class="chapter-item "><a href="../zh/06_01_18_execute.html"><strong aria-hidden="true">7.1.18.</strong> execute</a></li><li class="chapter-item "><a href="../zh/06_01_19_f.html"><strong aria-hidden="true">7.1.19.</strong> f</a></li><li class="chapter-item "><a href="../zh/06_01_20_get_bind.html"><strong aria-hidden="true">7.1.20.</strong> get_bind</a></li><li class="chapter-item "><a href="../zh/06_01_21_get_context.html"><strong aria-hidden="true">7.1.21.</strong> get_context</a></li><li class="chapter-item "><a href="../zh/06_01_22_implementation_for.html"><strong aria-hidden="true">7.1.22.</strong> implementation_for</a></li><li class="chapter-item "><a href="../zh/06_01_23_inline_literal.html"><strong aria-hidden="true">7.1.23.</strong> inline_literal</a></li><li class="chapter-item "><a href="../zh/06_01_24_invoke.html"><strong aria-hidden="true">7.1.24.</strong> invoke</a></li><li class="chapter-item "><a href="../zh/06_01_25_register_operation.html"><strong aria-hidden="true">7.1.25.</strong> register_operation</a></li><li class="chapter-item "><a href="../zh/06_01_26_rename_table.html"><strong aria-hidden="true">7.1.26.</strong> rename_table</a></li></ol></li><li class="chapter-item "><a href="../zh/06_02_batch_operations.html"><strong aria-hidden="true">7.2.</strong> alembic.operations.BatchOperations</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../zh/06_02_01_add_column.html"><strong aria-hidden="true">7.2.1.</strong> add_column</a></li><li class="chapter-item "><a href="../zh/06_02_02_alter_column.html"><strong aria-hidden="true">7.2.2.</strong> alter_column</a></li><li class="chapter-item "><a href="../zh/06_02_03_create_check_constraint.html"><strong aria-hidden="true">7.2.3.</strong> create_check_constraint</a></li><li class="chapter-item "><a href="../zh/06_02_04_create_exclude_constraint.html"><strong aria-hidden="true">7.2.4.</strong> create_exclude_constraint</a></li><li class="chapter-item "><a href="../zh/06_02_05_create_foreign_key.html"><strong aria-hidden="true">7.2.5.</strong> create_foreign_key</a></li><li class="chapter-item "><a href="../zh/06_02_06_create_index.html"><strong aria-hidden="true">7.2.6.</strong> create_index</a></li><li class="chapter-item "><a href="../zh/06_02_07_create_primary_key.html"><strong aria-hidden="true">7.2.7.</strong> create_primary_key</a></li><li class="chapter-item "><a href="../zh/06_02_08_create_table_comment.html"><strong aria-hidden="true">7.2.8.</strong> create_table_comment</a></li><li class="chapter-item "><a href="../zh/06_02_09_create_unique_constraint.html"><strong aria-hidden="true">7.2.9.</strong> create_unique_constraint</a></li><li class="chapter-item "><a href="../zh/06_02_10_drop_column.html"><strong aria-hidden="true">7.2.10.</strong> drop_column</a></li><li class="chapter-item "><a href="../zh/06_02_11_drop_constraint.html"><strong aria-hidden="true">7.2.11.</strong> drop_constraint</a></li><li class="chapter-item "><a href="../zh/06_02_12_drop_index.html"><strong aria-hidden="true">7.2.12.</strong> drop_index</a></li><li class="chapter-item "><a href="../zh/06_02_13_drop_table_comment.html"><strong aria-hidden="true">7.2.13.</strong> drop_table_comment</a></li></ol></li></ol></li><li class="chapter-item expanded "><a href="../zh/07_cook_book.html"><strong aria-hidden="true">8.</strong> cookbook</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../zh/07_01_building_an_up_to_date_database_from_scratch.html" class="active"><strong aria-hidden="true">8.1.</strong> 从头开始构建最新的数据库</a></li><li class="chapter-item "><a href="../zh/07_02_conditional_migration_elements.html"><strong aria-hidden="true">8.2.</strong> 条件迁移元素</a></li><li class="chapter-item "><a href="../zh/07_03_sharing_a_connection_with_a_series_of_migration_commands_and_environments.html"><strong aria-hidden="true">8.3.</strong> 与一系列迁移命令和环境共享连接</a></li><li class="chapter-item "><a href="../zh/07_04_replaceable_objects.html"><strong aria-hidden="true">8.4.</strong> 可替换对象</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../zh/07_04_01_the_replaceable_object_structure.html"><strong aria-hidden="true">8.4.1.</strong> 可替换对象结构</a></li><li class="chapter-item "><a href="../zh/07_04_02_create_operations_for_the_target_objects.html"><strong aria-hidden="true">8.4.2.</strong> 为目标对象创建操作</a></li><li class="chapter-item "><a href="../zh/07_04_03_create_initial_migrations.html"><strong aria-hidden="true">8.4.3.</strong> 创建初始迁移</a></li><li class="chapter-item "><a href="../zh/07_04_04_create_revision_migrations.html"><strong aria-hidden="true">8.4.4.</strong> 创建修订迁移</a></li></ol></li><li class="chapter-item "><a href="../zh/07_05_rudimental_schema_level_multi_tenancy_for_postgresql_databases.html"><strong aria-hidden="true">8.5.</strong> PostgreSQL 数据库的基本架构级多租户</a></li><li class="chapter-item "><a href="../zh/07_06_dont_generate_empty_migrations_with_autogenerate.html"><strong aria-hidden="true">8.6.</strong> 不要使用 Autogenerate 生成空迁移</a></li><li class="chapter-item "><a href="../zh/07_07_dont_emit_drop_index_when_the_table_is_to_be_dropped_as_well.html"><strong aria-hidden="true">8.7.</strong> 当表也将被删除时不要发出 DROP INDEX</a></li><li class="chapter-item "><a href="../zh/07_08_dont_generate_any_drop_table_directives_with_autogenerate.html"><strong aria-hidden="true">8.8.</strong> 不要使用autogenerate生成任何 DROP TABLE 指令</a></li><li class="chapter-item "><a href="../zh/07_09_apply_custom_sorting_to_table_columns_within_create_table.html"><strong aria-hidden="true">8.9.</strong> 将自定义排序应用于 CREATE TABLE 中的表列</a></li><li class="chapter-item "><a href="../zh/07_10_dont_emit_create_table_statements_for_views.html"><strong aria-hidden="true">8.10.</strong> 不要为视图发出 CREATE TABLE 语句</a></li><li class="chapter-item "><a href="../zh/07_11_run_multiple_alembic_environments_from_one_ini_file.html"><strong aria-hidden="true">8.11.</strong> 从一个 .ini 文件运行多个 Alembic 环境</a></li><li class="chapter-item "><a href="../zh/07_12_print_python_code_to_generate_particular_database_tables.html"><strong aria-hidden="true">8.12.</strong> 打印 Python 代码以生成特定的数据库表</a></li><li class="chapter-item "><a href="../zh/07_13_run_alembic_operation_objects_directly_as_in_from_autogenerate.html"><strong aria-hidden="true">8.13.</strong> 直接运行 Alembic 操作对象（如来自autogenerate）</a></li><li class="chapter-item "><a href="../zh/07_14_test_current_database_revision_is_at_heads.html"><strong aria-hidden="true">8.14.</strong> 测试当前的数据库修订版本处于head</a></li><li class="chapter-item "><a href="../zh/07_15_using_asyncio_with_alembic.html"><strong aria-hidden="true">8.15.</strong> 将 Asyncio 与 Alembic 结合使用</a></li></ol></li><li class="chapter-item expanded "><a href="../zh/08_api_details.html"><strong aria-hidden="true">9.</strong> API详细</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../zh/08_01_overview.html"><strong aria-hidden="true">9.1.</strong> 概览</a></li><li class="chapter-item "><a href="../zh/08_02_runtime_objects.html"><strong aria-hidden="true">9.2.</strong> 运行时对象</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../zh/08_02_01_the_environment_context.html"><strong aria-hidden="true">9.2.1.</strong> 环境上下文</a></li><li class="chapter-item "><a href="../zh/08_02_02_the_migration_context.html"><strong aria-hidden="true">9.2.2.</strong> 迁移上下文</a></li></ol></li><li class="chapter-item "><a href="../zh/08_03_configuration.html"><strong aria-hidden="true">9.3.</strong> 配置</a></li><li class="chapter-item "><a href="../zh/08_04_commands.html"><strong aria-hidden="true">9.4.</strong> 命令</a></li><li class="chapter-item "><a href="../zh/08_05_operation_directives.html"><strong aria-hidden="true">9.5.</strong> 操作指令</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../zh/08_05_01_operation_plugins.html"><strong aria-hidden="true">9.5.1.</strong> 操作插件</a></li><li class="chapter-item "><a href="../zh/08_05_02_built_in_operation_objects.html"><strong aria-hidden="true">9.5.2.</strong> 内置操作对象</a></li></ol></li><li class="chapter-item "><a href="../zh/08_06_autogeneration.html"><strong aria-hidden="true">9.6.</strong> 自动生成</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../zh/08_06_01_getting_diffs.html"><strong aria-hidden="true">9.6.1.</strong> 获取差异</a></li><li class="chapter-item "><a href="../zh/08_06_02_customizing_revision_generation.html"><strong aria-hidden="true">9.6.2.</strong> 生成自定义修订</a></li><li class="chapter-item "><a href="../zh/08_06_03_autogenerating_custom_operation_directives.html"><strong aria-hidden="true">9.6.3.</strong> Autogenerate自定义操作指令</a></li></ol></li><li class="chapter-item "><a href="../zh/08_07_script_directory.html"><strong aria-hidden="true">9.7.</strong> 脚本目录</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../zh/08_07_01_revision.html"><strong aria-hidden="true">9.7.1.</strong> 修订</a></li><li class="chapter-item "><a href="../zh/08_07_02_write_hooks.html"><strong aria-hidden="true">9.7.2.</strong> 写钩子</a></li></ol></li><li class="chapter-item "><a href="../zh/08_08_ddl_internals.html"><strong aria-hidden="true">9.8.</strong> DDL 内部结构</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../zh/08_08_01_mysql.html"><strong aria-hidden="true">9.8.1.</strong> MySQL</a></li><li class="chapter-item "><a href="../zh/08_08_02_ms_sql.html"><strong aria-hidden="true">9.8.2.</strong> MS-SQL</a></li><li class="chapter-item "><a href="../zh/08_08_03_postgresql.html"><strong aria-hidden="true">9.8.3.</strong> Postgresql</a></li><li class="chapter-item "><a href="../zh/08_08_04_sqlite.html"><strong aria-hidden="true">9.8.4.</strong> SQLite</a></li></ol></li></ol></li><li class="chapter-item expanded "><a href="../zh/09_change_log.html"><strong aria-hidden="true">10.</strong> 更新历史</a></li><li class="spacer"></li><li class="chapter-item expanded affix "><a href="../en/genindex.html">index</a></li><li class="chapter-item expanded affix "><a href="../en/py-modindex.html">module-index</a></li><li class="chapter-item expanded affix "><a href="../en/index.html">Document-English</a></li></ol>            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky bordered">
+                    <div class="left-buttons">
+                        <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </button>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light (default)</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                                                <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                                            </div>
+
+                    <h1 class="menu-title">alembic 中文文档</h1>
+
+                    <div class="right-buttons">
+                                                <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                                                                        
+                    </div>
+                </div>
+
+                                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+                
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script type="text/javascript">
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="building-an-up-to-date-database-from-scratch"><a class="header" href="#building-an-up-to-date-database-from-scratch">Building an Up to Date Database from Scratch</a></h1>
+<p><strong>从头开始构建最新的数据库</strong></p>
+<p>There’s a theory of database migrations that says that the revisions in existence for a database should be able to go from an entirely blank schema to the finished product, and back again. Alembic can roll this way. Though we think it’s kind of overkill, considering that SQLAlchemy itself can emit the full CREATE statements for any given model using <strong><a href="https://docs.sqlalchemy.org/en/14/core/metadata.html#sqlalchemy.schema.MetaData.create_all">create_all()</a></strong>. If you check out a copy of an application, running this will give you the entire database in one shot, without the need to run through all those migration files, which are instead tailored towards applying incremental changes to an existing database.</p>
+<p>Alembic can integrate with a <strong><a href="https://docs.sqlalchemy.org/en/14/core/metadata.html#sqlalchemy.schema.MetaData.create_all">create_all()</a></strong> script quite easily. After running the create operation, tell Alembic to create a new version table, and to stamp it with the most recent revision (i.e. <code>head</code>):</p>
+<pre><code class="language-python"># inside of a &quot;create the database&quot; script, first create
+# tables:
+my_metadata.create_all(engine)
+
+# then, load the Alembic configuration and generate the
+# version table, &quot;stamping&quot; it with the most recent rev:
+from alembic.config import Config
+from alembic import command
+alembic_cfg = Config(&quot;/path/to/yourapp/alembic.ini&quot;)
+command.stamp(alembic_cfg, &quot;head&quot;)
+</code></pre>
+<p>When this approach is used, the application can generate the database using normal SQLAlchemy techniques instead of iterating through hundreds of migration scripts. Now, the purpose of the migration scripts is relegated just to movement between versions on out-of-date databases, not new databases. You can now remove old migration files that are no longer represented on any existing environments.</p>
+<p>To prune old migration files, simply delete the files. Then, in the earliest, still-remaining migration file, set <code>down_revision</code> to <code>None</code>:</p>
+<pre><code class="language-python"># replace this:
+#down_revision = '290696571ad2'
+
+# with this:
+down_revision = None
+</code></pre>
+<p>That file now becomes the “base” of the migration series.</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                                                    <a rel="prev" href="../zh/07_cook_book.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+                        
+                                                    <a rel="next" href="../zh/07_02_conditional_migration_elements.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+                        
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                                    <a rel="prev" href="../zh/07_cook_book.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+                
+                                    <a rel="next" href="../zh/07_02_conditional_migration_elements.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+                            </nav>
+
+        </div>
+
+        
+        
+        
+                <script type="text/javascript">
+            window.playground_copyable = true;
+        </script>
+        
+        
+                <script src="../elasticlunr.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../mark.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../searcher.js" type="text/javascript" charset="utf-8"></script>
+        
+        <script src="../clipboard.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../highlight.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../book.js" type="text/javascript" charset="utf-8"></script>
+
+        <!-- Custom JS scripts -->
+        
+        
+    </body>
+</html>
