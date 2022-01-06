@@ -1,5 +1,9 @@
 
+import enum
 import json
+import logging
+
+from typing import Dict, List, Tuple
 from pyquery import PyQuery
 
 
@@ -37,162 +41,7 @@ def main():
 def parse_section():
 
     html2 = """
-        <section id="create-revision-migrations">
-<h3>Create Revision Migrations<a class="headerlink" href="#create-revision-migrations" title="Permalink to this headline">¶</a></h3>
-<p>Finally, we can illustrate how we would “revise” these objects.
-Let’s consider we added a new column <code class="docutils literal notranslate"><span class="pre">email</span></code> to our <code class="docutils literal notranslate"><span class="pre">customer</span></code> table:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ alembic revision -m "add email col"
-</pre></div>
-</div>
-<p>The migration is:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>
-
-<span class="c1"># revision identifiers, used by Alembic.</span>
-<span class="n">revision</span> <span class="o">=</span> <span class="s1">'191a2d20b025'</span>
-<span class="n">down_revision</span> <span class="o">=</span> <span class="s1">'28af9800143f'</span>
-<span class="n">branch_labels</span> <span class="o">=</span> <span class="kc">None</span>
-<span class="n">depends_on</span> <span class="o">=</span> <span class="kc">None</span>
-
-<span class="kn">from</span> <span class="nn">alembic</span> <span class="kn">import</span> <span class="n">op</span>
-<span class="kn">import</span> <span class="nn">sqlalchemy</span> <span class="k">as</span> <span class="nn">sa</span>
-
-
-<span class="k">def</span> <span class="nf">upgrade</span><span class="p">():</span>
-    <span class="n">op</span><span class="o">.</span><span class="n">add_column</span><span class="p">(</span><span class="s2">"customer"</span><span class="p">,</span> <span class="n">sa</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="s2">"email"</span><span class="p">,</span> <span class="n">sa</span><span class="o">.</span><span class="n">String</span><span class="p">()))</span>
-
-
-<span class="k">def</span> <span class="nf">downgrade</span><span class="p">():</span>
-    <span class="n">op</span><span class="o">.</span><span class="n">drop_column</span><span class="p">(</span><span class="s2">"customer"</span><span class="p">,</span> <span class="s2">"email"</span><span class="p">)</span>
-</pre></div>
-</div>
-<p>We now need to recreate the <code class="docutils literal notranslate"><span class="pre">customer_view</span></code> view and the
-<code class="docutils literal notranslate"><span class="pre">add_customer_sp</span></code> function.   To include downgrade capability, we will
-need to refer to the <strong>previous</strong> version of the construct; the
-<code class="docutils literal notranslate"><span class="pre">replace_view()</span></code> and <code class="docutils literal notranslate"><span class="pre">replace_sp()</span></code> operations we’ve created make
-this possible, by allowing us to refer to a specific, previous revision.
-the <code class="docutils literal notranslate"><span class="pre">replaces</span></code> and <code class="docutils literal notranslate"><span class="pre">replace_with</span></code> arguments accept a dot-separated
-string, which refers to a revision number and an object name, such
-as <code class="docutils literal notranslate"><span class="pre">"28af9800143f.customer_view"</span></code>.  The <code class="docutils literal notranslate"><span class="pre">ReversibleOp</span></code> class makes use
-of the <a class="reference internal" href="ops.html#alembic.operations.Operations.get_context" title="alembic.operations.Operations.get_context"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Operations.get_context()</span></code></a> method to locate the version file
-we refer to:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ alembic revision -m "update views/sp"
-</pre></div>
-</div>
-<p>The migration:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>
-
-<span class="c1"># revision identifiers, used by Alembic.</span>
-<span class="n">revision</span> <span class="o">=</span> <span class="s1">'199028bf9856'</span>
-<span class="n">down_revision</span> <span class="o">=</span> <span class="s1">'191a2d20b025'</span>
-<span class="n">branch_labels</span> <span class="o">=</span> <span class="kc">None</span>
-<span class="n">depends_on</span> <span class="o">=</span> <span class="kc">None</span>
-
-<span class="kn">from</span> <span class="nn">alembic</span> <span class="kn">import</span> <span class="n">op</span>
-<span class="kn">import</span> <span class="nn">sqlalchemy</span> <span class="k">as</span> <span class="nn">sa</span>
-
-<span class="kn">from</span> <span class="nn">foo</span> <span class="kn">import</span> <span class="n">ReplaceableObject</span>
-
-<span class="n">customer_view</span> <span class="o">=</span> <span class="n">ReplaceableObject</span><span class="p">(</span>
-    <span class="s2">"customer_view"</span><span class="p">,</span>
-    <span class="s2">"SELECT name, order_count, email "</span>
-    <span class="s2">"FROM customer WHERE order_count &gt; 0"</span>
-<span class="p">)</span>
-
-<span class="n">add_customer_sp</span> <span class="o">=</span> <span class="n">ReplaceableObject</span><span class="p">(</span>
-    <span class="s2">"add_customer_sp(name varchar, order_count integer, email varchar)"</span><span class="p">,</span>
-    
-<span class="p">)</span>
-
-
-<span class="k">def</span> <span class="nf">upgrade</span><span class="p">():</span>
-    <span class="n">op</span><span class="o">.</span><span class="n">replace_view</span><span class="p">(</span><span class="n">customer_view</span><span class="p">,</span> <span class="n">replaces</span><span class="o">=</span><span class="s2">"28af9800143f.customer_view"</span><span class="p">)</span>
-    <span class="n">op</span><span class="o">.</span><span class="n">replace_sp</span><span class="p">(</span><span class="n">add_customer_sp</span><span class="p">,</span> <span class="n">replaces</span><span class="o">=</span><span class="s2">"28af9800143f.add_customer_sp"</span><span class="p">)</span>
-
-
-<span class="k">def</span> <span class="nf">downgrade</span><span class="p">():</span>
-    <span class="n">op</span><span class="o">.</span><span class="n">replace_view</span><span class="p">(</span><span class="n">customer_view</span><span class="p">,</span> <span class="n">replace_with</span><span class="o">=</span><span class="s2">"28af9800143f.customer_view"</span><span class="p">)</span>
-    <span class="n">op</span><span class="o">.</span><span class="n">replace_sp</span><span class="p">(</span><span class="n">add_customer_sp</span><span class="p">,</span> <span class="n">replace_with</span><span class="o">=</span><span class="s2">"28af9800143f.add_customer_sp"</span><span class="p">)</span>
-</pre></div>
-</div>
-<p>Above, instead of using <code class="docutils literal notranslate"><span class="pre">create_view()</span></code>, <code class="docutils literal notranslate"><span class="pre">create_sp()</span></code>,
-<code class="docutils literal notranslate"><span class="pre">drop_view()</span></code>, and <code class="docutils literal notranslate"><span class="pre">drop_sp()</span></code> methods, we now use <code class="docutils literal notranslate"><span class="pre">replace_view()</span></code> and
-<code class="docutils literal notranslate"><span class="pre">replace_sp()</span></code>.  The replace operation we’ve built always runs a DROP <em>and</em>
-a CREATE.  Running an upgrade to head we see:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ alembic upgrade head
-INFO  [alembic.runtime.migration] Context impl PostgresqlImpl.
-INFO  [alembic.runtime.migration] Will assume transactional DDL.
-INFO  [sqlalchemy.engine.base.Engine] BEGIN (implicit)
-INFO  [sqlalchemy.engine.base.Engine] select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%(name)s
-INFO  [sqlalchemy.engine.base.Engine] {'name': u'alembic_version'}
-INFO  [sqlalchemy.engine.base.Engine] SELECT alembic_version.version_num
-FROM alembic_version
-INFO  [sqlalchemy.engine.base.Engine] {}
-INFO  [alembic.runtime.migration] Running upgrade 28af9800143f -&gt; 191a2d20b025, add email col
-INFO  [sqlalchemy.engine.base.Engine] ALTER TABLE customer ADD COLUMN email VARCHAR
-INFO  [sqlalchemy.engine.base.Engine] {}
-INFO  [sqlalchemy.engine.base.Engine] UPDATE alembic_version SET version_num='191a2d20b025' WHERE alembic_version.version_num = '28af9800143f'
-INFO  [sqlalchemy.engine.base.Engine] {}
-INFO  [alembic.runtime.migration] Running upgrade 191a2d20b025 -&gt; 199028bf9856, update views/sp
-INFO  [sqlalchemy.engine.base.Engine] DROP VIEW customer_view
-INFO  [sqlalchemy.engine.base.Engine] {}
-INFO  [sqlalchemy.engine.base.Engine] CREATE VIEW customer_view AS SELECT name, order_count, email FROM customer WHERE order_count &gt; 0
-INFO  [sqlalchemy.engine.base.Engine] {}
-INFO  [sqlalchemy.engine.base.Engine] DROP FUNCTION add_customer_sp(name varchar, order_count integer)
-INFO  [sqlalchemy.engine.base.Engine] {}
-INFO  [sqlalchemy.engine.base.Engine] CREATE FUNCTION add_customer_sp(name varchar, order_count integer, email varchar)
-    RETURNS integer AS $$
-    BEGIN
-        insert into customer (name, order_count, email)
-        VALUES (in_name, in_order_count, email);
-    END;
-    $$ LANGUAGE plpgsql;
-
-INFO  [sqlalchemy.engine.base.Engine] {}
-INFO  [sqlalchemy.engine.base.Engine] UPDATE alembic_version SET version_num='199028bf9856' WHERE alembic_version.version_num = '191a2d20b025'
-INFO  [sqlalchemy.engine.base.Engine] {}
-INFO  [sqlalchemy.engine.base.Engine] COMMIT
-</pre></div>
-</div>
-<p>After adding our new <code class="docutils literal notranslate"><span class="pre">email</span></code> column, we see that both <code class="docutils literal notranslate"><span class="pre">customer_view</span></code>
-and <code class="docutils literal notranslate"><span class="pre">add_customer_sp()</span></code> are dropped before the new version is created.
-If we downgrade back to the old version, we see the old version of these
-recreated again within the downgrade for this migration:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ alembic downgrade 28af9800143
-INFO  [alembic.runtime.migration] Context impl PostgresqlImpl.
-INFO  [alembic.runtime.migration] Will assume transactional DDL.
-INFO  [sqlalchemy.engine.base.Engine] BEGIN (implicit)
-INFO  [sqlalchemy.engine.base.Engine] select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where pg_catalog.pg_table_is_visible(c.oid) and relname=%(name)s
-INFO  [sqlalchemy.engine.base.Engine] {'name': u'alembic_version'}
-INFO  [sqlalchemy.engine.base.Engine] SELECT alembic_version.version_num
-FROM alembic_version
-INFO  [sqlalchemy.engine.base.Engine] {}
-INFO  [alembic.runtime.migration] Running downgrade 199028bf9856 -&gt; 191a2d20b025, update views/sp
-INFO  [sqlalchemy.engine.base.Engine] DROP VIEW customer_view
-INFO  [sqlalchemy.engine.base.Engine] {}
-INFO  [sqlalchemy.engine.base.Engine] CREATE VIEW customer_view AS SELECT name, order_count FROM customer WHERE order_count &gt; 0
-INFO  [sqlalchemy.engine.base.Engine] {}
-INFO  [sqlalchemy.engine.base.Engine] DROP FUNCTION add_customer_sp(name varchar, order_count integer, email varchar)
-INFO  [sqlalchemy.engine.base.Engine] {}
-INFO  [sqlalchemy.engine.base.Engine] CREATE FUNCTION add_customer_sp(name varchar, order_count integer)
-    RETURNS integer AS $$
-    BEGIN
-        insert into customer (name, order_count)
-        VALUES (in_name, in_order_count);
-    END;
-    $$ LANGUAGE plpgsql;
-
-INFO  [sqlalchemy.engine.base.Engine] {}
-INFO  [sqlalchemy.engine.base.Engine] UPDATE alembic_version SET version_num='191a2d20b025' WHERE alembic_version.version_num = '199028bf9856'
-INFO  [sqlalchemy.engine.base.Engine] {}
-INFO  [alembic.runtime.migration] Running downgrade 191a2d20b025 -&gt; 28af9800143f, add email col
-INFO  [sqlalchemy.engine.base.Engine] ALTER TABLE customer DROP COLUMN email
-INFO  [sqlalchemy.engine.base.Engine] {}
-INFO  [sqlalchemy.engine.base.Engine] UPDATE alembic_version SET version_num='28af9800143f' WHERE alembic_version.version_num = '191a2d20b025'
-INFO  [sqlalchemy.engine.base.Engine] {}
-INFO  [sqlalchemy.engine.base.Engine] COMMIT
-</pre></div>
-</div>
-</section>
+        
     """
 
     query = PyQuery(html2)
@@ -244,11 +93,11 @@ INFO  [sqlalchemy.engine.base.Engine] COMMIT
         "#alembic.operations.Operations.rename_table": "../zh/06_01_26_rename_table.md"
     }
 
+    parameter_flag = True
     links = {}
     texts = []
 
-
-    title = query.children('h2').text() or query.children('h3').text()
+    title = query.children('h1').text() or query.children('h2').text() or query.children('h3').text()
     title = title.replace('¶', '')
 
     print(f'# {title}')
@@ -349,10 +198,17 @@ INFO  [sqlalchemy.engine.base.Engine] COMMIT
     print('\n')
     print('\n\n'.join(texts))
 
-def parse_method_define(dt: PyQuery):
-    """ 解析定义的方法 """
+def parse_class_name(dt: PyQuery):
+    """ 解析定义的类名 """
 
+    class_ = '*class*'
+    prefix = dt('span.sig-prename.descclassname').text()
     method_name = dt('span.sig-name.descname').text()
+
+    if prefix:
+        method_name = f"{class_} {prefix}**{method_name}**"
+    else:
+        method_name = f"{class_} **{method_name}**"
 
     paramters = []
     links = {}
@@ -387,7 +243,9 @@ def parse_method_define(dt: PyQuery):
     _return_type_text = _return_type_text.replace(']', '\]')  # 转义
     
     paramters_str = ', '.join(paramters)
-    method_name = f"**{method_name}**({paramters_str})"
+
+    if paramters_str:
+        method_name = f"{method_name}({paramters_str})"
 
     if _return_type_text:
         method_name = f"{method_name} → {_return_type_text}"
@@ -395,34 +253,141 @@ def parse_method_define(dt: PyQuery):
     return method_name, links
 
 
-def main2():
-    html = """
-        <dl class="py method">
-        <dt class="sig sig-object py" id="alembic.operations.BatchOperations.drop_table_comment">
-        <span class="sig-name descname"><span class="pre">drop_table_comment</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">existing_comment</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#alembic.operations.BatchOperations.drop_table_comment" title="Permalink to this definition">¶</a></dt>
-        <dd><p>Issue a “drop table comment” operation to
-        remove an existing comment set on a table using the current
-        batch operations context.</p>
-        <div class="versionadded">
-        <p><span class="versionmodified added">New in version 1.6.0.</span></p>
-        </div>
-        <dl class="field-list simple">
-        <dt class="field-odd">Parameters</dt>
-        <dd class="field-odd"><p><span class="target" id="alembic.operations.BatchOperations.drop_table_comment.params.existing_comment"></span><strong>existing_comment</strong><a class="paramlink headerlink reference internal" href="#alembic.operations.BatchOperations.drop_table_comment.params.existing_comment">¶</a> – An optional string value of a comment already
-        registered on the specified table.</p>
-        </dd>
-        </dl>
-        </dd></dl>
-    """
+def parse_method_name(dt: PyQuery):
+    """ 解析定义的方法 """
 
-    query = PyQuery(html)
+    prefix = dt('span.sig-prename.descclassname').text()
+    method_name = dt('span.sig-name.descname').text()
 
-    method_name = query('dt').text()
-    method_name = method_name.replace('¶', '')
+    if prefix:
+        method_name = f"{prefix}**{method_name}**"
+    else:
+        method_name = f"**{method_name}**"
 
-    method_name, links = parse_method_define(query('dt'))
+    paramters = []
+    links = {}
 
-    print(f"{method_name}")
+    for parameter in dt('em.sig-param').items():
+        p_text = parameter.text()
+
+        if p_text.startswith('*'):
+            paramters.append(p_text)
+            continue
+            
+        if ':' not in p_text:
+            paramters.append(p_text)
+            continue
+
+        p_name, p_type = p_text.split(":", 1)
+
+        p_name = f'*{p_name}*'  # 斜体
+        p_type = p_type.replace('[', '\[')  # 转义
+        p_type = p_type.replace(']', '\]')  # 转义
+
+        a_tags = {a.text(): a.attr('href') for a in parameter('a').items() }
+        links.update(a_tags)
+
+        for a_name in a_tags.keys():
+            p_type = p_type.replace(a_name, f'[{a_name}]')
+
+        paramters.append(f'{p_name}: {p_type}')
+    
+    _return_type_text = dt('.sig-return-typehint').text()
+    _return_type_text = _return_type_text.replace('[', '\[')  # 转义
+    _return_type_text = _return_type_text.replace(']', '\]')  # 转义
+    
+    paramters_str = ', '.join(paramters)
+
+    if paramters_str:
+        method_name = f"{method_name}({paramters_str})"
+
+    if _return_type_text:
+        method_name = f"{method_name} → {_return_type_text}"
+    
+    return method_name, links
+
+
+def process_word(text: str, texts: List, parameter_flag: bool) -> Tuple[str, bool]:
+    # 处理每个P标签里面的特殊字符
+    words = []
+    _parameter_flag = parameter_flag
+    for index, word in enumerate(text.split(' ')):
+        _word = word
+        if index == 0 and word.startswith('Note'):  # Note 
+            _word = f'> **{word}:**'
+        
+        if word.endswith('¶'):  # 参数 斜体
+            _word = f'* ***{word[:-1]}***'
+
+            # 新增参数flag
+            if _parameter_flag:
+                texts.append('**Parameters:**')
+                _parameter_flag = False
+        
+        words.append(_word)
+
+    return ' '.join(words), _parameter_flag
+
+def process_keyword(text:str) -> str:
+    if text == 'See also':  # See also 
+        return f'**{text}:**'
+
+    if text == 'Warning':  # Warning
+        return f'**{text}:**'
+    
+    return text
+
+def process_code_tags(text: str, code_tags: Dict, a_tags: Dict) -> str:
+    # 单行代码
+    _text = text
+    for code in code_tags:
+        if code not in a_tags:
+            _text = _text.replace(f" {code} ", f' `{code}` ')
+            _text = _text.replace(f" {code},", f' `{code}`,')
+            _text = _text.replace(f" {code}:", f' `{code}`:')
+            _text = _text.replace(f" {code}.", f' `{code}`.')
+    
+    return _text
+
+def process_strong_tags(text: str, strong_tags: Dict, a_tags: Dict) -> str:
+    # 加粗
+    _text = text
+    for strong in strong_tags:
+        if strong not in a_tags:
+            _text = _text.replace(f" {strong} ", f' **{strong}** ')
+            _text = _text.replace(f" {strong},", f' **{strong}**,')
+            _text = _text.replace(f" {strong}:", f' **{strong}**:')
+            _text = _text.replace(f" {strong};", f' **{strong}**;')
+    
+    return _text
+
+def process_a_tags(text: str, a_tags: Dict) -> str:
+     # 链接
+    _text = text
+    for a, href in a_tags.items():
+        _text = _text.replace(f" {a} ", f' **[{a}]** ')
+        _text = _text.replace(f" {a},", f' **[{a}]**,')
+        _text = _text.replace(f" {a}.", f' **[{a}]**.')
+        _text = _text.replace(f" {a}:", f' **[{a}]**:')
+
+        if a == _text:
+            _text = _text.replace(f"{a}", f'* **[{a}]** ')
+
+    return _text
+
+def process_links_text(links: Dict) -> List:
+    links_text = []
+
+    for a_text, href in links.items():
+        _href = href
+        if not (href.startswith('http') or href.startswith('#') or href.startswith('../zh')):
+            _href = f'../en/{href}'
+
+        links_text.append(f'[{a_text}]: {_href}')
+    
+    return links_text
+
+def parse_page_content(query: PyQuery, links: Dict = None) -> None:
 
     batch_op_md_file_dict = {
         "#alembic.operations.BatchOperations": "../zh/06_02_batch_operations.md",
@@ -473,6 +438,7 @@ def main2():
 
     parameter_flag = True
     texts = []
+    links = links or {}
 
     for p in query('p').items():
         
@@ -494,76 +460,121 @@ def main2():
 
         text = p.text()
 
-        # 处理每个P标签里面的特殊字符
-        words = []
-        
-        for index, word in enumerate(text.split(' ')):
-            if index == 0 and word.startswith('Note'):  # Note 
-                word = f'> **{word}:**'
-            
-            if index == 0 and word.startswith('See also'):  # See also 
-                word = f'> **{word}:**'
-            
-            if word.endswith('¶'):  # 参数 斜体
-                word = f'* ***{word[:-1]}***'
+        text, _parameter_flag = process_word(text, texts, parameter_flag)
+        parameter_flag = _parameter_flag
+        # print(f"debug1: {text}")
 
-                # 新增参数flag
-                if parameter_flag:
-                    texts.append('**Parameters:**')
-                    parameter_flag = False
-            
-            words.append(word)
-
-        text = ' '.join(words)
-
-        if text == 'See also':  # See also 
-            text = f'**{text}:**'
-
-        # 单行代码
-        for code in code_tags:
-            if code not in a_tags:
-                text = text.replace(f" {code} ", f' `{code}` ')
-                text = text.replace(f" {code},", f' `{code}`,')
-                text = text.replace(f" {code}:", f' `{code}`:')
-                text = text.replace(f" {code}.", f' `{code}`.')
-
-        # 加粗
-        for strong in strong_tags:
-            if strong not in a_tags:
-                text = text.replace(f" {strong} ", f' **{strong}** ')
-                text = text.replace(f" {strong},", f' **{strong}**,')
-                text = text.replace(f" {strong}:", f' **{strong}**:')
-                text = text.replace(f" {strong};", f' **{strong}**;')
-
-        # 链接
-        for a, href in a_tags.items():
-            text = text.replace(f" {a} ", f' **[{a}]** ')
-            text = text.replace(f" {a},", f' **[{a}]**,')
-            text = text.replace(f" {a}.", f' **[{a}]**.')
-            text = text.replace(f" {a}:", f' **[{a}]**:')
-
-            if a == text:
-                text = text.replace(f"{a}", f'* **[{a}]** ')
+        text = process_keyword(text)
+        # print(f"debug2: {text}")
+        text = process_code_tags(text, code_tags, a_tags)
+        # print(f"debug3: {text}")
+        text = process_strong_tags(text, strong_tags, a_tags)
+        # print(f"debug4: {text}")
+        text = process_a_tags(text, a_tags)
+        # print(f"debug5: {text}")
         
         links.update(a_tags)
         texts.append(text)
 
+        if text.endswith(':'):
+            texts.append('```python')
+            texts.append('```')
+
         # print(a_tags)
         # print(code_tags)
     
-    links_text = []
-
-    for a_text, href in links.items():
-        _href = href
-        if not (href.startswith('http') or href.startswith('#') or href.startswith('../zh')):
-            _href = f'../en/{href}'
-
-        links_text.append(f'[{a_text}]: {_href}')
+    links_text = process_links_text(links)
 
     print('\n')
     print('\n'.join(links_text))
     print('\n')
     print('\n\n'.join(texts))
+
+
+def parse_py_class(query: PyQuery):
+    
+    for py_class in query('dl.py.class').items():
+        class_name, links = parse_class_name(py_class('dt.sig.sig-object.py'))
+        print(class_name)
+        parse_method(py_class('dd'))
+        print('---' * 50 + '\n')
+
+
+def parse_py_function(query: PyQuery):
+    
+    for py_class in query.children('dl.py.function').items():
+        class_name, links = parse_class_name(py_class('dt.sig.sig-object.py'))
+        print(class_name)
+        parse_method(py_class('dd'))
+        print('---' * 50 + '\n')
+
+def parse_section(query:PyQuery):
+
+    # 输出页面顶级内容
+    content_htmls = []
+    for child in query('h2').next_all().items():
+        if child.not_('dl.py.function'):
+            parse_page_content(child)
+            # content_htmls.append(child.outer_html())
+    
+    # print(f"debug: {'\n'.join(top_content_htmls)}")
+    
+    # content_htmls = content_htmls[::-1]
+    # parse_page_content(PyQuery('\n'.join(content_htmls)))
+    print('---' * 50 + '\n')
+
+def parse_page():
+
+    query = PyQuery("http://localhost:3002/en/api/autogenerate.html")
+    query = query('div.body section:first')
+
+    # parse_section(query('section#getting-diffs'))
+    # parse_py_class(query('section#customizing-revision-generation'))
+    # parse_py_function(query('section#customizing-revision-generation'))
+    # parse_page_content(query('section#operation-plugins'))
+    # return
+
+    query  = query('section#autogenerating-custom-operation-directives')
+
+    # 输出页面顶级内容
+    top_content_htmls = []
+    for child in query.children().items():
+        if child.is_('div.highlight-default') or child.is_('dl.py.function'):
+            continue
+        top_content_htmls.append(child.outer_html())
+
+    # print(f"debug: {'\n'.join(top_content_htmls)}")
+    
+    parse_page_content(PyQuery('\n'.join(top_content_htmls)))
+    print('---' * 50 + '\n')
+
+    for index, method in enumerate(query.children('dl.py').items(), start=1):
+        
+        if method.is_('dl.py.method') or method.is_('dl.py.attribute') or method.is_('dl.py.function'):
+            method_name = method('span.sig-name.descname').text()
+
+            md_file = f"- [{method_name}](./zh/08_04_{index:0>2d}_{method_name}.md)"
+            # print(md_file)
+
+            parse_method(method)
+            print('---' * 50 + '\n')
+
+def parse_method(query: PyQuery):
+    html = """
+        <dl class="py class">
+        <dt class="sig sig-object py" id="alembic.config.Config">
+    """
+
+    # query = PyQuery(html)
+
+    method_name = query('dt').text()
+    method_name = method_name.replace('¶', '')
+
+    method_name, links = parse_method_name(query('dt'))
+
+    print(f"{method_name}")
+
+    parse_page_content(query, links)
 
 
 def main3():
@@ -1766,4 +1777,6 @@ def main3():
 
 
 if __name__ == "__main__":
-    parse_section()
+    # parse_section()
+    parse_page()
+    # main2()
