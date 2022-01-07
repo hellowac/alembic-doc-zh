@@ -3,8 +3,8 @@
 [EnvironmentContext.configure.compare_type]: ../en/api/runtime.html#alembic.runtime.environment.EnvironmentContext.configure.params.compare_type
 [Comparing Types]: ../en/autogenerate.html#compare-types
 [EnvironmentContext.configure.compare_server_default]: ../en/api/runtime.html#alembic.runtime.environment.EnvironmentContext.configure.params.compare_server_default
-[The Importance of Naming Constraints]: ../en/naming.html
-[命名约束的重要性]: ../en/naming.html
+[The Importance of Naming Constraints]: ../zh/03_the_importance_of_naming_constraints.md
+[命名约束的重要性]: ../zh/03_the_importance_of_naming_constraints.md
 [Enum]: https://docs.sqlalchemy.org/en/14/core/type_basics.html#sqlalchemy.types.Enum
 [sqlalchemy.events.DDLEvents.column_reflect()]: https://docs.sqlalchemy.org/en/14/core/events.html#sqlalchemy.events.DDLEvents.column_reflect
 [sqlalchemy.events.DDLEvents.after_parent_attach()]: https://docs.sqlalchemy.org/en/14/core/events.html#sqlalchemy.events.DDLEvents.after_parent_attach
