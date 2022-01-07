@@ -4,11 +4,14 @@
 [Comparing Types]: ../en/autogenerate.html#compare-types
 [EnvironmentContext.configure.compare_server_default]: ../en/api/runtime.html#alembic.runtime.environment.EnvironmentContext.configure.params.compare_server_default
 [The Importance of Naming Constraints]: ../en/naming.html
+[命名约束的重要性]: ../en/naming.html
 [Enum]: https://docs.sqlalchemy.org/en/14/core/type_basics.html#sqlalchemy.types.Enum
 [sqlalchemy.events.DDLEvents.column_reflect()]: https://docs.sqlalchemy.org/en/14/core/events.html#sqlalchemy.events.DDLEvents.column_reflect
 [sqlalchemy.events.DDLEvents.after_parent_attach()]: https://docs.sqlalchemy.org/en/14/core/events.html#sqlalchemy.events.DDLEvents.after_parent_attach
 
 The vast majority of user issues with Alembic centers on the topic of what kinds of changes autogenerate can and cannot detect reliably, as well as how it renders Python code for what it does detect. It is critical to note that **autogenerate is not intended to be perfect**. It is *always* necessary to manually review and correct the **candidate migrations** that autogenerate produces. The feature is getting more and more comprehensive and error-free as releases continue, but one should take note of the current limitations.
+
+> Alembic 的绝大多数用户问题都集中在自动生成哪些类型的更改可以和不能可靠检测的主题上，以及它如何为检测到的内容呈现 Python 代码。 重要的是要注意自动生成并不是完美的。 始终需要手动检查和更正自动生成的候选迁移。 随着版本的不断发布，该功能变得越来越全面且无错误，但应注意当前的限制。
 
 Autogenerate **will detect**:
 
@@ -17,6 +20,14 @@ Autogenerate **will detect**:
 * Change of nullable status on columns.
 * Basic changes in indexes and explicitly-named unique constraints
 * Basic changes in foreign key constraints
+
+> Autogenerate 将**检测**：
+>
+> * 表的添加、删除。
+> * 列添加、删除。
+> * 列可为空状态的更改。
+> * 索引和显式命名的唯一约束的基本变化.
+> * 外键约束的基本变化
 
 Autogenerate can **optionally detect**:
 
@@ -28,6 +39,16 @@ Autogenerate can **optionally detect**:
 
 * Change of server default. This will occur if you set the **[EnvironmentContext.configure.compare_server_default]** parameter to True, or to a custom callable function. This feature works well for simple cases but cannot always produce accurate results. The Postgresql backend will actually invoke the “detected” and “metadata” values against the database to determine equivalence. The feature is off by default so that it can be tested on the target schema first. Like type comparison, it can also be customized by passing a callable; see the function’s documentation for details.
 
+> Autogenerate **可以选择检测**：
+>
+> * 列类型的更改。 如果您将 **[EnvironmentContext.configure.compare_type]** 参数设置为 `True` ，则会发生这种情况。 默认实现将可靠地检测主要更改，例如 **Numeric** 和 **String** 之间的更改，并适应 SQLAlchemy 生成的“通用”类型（例如 **Boolean** 类型）。 两种类型之间共享的参数，如长度和精度值，也将进行比较。如果元数据类型或数据库类型有其他类型的额外参数，则**不会**比较这些参数，例如如果一个 numeric 类型 具有 “scale” 而其他类型没有，这将被视为后端数据库不支持该值或者报告为元数据未指定的默认值。
+>
+>   类型比较逻辑也是完全可扩展的； 有关详细信息，请参阅[Comparing Types]。
+>
+>   * *版本 1.4 更新*: 类型比较代码已经过重新设计，以便根据它们呈现的 DDL 比较列类型，这应该允许 EnvironmentContext.configure.compare_type 启用的功能更加准确，更准确的解释 SQLAlchemy 的“通用”类型的行为以及类型中指定的主要参数。
+>
+> * 更改服务端默认设置。 如果您将 **[EnvironmentContext.configure.compare_server_default]** 参数设置为 True 或自定义可调用函数，则会发生这种情况。 此功能适用于简单的情况，但不能始终产生准确的结果。Postgresql 后端实际上会针对数据库调用 “detected” 和 “metadata” 值以确定等效性。该功能默认处于关闭状态，因此可以先在目标架构上进行测试。 和类型比较一样，也可以通过传递一个callable来自定义； 有关详细信息，请参阅该函数的文档。
+
 Autogenerate can **not detect**:
 
 * Changes of table name. These will come out as an add/drop of two different tables, and should be hand-edited into a name change instead.
@@ -35,8 +56,19 @@ Autogenerate can **not detect**:
 * Anonymously named constraints. Give your constraints a name, e.g. **UniqueConstraint('col1', 'col2', name="my_name")**. See the section [The Importance of Naming Constraints] for background on how to configure automatic naming schemes for constraints.
 * Special SQLAlchemy types such as **[Enum]** when generated on a backend which doesn’t support ENUM directly - this because the representation of such a type in the non-supporting database, i.e. a CHAR+ CHECK constraint, could be any kind of CHAR+CHECK. For SQLAlchemy to determine that this is actually an ENUM would only be a guess, something that’s generally a bad idea. To implement your own “guessing” function here, use the **[sqlalchemy.events.DDLEvents.column_reflect()]** event to detect when a CHAR (or whatever the target type is) is reflected, and change it to an ENUM (or whatever type is desired) if it is known that that’s the intent of the type. The **[sqlalchemy.events.DDLEvents.after_parent_attach()]** can be used within the autogenerate process to intercept and un-attach unwanted CHECK constraints.
 
+> Autogenerate **不能检测**:
+>
+> * 表名的变化。 这些将作为两个不同表的新增/删除出现，并且应该手动编辑表名更改。
+> * 列名的变化。 与表名更改一样，这些被检测为列添加/删除两种操作，这与名称更改完全不同。
+> * 匿名命名的约束。 给你的约束一个名字， 例如 **UniqueConstraint('col1', 'col2', name="my_name")**. 有关如何为约束配置自动命名方案的信息，请参阅[命名约束的重要性]一节。
+> * 在不直接支持 ENUM 的后端生成的特殊 SQLAlchemy 的 **[Enum]** 类型 - 这是因为这种类型是在不支持 **[Enum]** 类型 的数据库中的表示，即 CHAR+CHECK 约束，可以是任何类型的 CHAR+CHECK。 对于 SQLAlchemy 确定这实际上是一个 ENUM 只是一个猜测，这通常是一个坏主意。要在这里实现你自己的“guessing”方法, 当 CHAR (或任何目标类型)被反射并更改为 ENUM 时(或所需的任何类型)时, 请使用 **[sqlalchemy.events.DDLEvents.column_reflect()]** 事件检测，如果这是改变目标类型的目的。 **[sqlalchemy.events.DDLEvents.after_parent_attach()]** 可以在自动生成过程中用来拦截和取消额外不需要的 CHECK 约束。
+
 Autogenerate can’t currently, but **will eventually detect**:
 
 * Some free-standing constraint additions and removals may not be supported, including PRIMARY KEY, EXCLUDE, CHECK; these are not necessarily implemented within the autogenerate detection system and also may not be supported by the supporting SQLAlchemy dialect.
-
 * Sequence additions, removals - not yet implemented.
+
+> Autogenerate 不能实时, 但**最终会检测**:
+>
+> * 可能不支持某些独立约束的添加和删除，包括 PRIMARY KEY、EXCLUDE、CHECK； 这些不一定在Autogenerate系统中实现，SQLAlchemy 支持的方言也可能不支持。
+> * 序列的添加、删除 - 尚未实现。
