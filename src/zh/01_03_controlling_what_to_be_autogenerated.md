@@ -4,6 +4,7 @@
 [get_schema_names()]: https://docs.sqlalchemy.org/en/14/core/reflection.html#sqlalchemy.engine.reflection.Inspector.get_schema_names
 [Inspector]: https://docs.sqlalchemy.org/en/14/core/reflection.html#sqlalchemy.engine.reflection.Inspector
 [Specifying the Schema Name]: https://docs.sqlalchemy.org/en/14/core/metadata.html#schema-table-schema-name
+[指定模式名称]: https://docs.sqlalchemy.org/en/14/core/metadata.html#schema-table-schema-name
 [get_table_names()]: https://docs.sqlalchemy.org/en/14/core/reflection.html#sqlalchemy.engine.reflection.Inspector.get_table_names
 [Table]: https://docs.sqlalchemy.org/en/14/core/metadata.html#sqlalchemy.schema.Table
 [get_columns()]: https://docs.sqlalchemy.org/en/14/core/reflection.html#sqlalchemy.engine.reflection.Inspector.get_columns
@@ -13,9 +14,18 @@
 
 The autogenerate process scans across all table objects within the database that is referred towards by the current database connection in use.
 
+> 自动生成过程扫描数据库中由当前正在使用的数据库连接引用的所有表对象。
+
 The list of objects that are scanned in the target database connection include:
+
+> 在目标数据库连接中扫描的对象列表包括：
 
 * The “default” schema currently referred towards by the database connection.
 * If the **[EnvironmentContext.configure.include_schemas]** is set to `True`, all non-default “schemas”, which are those names returned by the **[get_schema_names()]** method of **[Inspector]**. The SQLAlchemy document [Specifying the Schema Name] discusses the concept of a “schema” in detail.
 * Within each “schema”, all tables present are scanned using the **[get_table_names()]** method of **[Inspector]**.
 * Within each “table”, most sub-objects of the each **[Table]** construct are scanned, including columns and some forms of constraints. This process ultimately involves the use of methods on **[Inspector]** including **[get_columns()]**, **[get_indexes()]**, **[get_unique_constraints()]**, **[get_foreign_keys()]** (as of this writing, CHECK constraints and primary key constraints are not yet included).
+
+> * 数据库连接的当前引用为“default”模式。
+> * 如果 **[EnvironmentContext.configure.include_schemas]** 设置为 `True`, 将包含所有从 **[Inspector]** 的 **[get_schema_names()]** 返回的非默认“schemas”名称。SQLAlchemy 的文档里面[指定模式名称]详细讨论了模式(Schema)的概念。
+> * 在每个模式(Schema)中，使用 **[Inspector]** 的 **[get_table_names()]** 方法扫描所有存在的表。
+> * 在每个“Table”中，会扫描每个 **[Table]** 构造的大多数子对象，包括列和某些形式的约束。 这个过程最终涉及使用 **[Inspector]** 上的方法，包括 **[get_columns()]**, **[get_indexes()]**, **[get_unique_constraints()]**, **[get_foreign_keys()]**（在撰写本文时，CHECK 约束和主键约束尚未包括在内）。
