@@ -1,2 +1,4 @@
 book
 venv
+alembic.ini
+migrations
