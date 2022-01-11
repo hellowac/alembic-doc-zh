@@ -47,16 +47,16 @@ The copy operation by default uses reflection to retrieve the current structure 
 * ***table_name*** – name of table
 * ***schema*** – optional **schema** name.
 * ***recreate*** – under what circumstances the table should be recreated. At its default of `"auto"`, the SQLite dialect will **recreate** the table if any operations other than `add_column()`, `create_index()`, or `drop_index()` are present. Other options include `"always"` and `"never"`.
-* *copy_from* – optional **[Table]** object that will act as the structure of the table being copied. If omitted, table reflection is used to retrieve the structure of the table.
+* *copy_from* <a name="copy_from"></a> – optional **[Table]** object that will act as the structure of the table being copied. If omitted, table reflection is used to retrieve the structure of the table.
   
   **See also** *[Working in Offline Mode]*
   
   ***reflect_args***
   
   ***reflect_kwargs***
-* ***reflect_args*** – a sequence of additional positional arguments that will be applied to the table structure being reflected / copied; this may be used to pass column and constraint overrides to the table that will be reflected, in lieu of passing the whole **[Table]** using **[copy_from]**.
-* ***reflect_kwargs*** – a dictionary of additional keyword arguments that will be applied to the table structure being copied; this may be used to pass additional table and reflection options to the table that will be reflected, in lieu of passing the whole **[Table]** using **[copy_from]**.
-* ***table_args*** – a sequence of additional positional arguments that will be applied to the new **[Table]** when created, in addition to those copied from the source table. This may be used to provide additional constraints such as CHECK constraints that may not be reflected.
+* ***reflect_args*** <a name="reflect_args"></a> – a sequence of additional positional arguments that will be applied to the table structure being reflected / copied; this may be used to pass column and constraint overrides to the table that will be reflected, in lieu of passing the whole **[Table]** using **[copy_from]**.
+* ***reflect_kwargs*** <a name="reflect_kwargs"></a> – a dictionary of additional keyword arguments that will be applied to the table structure being copied; this may be used to pass additional table and reflection options to the table that will be reflected, in lieu of passing the whole **[Table]** using **[copy_from]**.
+* ***table_args*** – <a name="table_args"></a> a sequence of additional positional arguments that will be applied to the new **[Table]** when created, in addition to those copied from the source table. This may be used to provide additional constraints such as CHECK constraints that may not be reflected.
 * ***table_args*** – a sequence of additional positional arguments that will be applied to the new **[Table]** when created, in addition to those copied from the source table. This may be used to provide additional constraints such as CHECK constraints that may not be reflected.
 * ***table_kwargs*** – a dictionary of additional keyword arguments that will be applied to the new **[Table]** when created, in addition to those copied from the source table. This may be used to provide for additional table options that may not be reflected.
 * ***naming_convention*** – a naming convention dictionary of the form described at **[Integration of Naming Conventions into Operations, Autogenerate]** which will be applied to the **[MetaData]** during the reflection process. This is typically required if one wants to drop SQLite constraints, as these constraints will not have names when reflected on this backend. Requires SQLAlchemy **0.9.4** or greater.

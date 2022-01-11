@@ -3,7 +3,7 @@
 [EnvironmentContext]: #alembic.runtime.environment.EnvironmentContext
 [EnvironmentContext.configure()]: #alembic.runtime.environment.EnvironmentContext.configure
 [MigrationContext]: #alembic.runtime.migration.MigrationContext
-[Config]: ../en/config.html#alembic.config.Config
+[Config]: ../zh/08_03_configuration.md
 [alembic.command]: ../en/commands.html#module-alembic.command
 [MigrationContext.run_migrations()]: #alembic.runtime.migration.MigrationContext.run_migrations
 [ScriptDirectory]: ../en/script.html#alembic.script.ScriptDirectory

@@ -1,7 +1,7 @@
 # Overview
 
 [Configuration]: ../en/config.html#alembic-config-toplevel
-[Config]: ../en/config.html#alembic.config.Config
+[Config]: ../zh/08_03_configuration.md
 [Commands]: ../en/commands.html#alembic-command-toplevel
 [ScriptDirectory]: ../en/script.html#alembic.script.ScriptDirectory
 [EnvironmentContext]: ../en/runtime.html#alembic.runtime.environment.EnvironmentContext
