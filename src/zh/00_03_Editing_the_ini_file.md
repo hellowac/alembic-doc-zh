@@ -1,8 +1,8 @@
 # Editing the .ini File
 
-[Working with Multiple Bases]: /zh/07_cook_book.md
-[Run Multiple Alembic Environments from one .ini]: /zh/07_cook_book.md
-[从一个 .ini 文件运行多个 Alembic 环境]: /zh/07_cook_book.md
+[Working with Multiple Bases]: ../zh/05_03_working_with_multiple_bases.md
+[Run Multiple Alembic Environments from one .ini]: /zh/07_11_run_multiple_alembic_environments_from_one_ini_file.md
+[从一个 .ini 文件运行多个 Alembic 环境]: /zh/07_11_run_multiple_alembic_environments_from_one_ini_file.md
 [Configuration File Format]: <http://docs.python.org/library/logging.config.html#configuration-file-format>
 
 **编辑.ini文件**
@@ -97,7 +97,8 @@ version_path_separator = os  # Use os.pathsep. Default configuration used for ne
 # 从 script.py.mako 写入修订文件时使用的输出编码
 # output_encoding = utf-8
 
-sqlalchemy.url = driver://user:pass@localhost/dbname
+; sqlalchemy.url = driver://user:pass@localhost/dbname
+sqlalchemy.url = postgresql://wangchao:@localhost/test
 
 # [post_write_hooks]
 # This section defines scripts or Python functions that are run
