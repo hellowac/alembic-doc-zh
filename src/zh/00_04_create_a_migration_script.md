@@ -1,11 +1,11 @@
 # Create a Migration Script
 
-[create_table()]: /en/ops.html#alembic.operations.Operations.create_table
-[drop_table()]: /en/ops.html#alembic.operations.Operations.drop_table
-[Operation Reference]: /en/ops.html#ops
-[操作参考]: /en/ops.html#ops
-[Building an Up to Date Database from Scratch]: /en/cookbook.html#building-uptodate
-[从头开始构建最新数据库部分]: /en/cookbook.html#building-uptodate
+[create_table()]: ../zh/06_01_10_create_table.md
+[drop_table()]: ../zh/06_01_16_drop_table.md
+[Operation Reference]: ../zh/06_operation_reference.md
+[操作参考]: ../zh/06_operation_reference.md
+[Building an Up to Date Database from Scratch]: ../zh/07_01_building_an_up_to_date_database_from_scratch.md
+[从头开始构建最新数据库部分]: ../zh/07_01_building_an_up_to_date_database_from_scratch.md
 
 **创建迁移脚本**
 
