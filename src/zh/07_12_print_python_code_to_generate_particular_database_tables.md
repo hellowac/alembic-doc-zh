@@ -1,11 +1,15 @@
 # Print Python Code to Generate Particular Database Tables
 
-[ops.UpgradeOps]: ../en/api/operations.html#alembic.operations.ops.UpgradeOps
-[ops.CreateTableOp]: ../en/api/operations.html#alembic.operations.ops.CreateTableOp
-[ops.CreateIndexOp]: ../en/api/operations.html#alembic.operations.ops.CreateIndexOp
-[autogenerate.render_python_code()]: ../en/api/autogenerate.html#alembic.autogenerate.render_python_code
+**打印 Python 代码以生成特定的数据库表**
+
+[ops.UpgradeOps]: ../zh/08_05_02_built_in_operation_objects.md#UpgradeOps
+[ops.CreateTableOp]: ../zh/08_05_02_built_in_operation_objects.md#CreateTableOp
+[ops.CreateIndexOp]: ../zh/08_05_02_built_in_operation_objects.md#CreateIndexOp
+[autogenerate.render_python_code()]: ../zh/08_06_02_customizing_revision_generation.md#render_python_code
 
 Suppose you have a database already, and want to generate some `op.create_table()` and other directives that you’d have in a migration file. How can we automate generating that code? Suppose the database schema looks like (assume MySQL):
+
+> 假设您已经有一个数据库，并且想要生成一些 `op.create_table()` 和迁移文件中的其他指令。 我们如何自动生成该代码？ 假设数据库模式看起来像（假设为 MySQL）：
 
 ```sql
 CREATE TABLE IF NOT EXISTS `users` (
@@ -26,6 +30,8 @@ CREATE TABLE IF NOT EXISTS `user_properties` (
 ```
 
 Using **[ops.UpgradeOps]**, **[ops.CreateTableOp]**, and **[ops.CreateIndexOp]**, we create a migration file structure, using `Table` objects that we get from SQLAlchemy reflection. The structure is passed to **[autogenerate.render_python_code()]** to produce the Python code for a migration file:
+
+> 使用 **[ops.UpgradeOps]**, **[ops.CreateTableOp]** 和 **[ops.CreateIndexOp]**，我们使用从 SQLAlchemy 反射获得的 `Table` 对象创建迁移文件结构。 该结构被传递给 **[autogenerate.render_python_code()]** 以生成迁移文件的 Python 代码：
 
 ```python
 from sqlalchemy import create_engine

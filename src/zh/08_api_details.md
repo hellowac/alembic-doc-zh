@@ -2,7 +2,7 @@
 
 **API详细**
 
-[Operations]: ../en/ops.html#alembic.operations.Operations
+[Operations]: ../zh/06_operation_reference.md
 [EnvironmentContext.configure()]: ../en/runtime.html#alembic.runtime.environment.EnvironmentContext.configure
 [Commands]: ../en/commands.html
 

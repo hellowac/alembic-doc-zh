@@ -11,7 +11,7 @@
 
 The simplest API autogenerate provides is the “schema comparison” API; these are simple functions that will run all registered “comparison” functions between a **[MetaData]** object and a database backend to produce a structure showing how they differ. The two functions provided are **[compare_metadata()]**, which is more of the “legacy” function that produces diff tuples, and **[produce_migrations()]**, which produces a structure consisting of operation directives detailed in **[Operation Directives]**.
 
-* *class* alembic.autogenerate.**compare_metadata**(*context*:  MigrationContext, *metadata*:  MetaData) → Any
+* *class* alembic.autogenerate.**compare_metadata**(*context*:  MigrationContext, *metadata*:  MetaData) → Any <a name="compare_metadata"></a>
 
     Compare a database schema to that given in a **[MetaData]** instance.
 
@@ -96,7 +96,7 @@ The simplest API autogenerate provides is the “schema comparison” API; these
     > * ***context*** – a **[MigrationContext]** instance.
     > * ***metadata*** – a **[MetaData]** instance.
 
-* *class* alembic.autogenerate.**produce_migrations**(*context*:  MigrationContext, *metadata*:  MetaData) → MigrationScript
+* *class* alembic.autogenerate.**produce_migrations**(*context*:  MigrationContext, *metadata*:  MetaData) → MigrationScript <a name="produce_migrations"></a>
 
     Produce a **[MigrationScript]** structure based on schema comparison.
 

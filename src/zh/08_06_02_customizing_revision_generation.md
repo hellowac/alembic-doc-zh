@@ -3,7 +3,7 @@
 [command.revision()]: ../en/commands.html#alembic.command.revision
 [MigrateOperation]: ../en/operations.html#alembic.operations.ops.MigrateOperation
 [MigrationScript]: ../en/operations.html#alembic.operations.ops.MigrationScript
-[render_python_code()]: #alembic.autogenerate.render_python_code
+[render_python_code()]: #render_python_code
 [EnvironmentContext.configure.process_revision_directives]: ../en/runtime.html#alembic.runtime.environment.EnvironmentContext.configure.params.process_revision_directives
 [Don’t Generate Empty Migrations with Autogenerate]: ../en/../cookbook.html#cookbook-no-empty-migrations
 [Don’t emit DROP INDEX when the table is to be dropped as well]: ../en/../cookbook.html#cookbook-dont-emit-drop-index
@@ -168,7 +168,7 @@ Above, the `directives` argument is a Python list. We may alter the given struct
 > * **[Don’t emit DROP INDEX when the table is to be dropped as well]**
 > * **[Apply Custom Sorting to Table Columns within CREATE TABLE]**
 
-* alembic.autogenerate.**render_python_code**(*up_or_down_op*:  UpgradeOps, *sqlalchemy_module_prefix*:  [str] = 'sa.', *alembic_module_prefix*:  [str] = 'op.', *render_as_batch*:  [bool] = False, *imports*:  Tuple\[[str], ...\] = (), *render_item*:  [None] = [None], *migration_context*:  Optional\[MigrationContext\] = None) → str
+* alembic.autogenerate.**render_python_code**(*up_or_down_op*:  UpgradeOps, *sqlalchemy_module_prefix*:  [str] = 'sa.', *alembic_module_prefix*:  [str] = 'op.', *render_as_batch*:  [bool] = False, *imports*:  Tuple\[[str], ...\] = (), *render_item*:  [None] = [None], *migration_context*:  Optional\[MigrationContext\] = None) → str <a name="render_python_code"></a>
 
     Render Python code given an **[UpgradeOps]** or **[DowngradeOps]** object.
 
