@@ -2,8 +2,8 @@
 
 **指南**
 
-[Installation]: /zh/_front_matter.md#installation-安装
-[安装]: /zh/_front_matter.md#installation-安装
+[Installation]: ../zh/_front_matter.md#installation-安装
+[安装]: ../zh/_front_matter.md#installation-安装
 [Python virtual environment]: https://docs.python.org/3/tutorial/venv.html
 [Python 虚拟环境]: https://docs.python.org/3/tutorial/venv.html
 

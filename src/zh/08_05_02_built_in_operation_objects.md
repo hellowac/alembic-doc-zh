@@ -204,7 +204,7 @@ The built-in operation objects are listed below.
 [Operations]: ../en/../ops.html#alembic.operations.Operations
 [Operations.create_table()]: ../en/../ops.html#alembic.operations.Operations.create_table
 
-* *class* alembic.operations.ops.**CreateTableOp**(*table_name*:  [str], *columns*:  Sequence\[Union\[Column, Constraint\]\], *schema*:  Optional\[[str]\] = None, *_namespace_metadata*:  Optional\[MetaData\] = None, *_constraints_included*:  [bool] = False, \*\*kw)
+* *class* alembic.operations.ops.**CreateTableOp**(*table_name*:  [str], *columns*:  Sequence\[Union\[Column, Constraint\]\], *schema*:  Optional\[[str]\] = None, *_namespace_metadata*:  Optional\[MetaData\] = None, *_constraints_included*:  [bool] = False, \*\*kw) <a name="CreateTableOp"></a>
 
     Represent a create table operation.
 
@@ -294,7 +294,7 @@ This method is proxied on the **[Operations]** class, via the **[Operations.drop
 [Operations]: ../en/../ops.html#alembic.operations.Operations
 [Operations.drop_index()]: ../en/../ops.html#alembic.operations.Operations.drop_index
 
-* *class* alembic.operations.ops.**DropIndexOp**(*index_name*:  Union\[quoted_name, [str], conv\], *table_name*:  Optional\[[str]\] = None, *schema*:  Optional\[[str]\] = None, *_reverse*:  Optional\[[CreateIndexOp]\] = None, \*\*kw)
+* *class* alembic.operations.ops.**DropIndexOp**(*index_name*:  Union\[quoted_name, [str], conv\], *table_name*:  Optional\[[str]\] = None, *schema*:  Optional\[[str]\] = None, *_reverse*:  Optional\[[CreateIndexOp]\] = None, \*\*kw) <a name="CreateIndexOp"></a>
 
     Represent a drop index operation.
 
@@ -386,7 +386,7 @@ This method is proxied on the **[Operations]** class, via the **[Operations.drop
 
 ----
 
-[MigrationScript]: #alembic.operations.ops.MigrationScript
+[MigrationScript]: #MigrationScript
 [UpgradeOps]: #alembic.operations.ops.UpgradeOps
 [DowngradeOps]: #alembic.operations.ops.DowngradeOps
 [Customizing Revision Generation]: ../en/autogenerate.html#customizing-revision
@@ -395,7 +395,7 @@ This method is proxied on the **[Operations]** class, via the **[Operations.drop
 [MigrationScript.upgrade_ops_list]: #alembic.operations.ops.MigrationScript.upgrade_ops_list
 [MigrationScript.upgrade_ops]: #alembic.operations.ops.MigrationScript.upgrade_ops
 
-* *class* alembic.operations.ops.**MigrationScript**(*rev_id*:  Optional\[[str]\], *upgrade_ops*:  [alembic.operations.ops.UpgradeOps], *downgrade_ops*:  [alembic.operations.ops.DowngradeOps], *message*:  Optional\[[str]\] = None, *imports*:  Set\[[str]\] = {}, *head*:  Optional\[[str]\] = None, *splice*:  Optional\[[bool]\] = None, *branch_label*:  Optional\[[str]\] = None, *version_path*:  Optional\[[str]\] = None, *depends_on*:  Optional\[Union\[[str], Sequence\[[str]\]\]\] = None)
+* *class* alembic.operations.ops.**MigrationScript**(*rev_id*:  Optional\[[str]\], *upgrade_ops*:  [alembic.operations.ops.UpgradeOps], *downgrade_ops*:  [alembic.operations.ops.DowngradeOps], *message*:  Optional\[[str]\] = None, *imports*:  Set\[[str]\] = {}, *head*:  Optional\[[str]\] = None, *splice*:  Optional\[[bool]\] = None, *branch_label*:  Optional\[[str]\] = None, *version_path*:  Optional\[[str]\] = None, *depends_on*:  Optional\[Union\[[str], Sequence\[[str]\]\]\] = None) <a name="MigrationScript"></a>
 
     represents a migration script.
 
@@ -433,7 +433,7 @@ This method is proxied on the **[Operations]** class, via the **[Operations.drop
 
 ----
 
-* *class* alembic.operations.ops.**ModifyTableOps**(*table_name*:  [str], *ops*:  Sequence\[[alembic.operations.ops.MigrateOperation]\], *schema*:  Optional\[[str]\] = None)
+* *class* alembic.operations.ops.**ModifyTableOps**(*table_name*:  [str], *ops*:  Sequence\[[alembic.operations.ops.MigrateOperation]\], *schema*:  Optional\[[str]\] = None) <a name="ModifyTableOps"></a>
 
     Contains a sequence of operations that all apply to a single Table.
 
@@ -461,7 +461,7 @@ This method is proxied on the **[Operations]** class, via the **[Operations.drop
 
 [Customizing Revision Generation]: ../en/autogenerate.html#customizing-revision
 
-* *class* alembic.operations.ops.**UpgradeOps**(*ops*:  Sequence\[[alembic.operations.ops.MigrateOperation]\] = (), *upgrade_token*:  [str] = 'upgrades')
+* *class* alembic.operations.ops.**UpgradeOps**(*ops*:  Sequence\[[alembic.operations.ops.MigrateOperation]\] = (), *upgrade_token*:  [str] = 'upgrades') <a name="UpgradeOps"></a>
 
     contains a sequence of operations that would apply to the ‘upgrade’ stream of a script.
 

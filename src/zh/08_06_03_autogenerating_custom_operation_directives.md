@@ -126,7 +126,7 @@ The registration of our function at the scope of “schema” means our autogene
 
 The **[AutogenContext]** passed to these hooks is documented below.
 
-* *class* alembic.autogenerate.api.**AutogenContext**(migration_context: MigrationContext, metadata: Optional[MetaData] = None, opts: Optional[dict] = None, autogenerate: bool = True)
+* *class* alembic.autogenerate.api.**AutogenContext**(migration_context: MigrationContext, metadata: Optional[MetaData] = None, opts: Optional[dict] = None, autogenerate: bool = True) <a name="AutogenContext"></a>
 
     Maintains configuration and state that’s specific to an autogenerate operation.
 
@@ -142,7 +142,7 @@ The **[AutogenContext]** passed to these hooks is documented below.
 
     This is normally obtained from the `dialect` attribute.
 
-  * **imports**: *Set*\[[str]\] = None
+  * **imports**: *Set*\[[str]\] = None <a name="imports"></a>
 
     A `set()` which contains string Python import directives.
 

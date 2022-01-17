@@ -1,9 +1,9 @@
 # Affecting the Rendering of Types Themselves
 
-[EnvironmentContext.configure.user_module_prefix]: /en/api/runtime.html#alembic.runtime.environment.EnvironmentContext.configure.params.user_module_prefix
-[EnvironmentContext.configure.render_item]: /en/api/runtime.html#alembic.runtime.environment.EnvironmentContext.configure.params.render_item
-[AutogenContext]: ../en/api/autogenerate.html#alembic.autogenerate.api.AutogenContext
-[AutogenContext.imports]: ../en/api/autogenerate.html#alembic.autogenerate.api.AutogenContext.imports
+[EnvironmentContext.configure.user_module_prefix]: ../zh/08_02_01_02_configure.md#user_module_prefix
+[EnvironmentContext.configure.render_item]: ../zh/08_02_01_02_configure.md#render_item
+[AutogenContext]: ../zh/08_06_03_autogenerating_custom_operation_directives.md
+[AutogenContext.imports]: ../zh/08_06_03_autogenerating_custom_operation_directives.md#imports
 
 The methodology Alembic uses to generate SQLAlchemy and user-defined type constructs as Python code is plain old `__repr__()`. SQLAlchemy’s built-in types for the most part have a `__repr__()` that faithfully renders a Python-compatible constructor call, but there are some exceptions, particularly in those cases when a constructor accepts arguments that aren’t compatible with `__repr__()`, such as a pickling function.
 

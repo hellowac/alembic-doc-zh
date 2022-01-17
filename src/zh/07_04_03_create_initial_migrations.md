@@ -4,11 +4,15 @@
 
 We can now illustrate how these objects look during use. For the first step, we’ll create a new migration to create a “customer” table:
 
+> 我们现在可以说明这些对象在使用过程中的外观。 第一步，我们将创建一个新的迁移来创建一个 “customer” 表：
+
 ```bash
 alembic revision -m "create table"
 ```
 
 We build the first revision as follows:
+
+> 我们构建第一个修订版如下：
 
 ```python
 """create table
@@ -44,11 +48,15 @@ def downgrade():
 
 For the second migration, we will create a view and a stored procedure which act upon this table:
 
+> 对于第二次迁移，我们将创建一个视图和一个作用于该表的存储过程：
+
 ```bash
 alembic revision -m "create views/sp"
 ```
 
 This migration will use the new directives:
+
+> 此迁移将使用新指令：
 
 ```python
 """create views/sp
@@ -100,6 +108,8 @@ def downgrade():
 
 We see the use of our new `create_view()`, `create_sp()`, `drop_view()`, and `drop_sp()` directives. Running these to “head” we get the following (this includes an edited view of SQL emitted):
 
+> 我们看到了我们新的 `create_view()`、`create_sp()`、`drop_view()` 和 `drop_sp()` 指令的使用。 将这些运行到“head”，我们得到以下信息（这包括发出的 SQL 的编辑视图）：
+
 ```bash
 $ alembic upgrade 28af9800143
 INFO  [alembic.runtime.migration] Context impl PostgresqlImpl.
@@ -143,3 +153,5 @@ INFO  [sqlalchemy.engine.base.Engine] COMMIT
 ```
 
 We see that our CREATE TABLE proceeded as well as the CREATE VIEW and CREATE FUNCTION operations produced by our new directives.
+
+> 我们看到我们的 CREATE TABLE 以及由我们的新指令产生的 CREATE VIEW 和 CREATE FUNCTION 操作正常进行。

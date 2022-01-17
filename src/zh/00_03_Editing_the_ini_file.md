@@ -1,8 +1,8 @@
 # Editing the .ini File
 
 [Working with Multiple Bases]: ../zh/05_03_working_with_multiple_bases.md
-[Run Multiple Alembic Environments from one .ini]: /zh/07_11_run_multiple_alembic_environments_from_one_ini_file.md
-[从一个 .ini 文件运行多个 Alembic 环境]: /zh/07_11_run_multiple_alembic_environments_from_one_ini_file.md
+[Run Multiple Alembic Environments from one .ini]: ../zh/07_11_run_multiple_alembic_environments_from_one_ini_file.md
+[从一个 .ini 文件运行多个 Alembic 环境]: ../zh/07_11_run_multiple_alembic_environments_from_one_ini_file.md
 [Configuration File Format]: <http://docs.python.org/library/logging.config.html#configuration-file-format>
 
 **编辑.ini文件**

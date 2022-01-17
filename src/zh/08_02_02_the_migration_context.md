@@ -6,7 +6,7 @@
 [EnvironmentContext.get_context()]: #alembic.runtime.environment.EnvironmentContext.get_context
 [MigrationContext.configure()]: #alembic.runtime.migration.MigrationContext.configure
 [MigrationContext.get_current_revision()]: #alembic.runtime.migration.MigrationContext.get_current_revision
-[Operations]: ../en/ops.html#alembic.operations.Operations
+[Operations]: ../zh/06_operation_reference.md
 
 The [MigrationContext] handles the actual work to be performed against a database backend as migration operations proceed. It is generally not exposed to the end-user, except when the [on_version_apply] callback hook is used.
 
