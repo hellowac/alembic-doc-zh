@@ -1,9 +1,15 @@
 import enum
+from fileinput import filename
 import json
+import os
+from pathlib import Path
 import logging
+from datetime import datetime
+from re import sub
 
 import requests
 from typing import Dict, List, Tuple
+
 
 from bs4 import BeautifulSoup
 from bs4.element import NavigableString, Tag
@@ -21,30 +27,33 @@ class ParsePage(object):
             "*": "\\*",
         }
 
-    def parse_p(self, p: Tag, deep=1) -> None:
+    def parse_p(self, p: Tag, prefix: str = "", subfix="") -> None:
         # 解析p标签
 
         strs = []
 
         for child in p.children:
             if isinstance(child, NavigableString):
-                strs.append(child.text.replace("\n", ""))
+                text = child.text.replace("\n", "")
+                text = f"{prefix}{text}{subfix}"
+
+                strs.append(text)
                 continue
-            
+
             tag_name = child.name
 
-            if tag_name == "a" and child.text.strip() != 'Â¶':
+            if tag_name == "a" and child.text.strip() != "Â¶":
                 strs.append(f" **[{child.text}]** ")
                 self.a_links[child.text] = child.attrs.get("href")
 
             elif tag_name == "code":
                 strs.append(f" `{child.text}` ")
-            
+
             elif tag_name == "strong":
                 strs.append(f" **[{child.text}]** ")
 
             else:
-                logging.info(f'未知节点: {tag_name}')
+                logging.info(f"未知节点: {tag_name}")
 
         sentence = " ".join(strs)
 
@@ -124,25 +133,52 @@ class ParsePage(object):
 
             elif tag_name == "dl":
                 self.parse_dl(child)
-            
+
             elif tag_name == "ul":
 
                 self.parse_ul(child)  # 参数列表
 
+            elif tag_name == "div":
+
+                self.parse_div(child)
+
             else:
-                logging.info(f'未知节点: {tag_name}')
-    
+                logging.info(f"未知节点: {tag_name}")
+
+    def parse_div(self, div: Tag) -> None:
+        # div
+
+        class_values = div.attrs.get("class", [])
+        class_str = " ".join(class_values)
+
+        is_see_also_div = class_str == "admonition seealso"
+        is_version_added = class_str == "versionadded"
+
+        prefix = ""
+        subfix = ""
+
+        if is_see_also_div:
+            prefix = "> "
+
+        elif is_version_added: # 斜体
+            prefix = "> *"
+            subfix = "* "
+
+        for child in div.children:
+            tag_name = child.name
+
+            if tag_name == "p":
+                self.parse_p(child, prefix=prefix, subfix=subfix)
 
     def parse_ul(self, ul: Tag) -> None:
-        
+
         for child in ul.children:
             tag_name = child.name
 
             if tag_name == "li":
                 self.parse_li(child)
             else:
-                logging.info(f'未知节点: {tag_name}')
-    
+                logging.info(f"未知节点: {tag_name}")
 
     def parse_li(self, li: Tag) -> None:
 
@@ -152,8 +188,7 @@ class ParsePage(object):
             if tag_name == "p":
                 self.parse_p(child)
             else:
-                logging.info(f'未知节点: {tag_name}')
-
+                logging.info(f"未知节点: {tag_name}")
 
     def parse_dt_property(self, tag: Tag) -> str:
         # 解析函数的返回值定义
@@ -259,7 +294,7 @@ class ParsePage(object):
 
         return result
 
-    def parse(self):
+    def parse(self) -> Path:
 
         if not url:
             return
@@ -271,16 +306,27 @@ class ParsePage(object):
 
         self.parse_section(first_section)
 
-        for k, v in self.a_links.items():
-            print(f"[{k}]: {v}")
+        _dir = os.path.dirname(os.path.abspath(__file__))
+        filename = Path(_dir) / datetime.now().strftime("%Y%m%d%H%M%S.md")
 
-        print("\n")
-        print("\n".join(self.strs))
+        with open(filename, "w") as fw:
+
+            for k, v in self.a_links.items():
+                # links
+                link_define = f"[{k}]: {v}\n"
+                fw.write(link_define)
+
+            fw.write("\n")
+            fw.writelines("\n".join(self.strs))
+
+        return filename
 
 
 if __name__ == "__main__":
 
     url = "http://localhost:3001/en/api/script.html"
+    url = "http://localhost:3001/en/api/ddl.html"
 
     parse_page = ParsePage(url)
-    parse_page.parse()
+    filename = parse_page.parse()
+    print(f"文件位于: {str(filename)}")
