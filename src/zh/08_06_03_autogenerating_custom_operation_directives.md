@@ -21,9 +21,9 @@
 [EnvironmentContext.configure.include_object]: ../en/runtime.html#alembic.runtime.environment.EnvironmentContext.configure.params.include_object
 [EnvironmentContext.configure.include_name]: ../en/runtime.html#alembic.runtime.environment.EnvironmentContext.configure.params.include_name
 
-In the section **[Operation Plugins]**, we talked about adding new subclasses of **[MigrateOperation]** in order to add new `op.` directives. In the preceding section **[Customizing Revision Generation]**, we also learned that these same **[MigrateOperation]** structures are at the base of how the autogenerate system knows what Python code to render. Using this knowledge, we can create additional functions that plug into the autogenerate system so that our new operations can be generated into migration scripts when `alembic revision --autogenerate` is run.
+在 **[Operation Plugins]** 部分中，我们讨论了添加 **[MigrateOperation]** 的新子类以添加新的 `op.` 指令。 在上一节**[自定义修订生成]** 中，我们还了解到，这些相同的**[MigrateOperation]** 结构是自动生成系统如何知道要呈现哪些 Python 代码的基础。 利用这些知识，我们可以创建插入自动生成系统的附加函数，以便在运行 `alembic revision --autogenerate` 时将我们的新操作生成到迁移脚本中。
 
-The following sections will detail an example of this using the the `CreateSequenceOp` and `DropSequenceOp` directives we created in **[Operation Plugins]**, which correspond to the SQLAlchemy **[Sequence]** construct.
+以下部分将详细介绍使用我们在 **[Operation Plugins]** 中创建的 `CreateSequenceOp` 和 `DropSequenceOp` 指令的示例，它们对应于 SQLAlchemy **[Sequence]** 结构。
 
 ## Tracking our Object with the Model
 
